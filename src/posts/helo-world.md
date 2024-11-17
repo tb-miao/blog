@@ -44,7 +44,7 @@ npm run docs:clean-dev --清除缓存并启动开发服务器
 ::: warning 如果你需要终止开发服务器，请点击终端，并连续两次按下 Ctrl + C。
 :::
 # 创建文章
-<img src="/assets/images/navbar.png" alt="vue logo">
+<img :src="$withBase('/assets/images/navbar.png')" alt="vue主题命令" />
 
 ::: caution
 图片要放到“/assets/images”目录下，并且图片名要和文章名一致！
