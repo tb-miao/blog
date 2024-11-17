@@ -36,6 +36,10 @@ export default hopeTheme({
     medias: {
       BiliBili: "https://space.bilibili.com/3546708996786634",
       GitHub: "https://github.com/tb-miao",
+      hexo: {
+        icon: "https://hexo.io/logo.svg",
+        link: "https://hexo.io/zh-cn/",
+      },
       VuePressThemeHope: {
         icon: "https://theme-hope-assets.vuejs.press/logo.svg",
         link: "https://theme-hope.vuejs.press",
