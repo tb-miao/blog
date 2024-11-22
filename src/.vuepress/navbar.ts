@@ -43,6 +43,7 @@ export default navbar([
       { text: "vue主题命令", icon: "pen-to-square", link: "helo-world" },
       { text: "hexo", icon: "pen-to-square", link: "hexo" },
       { text: "java", icon: "pen-to-square", link: "java-1" },
+      { text: "导航大全", icon: "pen-to-square", link: "nav" },
       "tomato",
       "strawberry",
     ],
