@@ -8,7 +8,6 @@ category:
 tag:
   - vue
 star: true
-sticky: true
 ---
 # 本地查看/发布
 

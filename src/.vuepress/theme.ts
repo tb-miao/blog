@@ -8,7 +8,7 @@ export default hopeTheme({
 
   author: {
     name: "TB",
-    url: "https://mister-hope.com",
+    url: "https://tb-miao.github.io/blog",
   },
 
   iconAssets: "fontawesome-with-brands",

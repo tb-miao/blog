@@ -8,7 +8,6 @@ category:
 tag:
   - hexo
 star: true
-sticky: true
 ---
 # HEXO
 <img src="https://hexo.io/logo.svg" alt="hexo logo" width="200">

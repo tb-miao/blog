@@ -8,7 +8,6 @@ category:
 tag:
   - java
 star: true
-sticky: true
 ---
 # 我的世界java版资源网站
 ## MCMOD-MC百科

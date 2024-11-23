@@ -7,8 +7,9 @@ category:
 tag:
   - nav导航
 star: true
-sticky: true
 ---
+如果导航页超过限制，站长就会部署一个新的导航页。
+(1/100)
 ## 书写格式
 
 ``` yaml
