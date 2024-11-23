@@ -12,6 +12,8 @@ export default navbar([
       { text: "hexo", icon: "pen-to-square", link: "hexo" },
       { text: "java", icon: "pen-to-square", link: "java-1" },
       { text: "永久激活Windows", icon: "pen-to-square", link: "windows-jh" },
+      { text: "TurboWarp", icon: "pen-to-square", link: "TurboWarp" },
+      { text: "结束了", icon: "pen-to-square", link: "jieshule" },
     ],
   },
   {
