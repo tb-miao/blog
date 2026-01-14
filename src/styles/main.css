@@ -9,17 +9,17 @@
 @import "./gradient-buttons.css";
 /* 加密内容样式已移除，现在直接使用非加密文章的样式 */
 
-/* 导入 ZenMaruGothic-Medium 字体 */
+/* 导入 DouyinSansBold 字体 */
 @font-face {
-  font-family: "ZenMaruGothic-Medium";
+  font-family: "DouyinSansBold";
   src: url("/assets/font/DouyinSansBold.woff2") format("woff2");
   font-weight: 500;
   font-display: swap;
 }
 
-/* 导入 萝莉体 第二版 字体 */
+/* 导入 ZenMaruGothic-Medium字体 */
 @font-face {
-  font-family: "萝莉体 第二版";
+  font-family: "ZenMaruGothic-Medium";
   src: url("/assets/font/ZenMaruGothic-Medium.woff2") format("woff2");
   font-style: normal;
   font-weight: 400;
