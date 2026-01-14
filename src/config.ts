@@ -265,6 +265,7 @@ export const navBarConfig: NavBarConfig = {
 			name: "统计",
 			url: "https://cloud.umami.is/analytics/us/share/pBFqYW1e5248KxEz",
 			icon: "material-symbols:group",
+			external: true,
 		},
 	],
 };
