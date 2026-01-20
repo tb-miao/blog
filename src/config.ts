@@ -32,16 +32,16 @@ export const siteConfig: SiteConfig = {
 	lang: SITE_LANG,
 
 	themeColor: {
-		hue: 360, // 主题色的默认色相，范围从 0 到 360。例如：红色：0，青色：200，蓝绿色：250，粉色：345
-		fixed: false, // 对访问者隐藏主题色选择器
+		hue: 345, // 主题色的默认色相，范围从 0 到 360。例如：红色：0，青色：200，蓝绿色：250，粉色：345
+		fixed: true, // 对访问者隐藏主题色选择器
 	},
 
 	// 特色页面开关配置(关闭不在使用的页面有助于提升SEO,关闭后直接在顶部导航删除对应的页面就行)
 	featurePages: {
 		anime: false, // 番剧页面开关
-		diary: true, // 日记页面开关
+		diary: false, // 日记页面开关
 		friends: true, // 友链页面开关
-		projects: false, // 项目页面开关
+		projects: true, // 项目页面开关
 		skills: false, // 技能页面开关
 		timeline: false, // 时间线页面开关
 		albums: false, // 相册页面开关
@@ -96,12 +96,13 @@ export const siteConfig: SiteConfig = {
 		// 支持单张图片或图片数组，当数组长度 > 1 时自动启用轮播
 		src: {
 			desktop: [
-				"/assets/desktop-banner/1.webp",
-				"/assets/desktop-banner/2.webp",
-				"/assets/desktop-banner/3.webp",
-				"/assets/desktop-banner/4.webp",
-				"/assets/desktop-banner/5.webp",
-				"/assets/desktop-banner/6.webp",
+				//"/assets/desktop-banner/1.webp",
+				//"/assets/desktop-banner/2.webp",
+				//"/assets/desktop-banner/3.webp",
+				//"/assets/desktop-banner/4.webp",
+				//"/assets/desktop-banner/5.webp",
+				//"/assets/desktop-banner/6.webp",
+				"/assets/desktop-banner/7.webp"
 			], // 桌面横幅图片
 			mobile: [
 				"/assets/mobile-banner/1.webp",
@@ -110,6 +111,7 @@ export const siteConfig: SiteConfig = {
 				"/assets/mobile-banner/4.webp",
 				"/assets/mobile-banner/5.webp",
 				"/assets/mobile-banner/6.webp",
+				"/assets/mobile-banner/7.webp",
 			], // 移动横幅图片
 		}, // 使用本地横幅图片
 
@@ -143,8 +145,6 @@ export const siteConfig: SiteConfig = {
 			subtitle: [
 				"你好",
 				"咕咕嘎嘎",
-				"嘎嘎嘎嘎",
-				"awa",
 			],
 			typewriter: {
 				enable: true, // 启用副标题打字机效果
@@ -208,12 +208,13 @@ export const siteConfig: SiteConfig = {
 export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
 	src: {
 		desktop: [
-			"/assets/desktop-banner/1.webp",
-			"/assets/desktop-banner/2.webp",
-			"/assets/desktop-banner/3.webp",
-			"/assets/desktop-banner/4.webp",
-			"/assets/desktop-banner/5.webp",
-			"/assets/desktop-banner/6.webp",
+			//"/assets/desktop-banner/1.webp",
+			//"/assets/desktop-banner/2.webp",
+			//"/assets/desktop-banner/3.webp",
+			//"/assets/desktop-banner/4.webp",
+			//"/assets/desktop-banner/5.webp",
+			//"/assets/desktop-banner/6.webp",
+			"/assets/desktop-banner/7.webp",
 		], // 桌面横幅图片
 		mobile: [
 			"/assets/mobile-banner/1.webp",
@@ -222,6 +223,7 @@ export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
 			"/assets/mobile-banner/4.webp",
 			"/assets/mobile-banner/5.webp",
 			"/assets/mobile-banner/6.webp",
+			"/assets/mobile-banner/7.webp",
 		], // 移动横幅图片
 	}, // 使用本地横幅图片
 	position: "center", // 壁纸位置，等同于 object-position
@@ -250,9 +252,9 @@ export const navBarConfig: NavBarConfig = {
 			icon: "material-symbols:person",
 			children: [
 				{
-					name: "日记",
-					url: "/diary/",
-					icon: "material-symbols:book",
+					name: "项目",
+					url: "/projects/",
+					icon: "material-symbols:developer-board",
 				},
 				{
 					name: "关于",

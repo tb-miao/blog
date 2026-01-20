@@ -148,6 +148,14 @@ export const friendsData: FriendItem[] = [
 		siteurl: "https://www.adclosenn.dev/",
 		tags: ["Blog"],
 	},
+	{
+		id: 18,
+		title: "鈴奈咲桜のBlog",
+		imgurl: "https://q2.qlogo.cn/headimg_dl?dst_uin=2731443459&spec=5",
+		desc: "愛することを忘れないで",
+		siteurl: "https://blog.sakura.ink",
+		tags: ["Blog"],
+	}
 ];
 
 // 获取所有友情链接数据
