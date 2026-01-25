@@ -26,7 +26,7 @@ export const projectsData: Project[] = [
 		image: "",
 		category: "desktop",
 		techStack: ["python"],
-		status: "in-progress",
+		status: "planned",
 		liveDemo: "https://github.com/tb-miao/AUNya-PY",
 		sourceCode: "https://github.com/tb-miao/AUNya-PY",
 		startDate: "2025-11-01",

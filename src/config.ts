@@ -280,6 +280,13 @@ export const profileConfig: ProfileConfig = {
 		enable: true, // 启用个人简介打字机效果
 		speed: 80, // 打字速度（毫秒）
 	},
+	// 时间进度配置
+	timeProgress: {
+		enable: true, // 启用时间进度显示
+		showYearProgress: true, // 显示年度进度
+		showDayProgress: true, // 显示今日进度
+		updateInterval: 60000, // 更新间隔（毫秒），默认1分钟
+	},
 	links: [
 		{
 			name: "Bilibli",
@@ -354,7 +361,7 @@ export const shareConfig: ShareConfig = {
 export const announcementConfig: AnnouncementConfig = {
 	title: "公告呀~", // 公告标题
 	content: "🎉🎉 欢迎来到我的博客喵！本站2周年啦！", // 公告内容
-	closable: true, // 允许用户关闭公告
+	closable: false, // 允许用户关闭公告
 	link: {
 		enable: false, // 启用链接
 		text: "Learn More", // 链接文本
@@ -599,7 +606,7 @@ export const widgetConfigs = {
 
 export const umamiConfig = {
 	enabled: true, // 是否显示Umami统计
-	apiKey: import.meta.env.UMAMI_API_KEY || "api_xxxxxxxx", // API密钥优先从环境变量读取，否则使用配置文件中的值
+	apiKey: import.meta.env.UMAMI_API_KEY || "api_xxxx", // API密钥优先从环境变量读取，否则使用配置文件中的值
 	baseUrl: "https://api.umami.is", // Umami Cloud API地址
 	scripts: `
 <script defer src="https://cloud.umami.is/script.js" data-website-id="50cd57c4-1d49-4941-88d5-b1cce22ee6a1"></script>

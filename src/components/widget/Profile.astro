@@ -52,37 +52,278 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
             </a>}
         </div>
         {umamiEnabled && (
-            <hr class="my-2 border-t border-dashed border-gray-300 dark:border-gray-700" />
-            <div class="text-sm text-gray-500 mt-2 text-center">
-                <Icon name="fa6-solid:eye" class="inline-block mr-1 text-gray-400 text-sm align-middle" />
-                <span id="site-stats-display">统计加载中...</span>
+            <div id="umami-stats-container" class="mt-4 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border border-blue-200 dark:border-blue-800/30 hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer relative overflow-hidden group" title="统计数据">
+                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-[shimmer_2s_infinite]"></div>
+                <div class="flex items-center justify-center gap-2 mb-3">
+                    <div class="relative">
+                        <Icon name="fa6-solid:chart-pie" class="text-blue-600 dark:text-blue-400 text-sm" />
+                        <div class="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    </div>
+                    <span class="text-sm font-semibold text-blue-700 dark:text-blue-300">实时统计</span>
+                    <button id="refresh-button" onclick="fetchSiteStats(true); resetAutoRefresh();" class="ml-2 p-1 rounded-full bg-blue-100 dark:bg-blue-900/30 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-all duration-200 opacity-0 group-hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed" title="刷新数据">
+                        <Icon name="fa6-solid:arrows-rotate" class="text-blue-600 dark:text-blue-400 text-xs" />
+                    </button>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-gray-700 dark:text-gray-300 transition-all duration-300" id="pageviews-count">-</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">浏览量</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-gray-700 dark:text-gray-300 transition-all duration-300" id="visits-count">-</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">访问次数</div>
+                    </div>
+                </div>
+                <div class="mt-2 text-center">
+                    <Icon name="fa6-solid:chart-line" class="inline-block mr-1 text-blue-500 dark:text-blue-400 text-sm" />
+                    <span id="site-stats-display" class="text-xs text-blue-600 dark:text-blue-400">数据加载中...</span>
+                </div>
+                <div class="mt-1 text-center">
+                    <span id="last-update-time" class="text-xs text-gray-400 dark:text-gray-500">首次加载中...</span>
+                </div>
+            </div>
+        )}
+        {profileConfig.timeProgress?.enable && (
+            <div id="time-progress-container" class="mt-3 p-3 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl border border-green-200 dark:border-green-800/30 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group">
+                <div class="flex items-center justify-center gap-2 mb-3">
+                    <div class="relative">
+                        <Icon name="fa6-solid:clock" class="text-green-600 dark:text-green-400 text-sm" />
+                        <div class="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                    </div>
+                    <span class="text-sm font-semibold text-green-700 dark:text-green-300">时间进度</span>
+                    <div class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        <Icon name="fa6-solid:arrows-rotate" class="text-green-400 dark:text-green-500 text-xs" />
+                    </div>
+                </div>
+                
+                {profileConfig.timeProgress?.showYearProgress && (
+                    <div class="mb-3">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs text-gray-600 dark:text-gray-400">年度进度</span>
+                            <span id="year-progress-percent" class="text-xs font-semibold text-gray-700 dark:text-gray-300">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                            <div id="year-progress-bar" class="bg-gradient-to-r from-green-400 to-emerald-500 h-2 rounded-full transition-all duration-1000 ease-out" style="width: 0%"></div>
+                        </div>
+                        <div class="text-center mt-1">
+                            <span id="year-progress-text" class="text-xs text-gray-500 dark:text-gray-400">加载中...</span>
+                        </div>
+                    </div>
+                )}
+                
+                {profileConfig.timeProgress?.showDayProgress && (
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs text-gray-600 dark:text-gray-400">今日进度</span>
+                            <span id="day-progress-percent" class="text-xs font-semibold text-gray-700 dark:text-gray-300">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                            <div id="day-progress-bar" class="bg-gradient-to-r from-blue-400 to-cyan-500 h-2 rounded-full transition-all duration-1000 ease-out" style="width: 0%"></div>
+                        </div>
+                        <div class="text-center mt-1">
+                            <span id="day-progress-text" class="text-xs text-gray-500 dark:text-gray-400">加载中...</span>
+                        </div>
+                    </div>
+                )}
+                <div class="mt-1 text-center">
+                    <span class="text-xs text-gray-400 dark:text-gray-500">默认刷新时间：1分钟</span>
+                </div>
             </div>
         )}
                     <!-- 最新 Commit 提交信息 -->
-        <div class="text-center text-sm text-neutral-500 dark:text-neutral-400 mt-3 pt-3 border-t border-neutral-200 dark:border-neutral-700">
-            <div class="flex items-center justify-center gap-1">
-                <Icon name="fa6-brands:git-alt" class="text-xl"></Icon>
-                <span><a id="github-commit-link" href="#">
-                <span id="github-commit">加载中...</span></a></span>
+        <div id="github-commit-container" class="mt-3 p-3 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800/30 dark:to-gray-900/30 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group">
+            <div class="flex items-center justify-center gap-2 mb-2">
+                <div class="relative">
+                    <Icon name="fa6-brands:git-alt" class="text-purple-600 dark:text-purple-400 text-lg" />
+                    <div class="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                </div>
+                <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">最新提交</span>
+                <div class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <Icon name="fa6-brands:git-alt" class="text-gray-400 dark:text-gray-500 text-xs" />
+                </div>
+            </div>
+            
+            <div class="text-center space-y-1">
+                <div class="flex items-center justify-center gap-2">
+                    <a id="github-commit-link" href="#" class="group/link">
+                        <span id="github-commit-hash" class="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-md text-xs font-mono font-bold hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors duration-200">
+                            加载中...
+                        </span>
+                    </a>
+                    <span id="github-commit-status" class="px-2 py-0.5 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-full text-xs font-medium animate-pulse">
+                        最新
+                    </span>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+{profileConfig.timeProgress?.enable && (
+    <script is:inline define:vars={{ timeProgressConfig: profileConfig.timeProgress }}>
+        // 计算时间进度相关函数
+        function updateTimeProgress() {
+            const now = new Date();
+            
+            // 计算年度进度
+            if (timeProgressConfig?.showYearProgress) {
+                const startOfYear = new Date(now.getFullYear(), 0, 1);
+                const endOfYear = new Date(now.getFullYear() + 1, 0, 1);
+                const yearProgress = (now - startOfYear) / (endOfYear - startOfYear);
+                
+                const yearProgressPercent = Math.round(yearProgress * 100);
+                const yearProgressBar = document.getElementById('year-progress-bar');
+                const yearProgressPercentEl = document.getElementById('year-progress-percent');
+                const yearProgressText = document.getElementById('year-progress-text');
+                
+                if (yearProgressBar) {
+                    yearProgressBar.style.width = yearProgressPercent + '%';
+                }
+                if (yearProgressPercentEl) {
+                    yearProgressPercentEl.textContent = yearProgressPercent + '%';
+                }
+                if (yearProgressText) {
+                    const daysPassed = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24));
+                    const totalDays = Math.floor((endOfYear - startOfYear) / (1000 * 60 * 60 * 24));
+                    yearProgressText.textContent = `${daysPassed}/${totalDays} 天`;
+                }
+            }
+            
+            // 计算今日进度
+            if (timeProgressConfig?.showDayProgress) {
+                const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+                const dayProgress = (now - startOfDay) / (endOfDay - startOfDay);
+                
+                const dayProgressPercent = Math.round(dayProgress * 100);
+                const dayProgressBar = document.getElementById('day-progress-bar');
+                const dayProgressPercentEl = document.getElementById('day-progress-percent');
+                const dayProgressText = document.getElementById('day-progress-text');
+                
+                if (dayProgressBar) {
+                    dayProgressBar.style.width = dayProgressPercent + '%';
+                }
+                if (dayProgressPercentEl) {
+                    dayProgressPercentEl.textContent = dayProgressPercent + '%';
+                }
+                if (dayProgressText) {
+                    const hours = now.getHours();
+                    const minutes = now.getMinutes();
+                    const seconds = now.getSeconds();
+                    dayProgressText.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+            }
+        }
+        
+        // 添加点击刷新功能
+        function addTimeProgressRefresh() {
+            const timeProgressContainer = document.getElementById('time-progress-container');
+            if (timeProgressContainer) {
+                timeProgressContainer.addEventListener('click', function(e) {
+                    // 如果点击的是进度条或其他子元素，不触发刷新动画
+                    if (e.target.closest('.rounded-full')) {
+                        return;
+                    }
+                    
+                    // 添加刷新动画
+                    this.classList.add('animate-pulse');
+                    
+                    // 立即更新一次
+                    updateTimeProgress();
+                    
+                    // 移除动画类
+                    setTimeout(() => {
+                        this.classList.remove('animate-pulse');
+                    }, 1000);
+                });
+            }
+        }
+        
+        // 页面加载完成后初始化
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                updateTimeProgress();
+                addTimeProgressRefresh();
+            });
+        } else {
+            updateTimeProgress();
+            addTimeProgressRefresh();
+        }
+        
+        // 设置定时更新
+        const updateInterval = timeProgressConfig?.updateInterval || 60000;
+        setInterval(updateTimeProgress, updateInterval);
+    </script>
+)}
+
 {umamiEnabled && (
     <script is:inline define:vars={{ umamiBaseUrl, umamiApiKey, umamiWebsiteId, umamiConfig }}>
         // 客户端统计文案生成函数
         function generateStatsText(pageViews, visits) {
-            return `浏览量 ${pageViews} · 访问次数 ${visits}`;
+            return ` 实时数据`;
+        }
+        
+        // 更新最后更新时间
+        function updateLastUpdateTime() {
+            const lastUpdateElement = document.getElementById('last-update-time');
+            if (lastUpdateElement) {
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString('zh-CN', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+                lastUpdateElement.textContent = `最后更新: ${timeStr}`;
+            }
+        }
+        
+        // 数字格式化函数
+        function formatNumber(num) {
+            if (num >= 10000) {
+                return (num / 10000).toFixed(1) + '万';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
         }
         
         // 获取访问量统计
-        async function fetchSiteStats(isRetry = false) {
-            if (!umamiConfig.enabled || !isRetry) {
-                // isRetry is used to avoid recursive retry loop or similar logic if implemented
-            }
+        async function fetchSiteStats(isManualRefresh = false) {
             if (!umamiConfig.enabled) {
                 return;
+            }
+            
+            // 获取DOM元素
+            const pageviewsElement = document.getElementById('pageviews-count');
+            const visitsElement = document.getElementById('visits-count');
+            const displayElement = document.getElementById('site-stats-display');
+            const statsContainer = document.getElementById('umami-stats-container');
+            const refreshButton = document.getElementById('refresh-button');
+            
+            // 防止重复点击 - 如果正在刷新则直接返回
+            if (statsContainer && statsContainer.classList.contains('refreshing')) {
+                return;
+            }
+            
+            // 添加刷新状态类
+            if (statsContainer) {
+                statsContainer.classList.add('refreshing');
+            }
+            
+            // 禁用刷新按钮
+            if (refreshButton) {
+                refreshButton.disabled = true;
+                refreshButton.classList.add('animate-spin');
+            }
+            
+            // 显示加载状态
+            if (isManualRefresh && displayElement) {
+                displayElement.innerHTML = '🔄 正在刷新数据...';
+            }
+            
+            // 添加加载动画类
+            if (statsContainer) {
+                statsContainer.classList.add('animate-pulse');
             }
             
             try {
@@ -93,34 +334,281 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
                 const pageViews = stats.pageviews || 0;
                 const visits = stats.visits || 0;
                 
-                const displayElement = document.getElementById('site-stats-display');
+                // 添加加载动画效果
+                if (pageviewsElement) {
+                    pageviewsElement.style.opacity = '0.3';
+                    setTimeout(() => {
+                        pageviewsElement.textContent = formatNumber(pageViews);
+                        pageviewsElement.style.opacity = '1';
+                        pageviewsElement.classList.add('animate-bounce');
+                        setTimeout(() => pageviewsElement.classList.remove('animate-bounce'), 600);
+                    }, 300);
+                }
+                if (visitsElement) {
+                    visitsElement.style.opacity = '0.3';
+                    setTimeout(() => {
+                        visitsElement.textContent = formatNumber(visits);
+                        visitsElement.style.opacity = '1';
+                        visitsElement.classList.add('animate-bounce');
+                        setTimeout(() => visitsElement.classList.remove('animate-bounce'), 600);
+                    }, 300);
+                }
                 if (displayElement) {
                     displayElement.textContent = generateStatsText(pageViews, visits);
                 }
+                
+                // 更新最后更新时间
+                updateLastUpdateTime();
+                
+                // 显示成功提示
+                if (isManualRefresh && displayElement) {
+                    const originalText = displayElement.textContent;
+                    displayElement.innerHTML = '✅ 数据已更新';
+                    setTimeout(() => {
+                        displayElement.textContent = originalText;
+                    }, 2000);
+                }
+                
             } catch (error) {
                 console.error('Error fetching site stats:', error);
-                const displayElement = document.getElementById('site-stats-display');
+                
                 if (displayElement) {
-                    displayElement.textContent = '统计不可用';
+                    displayElement.innerHTML = '❌ 数据获取失败';
+                }
+                if (pageviewsElement) {
+                    pageviewsElement.textContent = '-';
+                }
+                if (visitsElement) {
+                    visitsElement.textContent = '-';
+                }
+                
+                // 更新最后更新时间（错误时也要更新）
+                updateLastUpdateTime();
+                
+                // 3秒后恢复原始状态
+                setTimeout(() => {
+                    if (displayElement) {
+                        displayElement.textContent = generateStatsText(0, 0);
+                    }
+                }, 3000);
+                
+            } finally {
+                // 移除加载动画类和刷新状态
+                if (statsContainer) {
+                    statsContainer.classList.remove('animate-pulse', 'refreshing');
+                }
+                
+                // 重新启用刷新按钮
+                if (refreshButton) {
+                    refreshButton.disabled = false;
+                    refreshButton.classList.remove('animate-spin');
+                }
+                
+                // 5秒后移除成功提示，恢复原始状态
+                if (isManualRefresh) {
+                    setTimeout(() => {
+                        if (displayElement) {
+                            displayElement.textContent = generateStatsText(0, 0);
+                        }
+                    }, 5000);
                 }
             }
         }
 
         // 页面加载完成后获取统计数据
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', fetchSiteStats);
+            document.addEventListener('DOMContentLoaded', function() {
+                fetchSiteStats();
+                updateLastUpdateTime();
+            });
         } else {
             fetchSiteStats();
+            updateLastUpdateTime();
         }
+        
+        // 设置自动刷新 - 每30秒自动更新一次数据
+        let autoRefreshInterval = setInterval(() => {
+            fetchSiteStats(false); // false表示自动刷新，不显示成功提示
+        }, 30000);
+        
+        // 当用户手动刷新时，重置自动刷新定时器
+        function resetAutoRefresh() {
+            clearInterval(autoRefreshInterval);
+            autoRefreshInterval = setInterval(() => {
+                fetchSiteStats(false);
+            }, 30000);
+        }
+        
+        // 添加键盘快捷键支持 - 按R键刷新统计数据
+        document.addEventListener('keydown', function(event) {
+            // 检查是否按下了R键（不区分大小写）且没有按下其他修饰键
+            if ((event.key === 'r' || event.key === 'R') && 
+                !event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
+                
+                // 检查鼠标是否在统计区域内
+                const statsContainer = document.getElementById('umami-stats-container');
+                if (statsContainer && statsContainer.matches(':hover')) {
+                    event.preventDefault();
+                    fetchSiteStats(true);
+                    resetAutoRefresh(); // 重置自动刷新定时器
+                }
+            }
+        });
     </script>
 )}
+
+<style>
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* GitHub Commit 区域样式增强 */
+#github-commit-container {
+    position: relative;
+    overflow: hidden;
+}
+
+#github-commit-container:hover {
+    transform: translateY(-1px);
+}
+
+#github-commit-hash {
+    font-family: 'Courier New', monospace;
+    letter-spacing: -0.5px;
+}
+
+#github-commit-message {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 暗色模式下的悬停效果 */
+.dark #github-commit-container:hover {
+    border-color: #4b5563;
+}
+
+/* 状态标签动画 */
+#github-commit-status {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* 外部链接图标动画 */
+#github-commit-container:hover .group-hover\:opacity-100 {
+    transform: translateX(2px);
+    transition: all 0.2s ease;
+}
+
+/* 响应式设计 */
+@media (max-width: 640px) {
+    #github-commit-message {
+        max-width: 150px;
+    }
+}
+
+/* 工具提示样式 */
+#github-commit-message .absolute {
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+#github-commit-message:hover .absolute {
+    animation: tooltipFadeIn 0.2s ease-out;
+}
+
+@keyframes tooltipFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* 时间进度组件样式 */
+#time-progress-container {
+    position: relative;
+    overflow: hidden;
+}
+
+#time-progress-container:hover {
+    transform: translateY(-1px);
+}
+
+/* 进度条动画效果 */
+#year-progress-bar, #day-progress-bar {
+    position: relative;
+    overflow: hidden;
+}
+
+#year-progress-bar::after, #day-progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    animation: shimmer 2s infinite;
+}
+
+/* 暗色模式下的进度条效果 */
+.dark #year-progress-bar::after, .dark #day-progress-bar::after {
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+}
+
+/* 进度条悬停效果 */
+#year-progress-bar:hover, #day-progress-bar:hover {
+    filter: brightness(1.1);
+}
+
+/* 时间文本样式 */
+#year-progress-text, #day-progress-text {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+}
+
+/* 响应式设计 */
+@media (max-width: 640px) {
+    #time-progress-container {
+        padding: 0.75rem;
+    }
+}
+</style>
 
 <!-- 获取 Commit 信息 via API -->
 <script>
     async function loadCommitStats() {
         try {
-            const statsElement = document.getElementById('github-commit'); // 查找 id
-            const link = document.getElementById('github-commit-link'); // 查找 id
+            const hashElement = document.getElementById('github-commit-hash');
+            const link = document.getElementById('github-commit-link');
+            const statusElement = document.getElementById('github-commit-status');
             
             // 第一步：调用 API                
             const githubResponse = await fetch(`https://api.github.com/repos/tb-miao/blog/commits?per_page=1`);
@@ -131,6 +619,7 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
 
             let Data = await githubResponse.json();
             Data = Data[0];
+            
             // 第二步：获取 Commit 数据
             const latestCommit = Data;
             
@@ -143,27 +632,107 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
                 url: latestCommit.html_url
             };
             
+            // 格式化日期
+            const commitDate = new Date(commitData.date);
+            const now = new Date();
+            const timeDiff = now - commitDate;
+            const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
             
-            if (statsElement) {
-                statsElement.textContent = `当前提交：${Data.sha.slice(0,7)}`;
+            let formattedDate = '';
+            if (daysDiff === 0) {
+                formattedDate = '今天';
+            } else if (daysDiff === 1) {
+                formattedDate = '昨天';
+            } else if (daysDiff < 7) {
+                formattedDate = `${daysDiff}天前`;
+            } else {
+                formattedDate = commitDate.toLocaleDateString('zh-CN', { 
+                    month: 'short', 
+                    day: 'numeric' 
+                });
             }
             
-
-            if (link){
-            // const gurl = "https://github.com/tb-miao/blog/commit/"+Data.sha;
-            const gurl = "/info/";
+            // 更新状态标签
+            if (statusElement) {
+                if (daysDiff === 0) {
+                    statusElement.textContent = '最新';
+                    statusElement.className = 'px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-xs font-medium animate-pulse';
+                } else if (daysDiff === 1) {
+                    statusElement.textContent = '昨天';
+                    statusElement.className = 'px-2 py-0.5 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-full text-xs font-medium';
+                } else {
+                    statusElement.textContent = `${daysDiff}天前`;
+                    statusElement.className = 'px-2 py-0.5 bg-gray-100 dark:bg-gray-900/30 text-gray-700 dark:text-gray-300 rounded-full text-xs font-medium';
+                }
+            }
+            
+            // 更新各个元素
+            if (hashElement) {
+                hashElement.textContent = commitData.hash;
+                hashElement.classList.add('animate-pulse');
+                setTimeout(() => {
+                    hashElement.classList.remove('animate-pulse');
+                }, 1000);
+            }
+            
+            if (link) {
+                const gurl = "/info/";
                 link.href = gurl;
-                link.title = "("+Data.commit.committer.date + ")" + " " + Data.commit.message;
+                link.title = `提交时间: ${commitDate.toLocaleString('zh-CN')}\n提交消息: ${commitData.message}\n点击查看详情`;
             }
+            
         } catch (error) {
             console.error('获取 Commit 信息失败:', error);  
-            const statsElement = document.getElementById('github-commit');
-            if (statsElement) {
-                statsElement.textContent = '提交信息不可用';
+            
+            const hashElement = document.getElementById('github-commit-hash');
+            const statusElement = document.getElementById('github-commit-status');
+            const loadingElement = document.getElementById('github-commit-loading');
+            
+            if (hashElement) {
+                hashElement.textContent = '获取失败';
+                hashElement.className = 'px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-md text-xs font-mono font-bold';
+            }
+            
+            if (statusElement) {
+                statusElement.textContent = '错误';
+                statusElement.className = 'px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-full text-xs font-medium';
+            }
+            
+            // 隐藏加载动画
+            if (loadingElement) {
+                loadingElement.style.display = 'none';
             }
         }
     }
 
     // 页面加载完成后获取 Commit 数据
-    document.addEventListener('DOMContentLoaded', loadCommitStats);
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadCommitStats);
+    } else {
+        loadCommitStats();
+    }
+    
+    // 添加点击刷新功能
+    document.addEventListener('DOMContentLoaded', function() {
+        const commitContainer = document.getElementById('github-commit-container');
+        if (commitContainer) {
+            commitContainer.addEventListener('click', function(e) {
+                // 如果点击的是链接，不触发刷新
+                if (e.target.closest('a')) {
+                    return;
+                }
+                
+                // 添加刷新动画
+                this.classList.add('animate-pulse');
+                
+                // 重新加载数据
+                loadCommitStats();
+                
+                // 移除动画类
+                setTimeout(() => {
+                    this.classList.remove('animate-pulse');
+                }, 1000);
+            });
+        }
+    });
 </script>

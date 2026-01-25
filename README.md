@@ -1,5 +1,5 @@
 
-[**仓库地址**](https://github.com/matsuzaka-yuki/mizuki)
+[**主题仓库地址**](https://github.com/matsuzaka-yuki/mizuki)
 
 ## 📝 文章前言格式
 

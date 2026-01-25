@@ -217,6 +217,12 @@ export type ProfileConfig = {
 		enable: boolean; // 是否启用打字机效果
 		speed?: number; // 打字速度（毫秒）
 	};
+	timeProgress?: {
+		enable: boolean; // 是否启用时间进度显示
+		showYearProgress?: boolean; // 显示年度进度
+		showDayProgress?: boolean; // 显示今日进度
+		updateInterval?: number; // 更新间隔（毫秒）
+	};
 };
 
 export type LicenseConfig = {
