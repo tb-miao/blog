@@ -52,34 +52,23 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
             </a>}
         </div>
         {umamiEnabled && (
-            <div id="umami-stats-container" class="mt-4 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border border-blue-200 dark:border-blue-800/30 hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer relative overflow-hidden group" title="统计数据">
-                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-[shimmer_2s_infinite]"></div>
+            <div id="umami-stats-container" class="mt-4 p-3 bg-gray-50 dark:bg-gray-800/30 rounded-lg border border-gray-200 dark:border-gray-700" title="网站统计">
                 <div class="flex items-center justify-center gap-2 mb-3">
-                    <div class="relative">
-                        <Icon name="fa6-solid:chart-pie" class="text-blue-600 dark:text-blue-400 text-sm" />
-                        <div class="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    </div>
-                    <span class="text-sm font-semibold text-blue-700 dark:text-blue-300">实时统计</span>
-                    <button id="refresh-button" onclick="fetchSiteStats(true); resetAutoRefresh();" class="ml-2 p-1 rounded-full bg-blue-100 dark:bg-blue-900/30 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-all duration-200 opacity-0 group-hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed" title="刷新数据">
-                        <Icon name="fa6-solid:arrows-rotate" class="text-blue-600 dark:text-blue-400 text-xs" />
-                    </button>
+                    <Icon name="fa6-solid:chart-pie" class="text-gray-600 dark:text-gray-400 text-sm" />
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">网站统计</span>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div class="text-center">
-                        <div class="text-lg font-bold text-gray-700 dark:text-gray-300 transition-all duration-300" id="pageviews-count">-</div>
+                        <div class="text-base font-semibold text-gray-700 dark:text-gray-300" id="pageviews-count">-</div>
                         <div class="text-xs text-gray-500 dark:text-gray-400">浏览量</div>
                     </div>
                     <div class="text-center">
-                        <div class="text-lg font-bold text-gray-700 dark:text-gray-300 transition-all duration-300" id="visits-count">-</div>
-                        <div class="text-xs text-gray-500 dark:text-gray-400">访问次数</div>
+                        <div class="text-base font-semibold text-gray-700 dark:text-gray-300" id="visits-count">-</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">访客数</div>
                     </div>
                 </div>
                 <div class="mt-2 text-center">
-                    <Icon name="fa6-solid:chart-line" class="inline-block mr-1 text-blue-500 dark:text-blue-400 text-sm" />
-                    <span id="site-stats-display" class="text-xs text-blue-600 dark:text-blue-400">数据加载中...</span>
-                </div>
-                <div class="mt-1 text-center">
-                    <span id="last-update-time" class="text-xs text-gray-400 dark:text-gray-500">首次加载中...</span>
+                    <span id="site-stats-display" class="text-xs text-gray-500 dark:text-gray-400">加载中...</span>
                 </div>
             </div>
         )}
@@ -129,9 +118,9 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
                     <span class="text-xs text-gray-400 dark:text-gray-500">默认刷新时间：1分钟</span>
                 </div>
             </div>
-        )}
-                    <!-- 最新 Commit 提交信息 -->
-        <div id="github-commit-container" class="mt-3 p-3 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800/30 dark:to-gray-900/30 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group">
+        
+            <!-- 最新 Commit 提交信息 -->
+            <div id="github-commit-container" class="mt-3 p-3 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800/30 dark:to-gray-900/30 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer group">
             <div class="flex items-center justify-center gap-2 mb-2">
                 <div class="relative">
                     <Icon name="fa6-brands:git-alt" class="text-purple-600 dark:text-purple-400 text-lg" />
@@ -156,6 +145,7 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
                 </div>
             </div>
         </div>
+        )}
     </div>
 </div>
 
@@ -258,25 +248,6 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
 
 {umamiEnabled && (
     <script is:inline define:vars={{ umamiBaseUrl, umamiApiKey, umamiWebsiteId, umamiConfig }}>
-        // 客户端统计文案生成函数
-        function generateStatsText(pageViews, visits) {
-            return ` 实时数据`;
-        }
-        
-        // 更新最后更新时间
-        function updateLastUpdateTime() {
-            const lastUpdateElement = document.getElementById('last-update-time');
-            if (lastUpdateElement) {
-                const now = new Date();
-                const timeStr = now.toLocaleTimeString('zh-CN', { 
-                    hour: '2-digit', 
-                    minute: '2-digit',
-                    second: '2-digit'
-                });
-                lastUpdateElement.textContent = `最后更新: ${timeStr}`;
-            }
-        }
-        
         // 数字格式化函数
         function formatNumber(num) {
             if (num >= 10000) {
@@ -288,92 +259,34 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
         }
         
         // 获取访问量统计
-        async function fetchSiteStats(isManualRefresh = false) {
+        async function fetchSiteStats() {
             if (!umamiConfig.enabled) {
                 return;
             }
             
-            // 获取DOM元素
             const pageviewsElement = document.getElementById('pageviews-count');
             const visitsElement = document.getElementById('visits-count');
             const displayElement = document.getElementById('site-stats-display');
-            const statsContainer = document.getElementById('umami-stats-container');
-            const refreshButton = document.getElementById('refresh-button');
-            
-            // 防止重复点击 - 如果正在刷新则直接返回
-            if (statsContainer && statsContainer.classList.contains('refreshing')) {
-                return;
-            }
-            
-            // 添加刷新状态类
-            if (statsContainer) {
-                statsContainer.classList.add('refreshing');
-            }
-            
-            // 禁用刷新按钮
-            if (refreshButton) {
-                refreshButton.disabled = true;
-                refreshButton.classList.add('animate-spin');
-            }
-            
-            // 显示加载状态
-            if (isManualRefresh && displayElement) {
-                displayElement.innerHTML = '🔄 正在刷新数据...';
-            }
-            
-            // 添加加载动画类
-            if (statsContainer) {
-                statsContainer.classList.add('animate-pulse');
-            }
             
             try {
-                // 调用全局工具获取 Umami 统计数据
                 const stats = await getUmamiWebsiteStats(umamiBaseUrl, umamiApiKey, umamiWebsiteId);
-                
-                // 从返回的数据中提取页面浏览量和访客数
                 const pageViews = stats.pageviews || 0;
                 const visits = stats.visits || 0;
                 
-                // 添加加载动画效果
                 if (pageviewsElement) {
-                    pageviewsElement.style.opacity = '0.3';
-                    setTimeout(() => {
-                        pageviewsElement.textContent = formatNumber(pageViews);
-                        pageviewsElement.style.opacity = '1';
-                        pageviewsElement.classList.add('animate-bounce');
-                        setTimeout(() => pageviewsElement.classList.remove('animate-bounce'), 600);
-                    }, 300);
+                    pageviewsElement.textContent = formatNumber(pageViews);
                 }
                 if (visitsElement) {
-                    visitsElement.style.opacity = '0.3';
-                    setTimeout(() => {
-                        visitsElement.textContent = formatNumber(visits);
-                        visitsElement.style.opacity = '1';
-                        visitsElement.classList.add('animate-bounce');
-                        setTimeout(() => visitsElement.classList.remove('animate-bounce'), 600);
-                    }, 300);
+                    visitsElement.textContent = formatNumber(visits);
                 }
                 if (displayElement) {
-                    displayElement.textContent = generateStatsText(pageViews, visits);
-                }
-                
-                // 更新最后更新时间
-                updateLastUpdateTime();
-                
-                // 显示成功提示
-                if (isManualRefresh && displayElement) {
-                    const originalText = displayElement.textContent;
-                    displayElement.innerHTML = '✅ 数据已更新';
-                    setTimeout(() => {
-                        displayElement.textContent = originalText;
-                    }, 2000);
+                    displayElement.textContent = '数据已加载';
                 }
                 
             } catch (error) {
-                console.error('Error fetching site stats:', error);
-                
+                console.error('获取统计数据失败:', error);
                 if (displayElement) {
-                    displayElement.innerHTML = '❌ 数据获取失败';
+                    displayElement.textContent = '加载失败';
                 }
                 if (pageviewsElement) {
                     pageviewsElement.textContent = '-';
@@ -381,102 +294,23 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
                 if (visitsElement) {
                     visitsElement.textContent = '-';
                 }
-                
-                // 更新最后更新时间（错误时也要更新）
-                updateLastUpdateTime();
-                
-                // 3秒后恢复原始状态
-                setTimeout(() => {
-                    if (displayElement) {
-                        displayElement.textContent = generateStatsText(0, 0);
-                    }
-                }, 3000);
-                
-            } finally {
-                // 移除加载动画类和刷新状态
-                if (statsContainer) {
-                    statsContainer.classList.remove('animate-pulse', 'refreshing');
-                }
-                
-                // 重新启用刷新按钮
-                if (refreshButton) {
-                    refreshButton.disabled = false;
-                    refreshButton.classList.remove('animate-spin');
-                }
-                
-                // 5秒后移除成功提示，恢复原始状态
-                if (isManualRefresh) {
-                    setTimeout(() => {
-                        if (displayElement) {
-                            displayElement.textContent = generateStatsText(0, 0);
-                        }
-                    }, 5000);
-                }
             }
         }
 
         // 页面加载完成后获取统计数据
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', function() {
-                fetchSiteStats();
-                updateLastUpdateTime();
-            });
+            document.addEventListener('DOMContentLoaded', fetchSiteStats);
         } else {
             fetchSiteStats();
-            updateLastUpdateTime();
         }
         
-        // 设置自动刷新 - 每30秒自动更新一次数据
-        let autoRefreshInterval = setInterval(() => {
-            fetchSiteStats(false); // false表示自动刷新，不显示成功提示
-        }, 30000);
-        
-        // 当用户手动刷新时，重置自动刷新定时器
-        function resetAutoRefresh() {
-            clearInterval(autoRefreshInterval);
-            autoRefreshInterval = setInterval(() => {
-                fetchSiteStats(false);
-            }, 30000);
-        }
-        
-        // 添加键盘快捷键支持 - 按R键刷新统计数据
-        document.addEventListener('keydown', function(event) {
-            // 检查是否按下了R键（不区分大小写）且没有按下其他修饰键
-            if ((event.key === 'r' || event.key === 'R') && 
-                !event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
-                
-                // 检查鼠标是否在统计区域内
-                const statsContainer = document.getElementById('umami-stats-container');
-                if (statsContainer && statsContainer.matches(':hover')) {
-                    event.preventDefault();
-                    fetchSiteStats(true);
-                    resetAutoRefresh(); // 重置自动刷新定时器
-                }
-            }
-        });
+        // 每60秒自动更新一次数据
+        setInterval(fetchSiteStats, 60000);
     </script>
 )}
 
 <style>
-@keyframes shimmer {
-    0% {
-        transform: translateX(-100%);
-    }
-    100% {
-        transform: translateX(100%);
-    }
-}
-
-/* GitHub Commit 区域样式增强 */
-#github-commit-container {
-    position: relative;
-    overflow: hidden;
-}
-
-#github-commit-container:hover {
-    transform: translateY(-1px);
-}
-
+/* GitHub Commit 区域样式 */
 #github-commit-hash {
     font-family: 'Courier New', monospace;
     letter-spacing: -0.5px;
@@ -488,17 +322,6 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
-/* 暗色模式下的悬停效果 */
-.dark #github-commit-container:hover {
-    border-color: #4b5563;
-}
-
-/* 状态标签动画 */
-#github-commit-status {
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
 /* 外部链接图标动画 */
 #github-commit-container:hover .group-hover\:opacity-100 {
     transform: translateX(2px);

@@ -1,16 +1,17 @@
+# 魔改版Astro Mizuki博客
 
-[**主题仓库地址**](https://github.com/matsuzaka-yuki/mizuki)
+## [**主题仓库地址**](https://github.com/matsuzaka-yuki/mizuki)
 
 ## 📝 文章前言格式
 
 ```yaml
 ---
-title: 我的第一篇博客文章
-published: 2023-09-09
-description: 这是我新博客的第一篇文章。
+title: 
+published: 
+description: 
 image: ./cover.jpg
-tags: [标签1, 标签2]
-category: 前端
+tags: [""]
+category: 
 draft: false
 pinned: false
 password:  # 设置文章密码，留空则不设置密码
