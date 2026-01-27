@@ -52,6 +52,7 @@ category: ''
 draft: false 
 pinned: false
 alias: 
+updated: ${getDate()}
 ---
 `;
 

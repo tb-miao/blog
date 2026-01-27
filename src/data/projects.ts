@@ -34,6 +34,22 @@ export const projectsData: Project[] = [
 		featured: true,
 		tags: ["python"],
 		visitUrl: "https://github.com/tb-miao/AUNya-PY",
+	},
+	{
+		id: "AUNya_Services_Status",
+		title: "AUNya_Services_Status",
+		description: "一个基于uptimerobot API的服务状态监控面板",
+		image: "",
+		category: "web",
+		techStack: ["react","vue","typescript"],
+		status: "completed",
+		liveDemo: "https://github.com/tb-miao/status",
+		sourceCode: "https://github.com/tb-miao/status",
+		startDate: "2026-01-01",
+		endDate: "2026-01-27",
+		featured: true,
+		tags: ["react","vue","typescript"],
+		visitUrl: "https://github.com/tb-miao/status",
 	}
 ];
 

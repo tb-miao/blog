@@ -264,8 +264,14 @@ export const navBarConfig: NavBarConfig = {
 			],
 		},
 		{
-			name: "统计",
+			name: "博客统计",
 			url: "https://cloud.umami.is/analytics/us/share/pBFqYW1e5248KxEz",
+			icon: "material-symbols:group",
+			external: true,
+		},
+		{
+			name: "监测统计",
+			url: "https://cloud.umami.is/share/uldxG2QTnboi9OlF",
 			icon: "material-symbols:group",
 			external: true,
 		},
