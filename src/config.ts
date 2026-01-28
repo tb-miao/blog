@@ -105,11 +105,6 @@ export const siteConfig: SiteConfig = {
 				"/assets/desktop-banner/7.webp"
 			], // 桌面横幅图片
 			mobile: [
-				"/assets/mobile-banner/1.webp",
-				"/assets/mobile-banner/2.webp",
-				"/assets/mobile-banner/3.webp",
-				"/assets/mobile-banner/4.webp",
-				"/assets/mobile-banner/5.webp",
 				"/assets/mobile-banner/6.webp",
 				"/assets/mobile-banner/7.webp",
 			], // 移动横幅图片
@@ -217,11 +212,6 @@ export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
 			"/assets/desktop-banner/7.webp",
 		], // 桌面横幅图片
 		mobile: [
-			"/assets/mobile-banner/1.webp",
-			"/assets/mobile-banner/2.webp",
-			"/assets/mobile-banner/3.webp",
-			"/assets/mobile-banner/4.webp",
-			"/assets/mobile-banner/5.webp",
 			"/assets/mobile-banner/6.webp",
 			"/assets/mobile-banner/7.webp",
 		], // 移动横幅图片
@@ -366,7 +356,7 @@ export const shareConfig: ShareConfig = {
 
 export const announcementConfig: AnnouncementConfig = {
 	title: "公告呀~", // 公告标题
-	content: "🎉🎉 欢迎来到我的博客喵！本站2周年啦！", // 公告内容
+	content: "🎉🎉 欢迎来到我的博客喵！本站2周年啦！本站暂时一个线路后续会添加，awa", // 公告内容
 	closable: false, // 允许用户关闭公告
 	link: {
 		enable: false, // 启用链接
@@ -381,7 +371,7 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	mode: "meting", // 音乐播放器模式，可选 "local" 或 "meting"
 	meting_api:
 		"https://www.bilibili.uno/api?server=:server&type=:type&id=:id&auth=:auth&r=:r", // Meting API 地址
-	id: "14164869977", // 歌单ID
+	id: "12631884339", // 歌单ID
 	server: "netease", // 音乐源服务器。有的meting的api源支持更多平台,一般来说,netease=网易云音乐, tencent=QQ音乐, kugou=酷狗音乐, xiami=虾米音乐, baidu=百度音乐
 	type: "playlist", // 播单类型
 };
@@ -459,6 +449,22 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			},
 		},
 		{
+			// 组件类型：线路切换组件
+			type: "line-switch",
+			// 是否启用该组件
+			enable: true,
+			// 组件显示顺序
+			order: 4,
+			// 组件位置
+			position: "sticky",
+			// 所在侧边栏
+			sidebar: "left",
+			// CSS 类名
+			class: "onload-animation",
+			// 动画延迟时间
+			animationDelay: 200,
+		},
+		{
 			// 组件类型：标签组件
 			type: "tags",
 			// 是否启用该组件
@@ -510,6 +516,22 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			class: "onload-animation",
 			// 动画延迟时间
 			animationDelay: 250,
+		},
+		{
+			// 组件类型：网络检查组件
+			type: "network-check",
+			// 是否启用该组件
+			enable: true,
+			// 组件显示顺序
+			order: 4,
+			// 组件位置
+			position: "top",
+			// 所在侧边栏
+			sidebar: "right",
+			// CSS 类名
+			class: "onload-animation",
+			// 动画延迟时间
+			animationDelay: 150,
 		},
 	],
 

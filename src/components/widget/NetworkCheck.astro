@@ -1,0 +1,204 @@
+---
+import WidgetLayout from './WidgetLayout.astro';
+import { Icon } from "astro-icon/components";
+
+interface Props {
+	class?: string;
+	style?: string;
+}
+
+const { class: className, style } = Astro.props;
+---
+
+<WidgetLayout name="看看你的网" id="network-check" class={className} style={style}>
+    <div slot="title-icon" class="inline-block ml-2 text-[var(--primary)] text-xl align-middle">
+        <Icon name="material-symbols:wifi" />
+    </div>
+
+    <div class="network-info-container text-sm space-y-3 mb-2 px-2">
+        <div id="net-loading" class="flex items-center justify-center gap-2 py-4 text-neutral-500 dark:text-neutral-400">
+            <Icon name="fa6-solid:spinner" class="text-2xl animate-spin" />
+            <span>正在检测网络...</span>
+        </div>
+        
+        <div id="net-data" class="hidden flex-col gap-3">
+             <!-- IP -->
+             <div class="flex flex-col bg-[var(--card-bg)] rounded-lg">
+                <span class="text-xs text-neutral-500 dark:text-neutral-400 mb-1">IP 地址</span>
+                <div class="flex items-center gap-2">
+                     <span id="net-ip" class="font-bold text-xl text-[var(--primary)] font-mono"></span>
+                     <img id="net-flag" class="h-4 w-6 object-cover rounded-sm shadow-sm hidden" alt="flag" />
+                </div>
+             </div>
+
+             <!-- Location -->
+             <div class="flex flex-col">
+                <span class="text-xs text-neutral-500 dark:text-neutral-400 mb-1">位置</span>
+                <div class="flex items-center gap-1 text-neutral-900 dark:text-neutral-100">
+                    <Icon name="material-symbols:location-on-outline" class="text-lg text-[var(--primary)]" />
+                    <span id="net-location"></span>
+                </div>
+             </div>
+
+             <!-- ISP & ASN -->
+             <div class="grid grid-cols-2 gap-2">
+                <div class="flex flex-col overflow-hidden">
+                    <span class="text-xs text-neutral-500 dark:text-neutral-400 mb-1">ISP</span>
+                    <span id="net-isp" class="text-neutral-900 dark:text-neutral-100 truncate text-xs leading-5" title=""></span>
+                </div>
+                 <div class="flex flex-col">
+                    <span class="text-xs text-neutral-500 dark:text-neutral-400 mb-1">ASN</span>
+                    <span id="net-asn" class="text-neutral-900 dark:text-neutral-100 text-xs leading-5 font-mono"></span>
+                </div>
+             </div>
+             
+             <!-- RTT -->
+             <div class="flex flex-col">
+                <div class="flex justify-between items-center mb-1">
+                     <span class="text-xs text-neutral-500 dark:text-neutral-400">延迟 (RTT)</span>
+                     <span id="net-rtt-val" class="font-mono text-xs font-bold text-[var(--primary)]"></span>
+                </div>
+                <div class="h-2 w-full bg-neutral-200 dark:bg-neutral-700 rounded-full overflow-hidden">
+                    <div id="net-rtt-bar" class="h-full bg-[var(--primary)] w-0 transition-all duration-500 ease-out"></div>
+                </div>
+             </div>
+        </div>
+        
+        <div id="net-error" class="hidden flex-col items-center justify-center py-4 text-center">
+            <Icon name="material-symbols:error-outline" class="text-3xl text-red-500 mb-2" />
+            <span class="text-xs text-neutral-500 dark:text-neutral-400">网络检测失败</span>
+            <button id="net-retry-btn" class="mt-2 text-xs text-[var(--primary)] hover:underline">重试</button>
+        </div>
+    </div>
+</WidgetLayout>
+
+<script>
+    class NetworkCheckWidget {
+        private apiUrl = 'https://ip.haokun.me/?act=get_ip_info';
+        
+        constructor() {
+            this.init();
+        }
+
+        init() {
+            this.fetchData();
+            
+            // Bind retry button
+            const retryBtn = document.getElementById('net-retry-btn');
+            if (retryBtn) {
+                retryBtn.addEventListener('click', () => {
+                    this.showLoading();
+                    this.fetchData();
+                });
+            }
+        }
+
+        async fetchData() {
+            try {
+                const response = await fetch(this.apiUrl);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                this.updateUI(data);
+            } catch (error) {
+                console.error('Failed to fetch network info:', error);
+                this.showError();
+            }
+        }
+
+        updateUI(data: any) {
+            // IP
+            const ipEl = document.getElementById('net-ip');
+            if (ipEl) ipEl.textContent = data.ip;
+
+            // Flag
+            const flagEl = document.getElementById('net-flag') as HTMLImageElement;
+            if (flagEl && data.node && data.node.iso) {
+                flagEl.src = `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.6/flags/4x3/${data.node.iso.toLowerCase()}.svg`;
+                flagEl.classList.remove('hidden');
+            }
+
+            // Location
+            const locEl = document.getElementById('net-location');
+            if (locEl) {
+                const parts = [
+                    data.node?.name || data.location?.city, 
+                    data.location?.region
+                ].filter(Boolean);
+                locEl.textContent = parts.join(', ');
+            }
+
+            // ISP
+            const ispEl = document.getElementById('net-isp');
+            if (ispEl) {
+                const ispName = data.isp?.name || data.isp?.raw || 'Unknown';
+                ispEl.textContent = ispName;
+                ispEl.title = ispName;
+            }
+
+            // ASN
+            const asnEl = document.getElementById('net-asn');
+            if (asnEl) asnEl.textContent = `AS${data.asn}`;
+
+            // RTT
+            const rttValEl = document.getElementById('net-rtt-val');
+            const rttBarEl = document.getElementById('net-rtt-bar');
+            if (rttValEl && rttBarEl && data.rtt !== undefined) {
+                rttValEl.textContent = `${data.rtt} ms`;
+                
+                // Calculate percentage for bar (cap at 200ms for full bar visually)
+                const percentage = Math.min(100, Math.max(5, (data.rtt / 200) * 100));
+                rttBarEl.style.width = `${percentage}%`;
+                
+                // Color coding
+                if (data.rtt < 50) {
+                    rttBarEl.classList.add('bg-green-500');
+                    rttBarEl.classList.remove('bg-[var(--primary)]', 'bg-yellow-500', 'bg-red-500');
+                } else if (data.rtt < 100) {
+                     rttBarEl.classList.add('bg-yellow-500');
+                     rttBarEl.classList.remove('bg-[var(--primary)]', 'bg-green-500', 'bg-red-500');
+                } else {
+                     rttBarEl.classList.add('bg-red-500');
+                     rttBarEl.classList.remove('bg-[var(--primary)]', 'bg-green-500', 'bg-yellow-500');
+                }
+            }
+
+            this.showData();
+        }
+
+        showLoading() {
+            document.getElementById('net-loading')?.classList.remove('hidden');
+            document.getElementById('net-data')?.classList.add('hidden');
+            document.getElementById('net-data')?.classList.remove('flex');
+            document.getElementById('net-error')?.classList.add('hidden');
+            document.getElementById('net-error')?.classList.remove('flex');
+        }
+
+        showData() {
+            document.getElementById('net-loading')?.classList.add('hidden');
+            document.getElementById('net-data')?.classList.remove('hidden');
+            document.getElementById('net-data')?.classList.add('flex');
+            document.getElementById('net-error')?.classList.add('hidden');
+            document.getElementById('net-error')?.classList.remove('flex');
+        }
+
+        showError() {
+            document.getElementById('net-loading')?.classList.add('hidden');
+            document.getElementById('net-data')?.classList.add('hidden');
+            document.getElementById('net-data')?.classList.remove('flex');
+            document.getElementById('net-error')?.classList.remove('hidden');
+            document.getElementById('net-error')?.classList.add('flex');
+        }
+    }
+
+    // Initialize on load and on Swup page change
+    function initNetworkCheck() {
+        new NetworkCheckWidget();
+    }
+
+    initNetworkCheck();
+    
+    // Support Swup
+    document.addEventListener('swup:contentReplace', initNetworkCheck);
+</script>

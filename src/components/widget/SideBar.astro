@@ -9,6 +9,7 @@ import Profile from "./Profile.astro";
 import SiteStats from "./SiteStats.astro";
 import Tags from "./Tags.astro";
 import TOC from "./TOC.astro";
+import LineSwitch from "./LineSwitch.astro";
 
 interface Props {
 	class?: string;
@@ -39,6 +40,7 @@ const componentMap = {
 	"music-player": MusicPlayer,
 	"site-stats": SiteStats,
 	calendar: Calendar,
+	"line-switch": LineSwitch,
 };
 
 // 渲染组件的辅助函数

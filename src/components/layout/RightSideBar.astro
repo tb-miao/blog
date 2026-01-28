@@ -9,6 +9,7 @@ import SiteStats from "@/components/widget/SiteStats.astro";
 import Tags from "@/components/widget/Tags.astro";
 import TOC from "@/components/widget/TOC.astro";
 import { widgetManager } from "@/utils/widget-manager";
+import NetworkCheck from "@/components/widget/NetworkCheck.astro";
 
 interface Props {
 	class?: string;
@@ -34,6 +35,7 @@ const componentMap = {
 	"music-player": MusicPlayer,
 	"site-stats": SiteStats,
 	calendar: Calendar,
+  "network-check": NetworkCheck,
 };
 
 // 渲染组件的辅助函数

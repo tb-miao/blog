@@ -1,0 +1,264 @@
+---
+import WidgetLayout from './WidgetLayout.astro';
+// 源码来自https://blog.haokun.me/  -困
+interface Props {
+	class?: string;
+	style?: string;
+}
+
+const { class: className, style } = Astro.props;
+
+const lines = [
+    //{ nameEn: "Cloudflare", nameZh: "优选", url: "https://blog.haokun.me", id: "cf-opt", icon: "logos:cloudflare-icon", isLocal: false, size: 27 },
+    { nameEn: "Cloudflare", nameZh: "默认", url: "https://tbmiao.dpdns.org", id: "cf-def", icon: "logos:cloudflare-icon", isLocal: false, size: 27 },
+    //{ nameEn: "EdgeOne", nameZh: "海外", url: "https://eo.blog.haokun.me", id: "eo", icon: "/assets/line-switch/icons/tencent-cloud-logo.svg", isLocal: true, size: 27 },
+    //{ nameEn: "ESA", nameZh: "海外", url: "https://esa.blog.haokun.me", id: "esa", icon: "/assets/line-switch/icons/ali-cloud.svg", isLocal: true, size: 24 },
+];
+---
+
+<WidgetLayout name="线路切换" id="line-switch" class={className} style={style}>
+    <div class="line-switch-container flex flex-col gap-2 mb-2">
+        {lines.map((line) => (
+            <a 
+                href={line.url}
+                data-hostname={new URL(line.url).hostname}
+                data-id={line.id}
+                class="line-item group block w-full "
+            >
+                <button
+                    class="w-full h-12 rounded-lg bg-black/[0.03] dark:bg-white/[0.03] hover:bg-[var(--btn-plain-bg-hover)] active:bg-[var(--btn-plain-bg-active)] transition-all pl-4 hover:pl-5 text-neutral-700 hover:text-[var(--primary)] dark:text-neutral-300 dark:hover:text-[var(--primary)] text-left"
+                >
+                    <div class="flex items-center justify-between relative mr-4">
+                        <div class="flex items-center gap-2 overflow-hidden">
+                            <div class="flex items-center text-[14px] line-name">
+                                <span class="w-[71px] truncate text-left">{line.nameEn}</span>
+                                <span class="truncate">{line.nameZh}</span>
+                            </div>
+                            <div class="flex items-center justify-center flex-shrink-0" style={`width: ${line.size}px; height: ${line.size}px`}>
+                                {line.isLocal ? (
+                                    <img 
+                                        src={line.icon} 
+                                        alt="" 
+                                        style={`width: ${line.size}px; height: auto;`}
+                                        class="flex-shrink-0"
+                                    />
+                                ) : (
+                                    <iconify-icon 
+                                        icon={line.icon} 
+                                        width={line.size} 
+                                        height={line.size} 
+                                        class="flex-shrink-0" 
+                                    />
+                                )}
+                            </div>
+                        </div>
+                        
+                        <div class="latency-badge transition px-2 h-6 min-w-[2.5rem] rounded-lg text-[10px] font-bold font-mono
+                            flex items-center justify-center ml-2">
+                            ---
+                        </div>
+                    </div>
+                </button>
+            </a>
+        ))}
+    </div>
+</WidgetLayout>
+
+<style>
+    /* 默认状态 */
+    .line-item button {
+        background: color-mix(in oklch, var(--primary), transparent 95%);
+        color: #000; /* 线路名称文字设为黑色 */
+        border: none;
+        transition: all 0.2s ease-in-out;
+    }
+    :global(.dark) .line-item button {
+        background: color-mix(in oklch, var(--primary), transparent 92%);
+        color: #fff; /* 暗色模式设为白色 */
+    }
+
+    /* 悬停状态 - 背景加深效果 */
+    .line-item button:hover {
+        background: color-mix(in oklch, var(--primary), transparent 85%);
+        color: var(--primary);
+    }
+    :global(.dark) .line-item button:hover {
+        background: color-mix(in oklch, var(--primary), transparent 80%);
+        color: var(--primary);
+    }
+
+    /* 选中状态 */
+    .line-item.active button {
+        background: color-mix(in oklch, var(--primary), transparent 75%);
+        color: var(--primary); /* 选中时恢复主题色 */
+        font-weight: bold;
+    }
+    :global(.dark) .line-item.active button {
+        background: color-mix(in oklch, var(--primary), transparent 60%);
+    }
+
+    /* 选中状态下的悬停 - 进一步加深 */
+    .line-item.active button:hover {
+        background: color-mix(in oklch, var(--primary), transparent 65%);
+    }
+    :global(.dark) .line-item.active button:hover {
+        background: color-mix(in oklch, var(--primary), transparent 50%);
+    }
+
+    /* 点击效果 */
+    .line-item button:active {
+        transform: scale(0.97);
+        background: color-mix(in oklch, var(--primary), transparent 70%);
+    }
+    :global(.dark) .line-item button:active {
+        background: color-mix(in oklch, var(--primary), transparent 55%);
+    }
+
+    .line-name {
+        white-space: pre-wrap;
+    }
+
+    /* 延迟徽章样式 - 默认极淡背景 */
+    .latency-badge {
+        background: rgba(0, 0, 0, 0.03);
+        color: #000;
+    }
+    :global(.dark) .latency-badge {
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+    }
+
+    /* 选中状态下的徽章样式 - 移除强制背景色，让状态色能显示 */
+    .line-item.active .latency-badge {
+        /* background: var(--primary); 移除此行 */
+        color: inherit; /* 继承选中按钮的颜色 */
+    }
+
+    /* 延迟颜色分级 - 使用 !important 确保在任何状态下都能正确显示颜色背景 */
+    .latency-badge.ok {
+        color: #10b981 !important;
+        background: rgba(16, 185, 129, 0.1) !important;
+    }
+    .latency-badge.lime {
+        color: #84cc16 !important;
+        background: rgba(132, 204, 22, 0.1) !important;
+    }
+    .latency-badge.warn {
+        color: #f59e0b !important;
+        background: rgba(245, 158, 11, 0.1) !important;
+    }
+    .latency-badge.err {
+        color: #ef4444 !important;
+        background: rgba(239, 68, 68, 0.1) !important;
+    }
+    
+    iconify-icon, img {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+<script>
+    async function measurePing(url: string) {
+        const start = performance.now();
+        try {
+            const target = new URL(url);
+            await fetch(target.origin + '/?' + Date.now(), { 
+                method: 'HEAD', 
+                mode: 'no-cors',
+                cache: 'no-store'
+            });
+            return Math.round(performance.now() - start);
+        } catch (e) {
+            return -1;
+        }
+    }
+
+    async function checkLatency(url: string, id: string) {
+        const results = [];
+        for (let i = 0; i < 10; i++) {
+            const ms = await measurePing(url);
+            results.push(ms);
+            if (i < 9) await new Promise(r => setTimeout(r, 50));
+        }
+
+        const validResults = results.filter(r => r >= 0);
+        
+        if (validResults.length === 0) {
+            updateLatencyUI(id, -1);
+            return;
+        }
+
+        let finalLatency;
+        if (validResults.length > 1) {
+            const [first, ...rest] = validResults;
+            const sum = rest.reduce((a, b) => a + b, 0);
+            finalLatency = Math.round(sum / rest.length);
+        } else {
+            finalLatency = validResults[0];
+        }
+
+        updateLatencyUI(id, finalLatency);
+    }
+
+    function updateLatencyUI(id: string, ms: number) {
+        const item = document.querySelector(`[data-id="${id}"]`);
+        if (!item) return;
+
+        const badge = item.querySelector('.latency-badge');
+        if (badge) {
+            badge.classList.remove('ok', 'lime', 'warn', 'err');
+            if (ms < 0) {
+                badge.textContent = 'ERR';
+                badge.classList.add('err');
+            } else {
+                badge.textContent = `${ms}ms`;
+                if (ms > 300) {
+                    badge.classList.add('err');
+                } else if (ms > 150) {
+                    badge.classList.add('warn');
+                } else if (ms > 100) {
+                    badge.classList.add('lime');
+                } else {
+                    badge.classList.add('ok');
+                }
+            }
+        }
+    }
+
+    function initLineSwitch() {
+        const currentHostname = window.location.hostname;
+        const currentPath = window.location.pathname;
+        const currentSearch = window.location.search;
+        const items = document.querySelectorAll('.line-item');
+        
+        items.forEach(item => {
+            const hostname = item.getAttribute('data-hostname');
+            const id = item.getAttribute('data-id');
+            const originalUrl = item.getAttribute('href'); // 获取原始配置的 URL
+
+            if (originalUrl) {
+                try {
+                    const targetUrl = new URL(originalUrl);
+                    targetUrl.pathname = currentPath;
+                    targetUrl.search = currentSearch;
+                    (item as HTMLAnchorElement).href = targetUrl.toString();
+                } catch (e) {
+                    console.error('LineSwitch: Invalid URL', originalUrl);
+                }
+            }
+
+            if (hostname === currentHostname) {
+                item.classList.add('active');
+            }
+
+            if (id && originalUrl) {
+                checkLatency(originalUrl, id);
+            }
+        });
+    }
+
+    initLineSwitch();
+    document.addEventListener('swup:contentReplace', initLineSwitch);
+</script>

@@ -15,7 +15,7 @@ function getDate() {
 const args = process.argv.slice(2);
 
 if (args.length === 0) {
-	console.error(`Error: No filename argument provided
+	console.error(`错误: No filename argument provided
 Usage: npm run new-post -- <filename>`);
 	process.exit(1); // Terminate the script and return error code 1
 }
@@ -32,7 +32,7 @@ const targetDir = "./src/content/posts/";
 const fullPath = path.join(targetDir, fileName);
 
 if (fs.existsSync(fullPath)) {
-	console.error(`Error: File ${fullPath} already exists `);
+	console.error(`错误: File ${fullPath} already exists `);
 	process.exit(1);
 }
 
@@ -58,4 +58,4 @@ updated: ${getDate()}
 
 fs.writeFileSync(path.join(targetDir, fileName), content);
 
-console.log(`Post ${fullPath} created`);
+console.log(`文章 ${fullPath} 创建完成`);
