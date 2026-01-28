@@ -104,6 +104,12 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
 
 {umamiEnabled && (
     <script is:inline define:vars={{ umamiBaseUrl, umamiApiKey, umamiWebsiteId, umamiConfig }}>
+
+        // 数字格式化函数，全部显示数字，使用千位分隔符
+        function formatNumber(num) {
+            return num.toLocaleString();
+            
+        }
         
         // 获取访问量统计
         async function fetchSiteStats() {
@@ -151,8 +157,8 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
             fetchSiteStats();
         }
         
-        // 每60秒自动更新一次数据
-        setInterval(fetchSiteStats, 60000);
+        // 每10秒自动更新一次数据
+        setInterval(fetchSiteStats, 10000);
     </script>
 )}
 
