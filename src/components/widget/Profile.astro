@@ -162,79 +162,6 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
     </script>
 )}
 
-<style>
-/* GitHub Commit 区域样式 */
-#github-commit-hash {
-    font-family: 'Courier New', monospace;
-    letter-spacing: -0.5px;
-}
-
-#github-commit-message {
-    max-width: 200px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-/* 工具提示样式 */
-#github-commit-message .absolute {
-    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
-}
-
-#github-commit-message:hover .absolute {
-    animation: tooltipFadeIn 0.2s ease-out;
-}
-/* 时间进度组件样式 */
-#time-progress-container {
-    position: relative;
-    overflow: hidden;
-}
-
-#time-progress-container:hover {
-    transform: translateY(-1px);
-}
-
-/* 进度条动画效果 */
-#year-progress-bar, #day-progress-bar {
-    position: relative;
-    overflow: hidden;
-}
-
-#year-progress-bar::after, #day-progress-bar::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.3),
-        transparent
-    );
-    animation: shimmer 2s infinite;
-}
-
-/* 暗色模式下的进度条效果 */
-.dark #year-progress-bar::after, .dark #day-progress-bar::after {
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.1),
-        transparent
-    );
-}
-
-
-/* 时间文本样式 */
-#year-progress-text, #day-progress-text {
-    font-family: 'Courier New', monospace;
-    letter-spacing: 0.5px;
-}
-
-</style>
-
 <!-- 获取 Commit 信息 via API -->
 <script>
     async function loadCommitStats() {
@@ -243,25 +170,50 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
             const link = document.getElementById('github-commit-link');
             const statusElement = document.getElementById('github-commit-status');
             
-            // 第一步：调用 API                
-            const githubResponse = await fetch(`https://api.github.com/repos/tb-miao/blog/commits?per_page=1`);
+            // 配置 GitHub 仓库信息（需要根据实际情况修改）
+            const githubRepoOwner = 'tb-miao'; // 仓库所有者
+            const githubRepoName = 'blog';     // 仓库名称
+            
+            // 第一步：调用 GitHub API
+            const githubResponse = await fetch(`https://api.github.com/repos/${githubRepoOwner}/${githubRepoName}/commits?per_page=1`);
 
+            // 检查响应状态
             if (!githubResponse.ok) {
-                throw new Error('获取信息失败');
+                if (githubResponse.status === 403) {
+                    throw new Error('GitHub API 速率限制，请稍后重试');
+                } else if (githubResponse.status === 404) {
+                    throw new Error('仓库不存在或无法访问');
+                } else {
+                    throw new Error(`获取信息失败 (HTTP ${githubResponse.status})`);
+                }
             }
 
-            let Data = await githubResponse.json();
-            Data = Data[0];
+            // 检查响应内容类型
+            const contentType = githubResponse.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('API 返回了非 JSON 数据');
+            }
+
+            const commitsData = await githubResponse.json();
             
-            // 第二步：获取 Commit 数据
-            const latestCommit = Data;
+            // 检查返回的数据是否有效
+            if (!Array.isArray(commitsData) || commitsData.length === 0) {
+                throw new Error('没有找到提交记录');
+            }
+
+            const latestCommit = commitsData[0];
+            
+            // 验证提交数据
+            if (!latestCommit || !latestCommit.sha || !latestCommit.commit) {
+                throw new Error('提交数据格式错误');
+            }
             
             const commitData = {
                 hash: latestCommit.sha.slice(0, 7),
                 fullHash: latestCommit.sha,
                 message: latestCommit.commit.message.split('\n')[0],
-                author: latestCommit.commit.author.name,
-                date: latestCommit.commit.author.date,
+                author: latestCommit.commit.author?.name || '未知作者',
+                date: latestCommit.commit.author?.date || new Date().toISOString(),
                 url: latestCommit.html_url
             };
             
@@ -271,20 +223,6 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
             const timeDiff = now - commitDate;
             const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
             
-            let formattedDate = '';
-            if (daysDiff === 0) {
-                formattedDate = '今天';
-            } else if (daysDiff === 1) {
-                formattedDate = '昨天';
-            } else if (daysDiff < 7) {
-                formattedDate = `${daysDiff}天前`;
-            } else {
-                formattedDate = commitDate.toLocaleDateString('zh-CN', { 
-                    month: 'short', 
-                    day: 'numeric' 
-                });
-            }
-            
             // 更新状态标签
             if (statusElement) {
                 if (daysDiff === 0) {
@@ -292,6 +230,9 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
                     statusElement.className = 'px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-xs font-medium animate-pulse';
                 } else if (daysDiff === 1) {
                     statusElement.textContent = '昨天';
+                    statusElement.className = 'px-2 py-0.5 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-full text-xs font-medium';
+                } else if (daysDiff < 7) {
+                    statusElement.textContent = `${daysDiff}天前`;
                     statusElement.className = 'px-2 py-0.5 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-full text-xs font-medium';
                 } else {
                     statusElement.textContent = `${daysDiff}天前`;
@@ -309,9 +250,10 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
             }
             
             if (link) {
-                const gurl = "/info/";
-                link.href = gurl;
-                link.title = `提交时间: ${commitDate.toLocaleString('zh-CN')}\n提交消息: ${commitData.message}\n点击查看详情`;
+                // 修复：使用实际的/info/链接
+                link.href = '/info/';
+                link.rel = 'noopener noreferrer'; // 安全设置
+                link.title = `提交时间: ${commitDate.toLocaleString('zh-CN')}\n提交消息: ${commitData.message}\n作者: ${commitData.author}\n点击查看提交详情`;
             }
             
         } catch (error) {
@@ -319,7 +261,6 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
             
             const hashElement = document.getElementById('github-commit-hash');
             const statusElement = document.getElementById('github-commit-status');
-            const loadingElement = document.getElementById('github-commit-loading');
             
             if (hashElement) {
                 hashElement.textContent = '获取失败';
@@ -329,11 +270,6 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
             if (statusElement) {
                 statusElement.textContent = '错误';
                 statusElement.className = 'px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-full text-xs font-medium';
-            }
-            
-            // 隐藏加载动画
-            if (loadingElement) {
-                loadingElement.style.display = 'none';
             }
         }
     }

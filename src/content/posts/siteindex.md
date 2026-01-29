@@ -43,12 +43,12 @@ pinned: true
         const listEl = document.getElementById(`list-${r.repo}`);
         listEl.innerHTML = '';
 
-        // 过滤条件：1. 不超过三个月前 2. 只取最近3条
+        // 过滤条件：1. 不超过三个月前 2. 只取最近5条
         const filteredCommits = data.filter(c => {
           if (!c.commit || !c.commit.author) return false;
           const commitDate = new Date(c.commit.author.date);
           return commitDate >= threeMonthsAgo;
-        }).slice(0, 3);
+        }).slice(0, 5);
 
         // 仅展示符合条件的提交
         filteredCommits.forEach(c => {

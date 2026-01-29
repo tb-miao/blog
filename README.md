@@ -1,6 +1,14 @@
 # 魔改版Astro Mizuki博客
+- 使用mizuki@7.6.5版本
+- 主题配置文件在`src/config.ts`
 
-## [**主题仓库地址**](https://github.com/matsuzaka-yuki/mizuki)
+[主题仓库地址](https://github.com/matsuzaka-yuki/mizuki)
+
+# 命令
+```
+pnpm install
+pnpm dev
+```
 
 ## 📝 文章前言格式
 
