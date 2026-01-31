@@ -356,7 +356,7 @@ export const shareConfig: ShareConfig = {
 
 export const announcementConfig: AnnouncementConfig = {
 	title: "公告呀~", // 公告标题
-	content: "🎉🎉 欢迎来到我的博客喵！本站2周年啦！本站暂时一个线路后续会添加，awa", // 公告内容
+	content: "🎉🎉 欢迎来到我的博客喵！本站2周年啦！已添加新的节点欢迎访问！", // 公告内容
 	closable: false, // 允许用户关闭公告
 	link: {
 		enable: false, // 启用链接

@@ -4,7 +4,7 @@
 
 [主题仓库地址](https://github.com/matsuzaka-yuki/mizuki)
 
-# 命令
+## 命令
 ```
 pnpm install
 pnpm dev
