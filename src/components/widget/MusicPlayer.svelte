@@ -52,8 +52,8 @@ let showError = false;
 
 // 当前歌曲信息
 let currentSong = {
-	title: "歌曲信息",
-	artist: "歌曲信息",
+	title: "我要听超时空辉夜姬！！！！",
+	artist: "超时空辉夜姬呀呀呀呀呀呀呀呀！！！！",
 	cover: "/favicon/favicon.ico",
 	url: "",
 	duration: 0,

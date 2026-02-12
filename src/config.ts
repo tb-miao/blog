@@ -53,7 +53,7 @@ export const siteConfig: SiteConfig = {
 		// 顶栏标题文本
 		text: "AUNyaの小窝",
 		// 顶栏标题图标路径，默认使用 public/assets/home/home.png
-		icon: "assets/home/firefly.png",
+		icon: "assets/home/kky1.ico",
 	},
 
 	bangumi: {
@@ -96,24 +96,21 @@ export const siteConfig: SiteConfig = {
 		// 支持单张图片或图片数组，当数组长度 > 1 时自动启用轮播
 		src: {
 			desktop: [
-				//"/assets/desktop-banner/1.webp",
-				//"/assets/desktop-banner/2.webp",
-				//"/assets/desktop-banner/3.webp",
-				//"/assets/desktop-banner/4.webp",
-				//"/assets/desktop-banner/5.webp",
-				//"/assets/desktop-banner/6.webp",
-				"/assets/desktop-banner/7.webp"
+				"/assets/desktop-banner/kky5.jpg"
 			], // 桌面横幅图片
 			mobile: [
-				"/assets/mobile-banner/6.webp",
-				"/assets/mobile-banner/7.webp",
+				"/assets/mobile-banner/kky1.png",
+				"/assets/mobile-banner/kky2.png",
+				"/assets/mobile-banner/kky3.png",
+				"/assets/mobile-banner/kky4.png",
+				"/assets/mobile-banner/kky5.png",
 			], // 移动横幅图片
 		}, // 使用本地横幅图片
 
-		position: "center", // 等同于 object-position，仅支持 'top', 'center', 'bottom'。默认为 'center'
+		position: "top", // 等同于 object-position，仅支持 'top', 'center', 'bottom'。默认为 'center'
 
 		carousel: {
-			enable: true, // 为 true 时：为多张图片启用轮播。为 false 时：从数组中随机显示一张图片
+			enable: false, // 为 true 时：为多张图片启用轮播。为 false 时：从数组中随机显示一张图片
 
 			interval: 3, // 轮播间隔时间（秒）
 		},
@@ -138,8 +135,10 @@ export const siteConfig: SiteConfig = {
 			title: "你好", // 主页横幅主标题
 
 			subtitle: [
-				"你好",
-				"咕咕嘎嘎",
+				"超时空辉夜姬太好看啦！！！",
+				"月見（るなみ） ヤチヨ (Runami Yachiyo)",
+				"siku",
+				"ヾ(•ω•`)o",
 			],
 			typewriter: {
 				enable: true, // 启用副标题打字机效果
@@ -151,21 +150,21 @@ export const siteConfig: SiteConfig = {
 		},
 
 		credit: {
-			enable: false, // 显示横幅图片来源文本
+			enable: true, // 显示横幅图片来源文本
 
-			text: "Describe", // 要显示的来源文本
-			url: "", // （可选）原始艺术品或艺术家页面的 URL 链接
+			text: "超时空辉夜姬", // 要显示的来源文本
+			url: "https://www.cho-kaguyahime.com", // （可选）原始艺术品或艺术家页面的 URL 链接
 		},
 
 		navbar: {
-			transparentMode: "semi", // 导航栏透明模式："semi" 半透明加圆角，"full" 完全透明，"semifull" 动态透明
+			transparentMode: "full", // 导航栏透明模式："semi" 半透明加圆角，"full" 完全透明，"semifull" 动态透明
 		},
 	},
 	toc: {
 		enable: true, // 启用目录功能
-		mode: "sidebar", // 目录显示模式："float" 悬浮按钮模式，"sidebar" 侧边栏模式
+		mode: "float", // 目录显示模式："float" 悬浮按钮模式，"sidebar" 侧边栏模式
 		depth: 2, // 目录深度，1-6，1 表示只显示 h1 标题，2 表示显示 h1 和 h2 标题，依此类推
-		useJapaneseBadge: false, // 使用日语假名标记（あいうえお...）代替数字，开启后会将 1、2、3... 改为 あ、い、う...
+		useJapaneseBadge: true, // 使用日语假名标记（あいうえお...）代替数字，开启后会将 1、2、3... 改为 あ、い、う...
 	},
 	showCoverInContent: true, // 在文章内容页显示文章封面
 	generateOgImages: false, // 启用生成OpenGraph图片功能,注意开启后要渲染很长时间，不建议本地调试的时候开启
@@ -203,22 +202,19 @@ export const siteConfig: SiteConfig = {
 export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
 	src: {
 		desktop: [
-			//"/assets/desktop-banner/1.webp",
-			//"/assets/desktop-banner/2.webp",
-			//"/assets/desktop-banner/3.webp",
-			//"/assets/desktop-banner/4.webp",
-			//"/assets/desktop-banner/5.webp",
-			//"/assets/desktop-banner/6.webp",
-			"/assets/desktop-banner/7.webp",
+			"/assets/desktop-banner/kky5.jpg"
 		], // 桌面横幅图片
 		mobile: [
-			"/assets/mobile-banner/6.webp",
-			"/assets/mobile-banner/7.webp",
+			"/assets/mobile-banner/kky2.png",
+			"/assets/mobile-banner/kky1.png",
+			"/assets/mobile-banner/kky3.png",
+			"/assets/mobile-banner/kky4.png",
+			"/assets/mobile-banner/kky5.png",
 		], // 移动横幅图片
 	}, // 使用本地横幅图片
 	position: "center", // 壁纸位置，等同于 object-position
 	carousel: {
-		enable: true, // 启用轮播
+		enable: false, // 启用轮播
 		interval: 5, // 轮播间隔时间（秒）
 	},
 	zIndex: -1, // 层级，确保壁纸在背景层
@@ -271,7 +267,7 @@ export const navBarConfig: NavBarConfig = {
 export const profileConfig: ProfileConfig = {
 	avatar: "https://avatars.githubusercontent.com/u/172878250?v=4", // 相对于 /src 目录。如果以 '/' 开头，则相对于 /public 目录
 	name: "AUNya",
-	bio: "是一个热爱二次元的小萌新~ ",
+	bio: "是一个热爱二次元的小萌新~ /.太喜欢超时空辉夜姬了！！！！！！！！！",
 	typewriter: {
 		enable: true, // 启用个人简介打字机效果
 		speed: 80, // 打字速度（毫秒）
@@ -356,7 +352,7 @@ export const shareConfig: ShareConfig = {
 
 export const announcementConfig: AnnouncementConfig = {
 	title: "公告呀~", // 公告标题
-	content: "🎉🎉 欢迎来到我的博客喵！本站2周年啦！已添加新的节点欢迎访问！", // 公告内容
+	content: "🎉🎉 欢迎来到我的博客喵！本站2周年啦！/.看板娘出问题了，正在修复。", // 公告内容
 	closable: false, // 允许用户关闭公告
 	link: {
 		enable: false, // 启用链接
@@ -371,7 +367,7 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	mode: "meting", // 音乐播放器模式，可选 "local" 或 "meting"
 	meting_api:
 		"https://www.bilibili.uno/api?server=:server&type=:type&id=:id&auth=:auth&r=:r", // Meting API 地址
-	id: "12631884339", // 歌单ID
+	id: "17699473409", // 歌单ID
 	server: "netease", // 音乐源服务器。有的meting的api源支持更多平台,一般来说,netease=网易云音乐, tencent=QQ音乐, kugou=酷狗音乐, xiami=虾米音乐, baidu=百度音乐
 	type: "playlist", // 播单类型
 };
@@ -598,7 +594,7 @@ export const sakuraConfig: SakuraConfig = {
 
 // Pio 看板娘配置
 export const pioConfig: import("./types/config").PioConfig = {
-	enable: true, // 启用看板娘
+	enable: false, // 启用看板娘
 	models: ["/pio/models/pio/model.json"], // 默认模型路径
 	position: "left", // 默认位置在右侧
 	width: 280, // 默认宽度
@@ -634,7 +630,7 @@ export const widgetConfigs = {
 
 export const umamiConfig = {
 	enabled: true, // 是否显示Umami统计
-	apiKey: import.meta.env.UMAMI_API_KEY || "api_xxxx", // API密钥优先从环境变量读取，否则使用配置文件中的值
+	apiKey: import.meta.env.UMAMI_API_KEY || "api_KM95wn9S07trPrzaQmFEYd8zEnzEJrWG", // API密钥优先从环境变量读取，否则使用配置文件中的值
 	baseUrl: "https://api.umami.is", // Umami Cloud API地址
 	scripts: `
 <script defer src="https://cloud.umami.is/script.js" data-website-id="50cd57c4-1d49-4941-88d5-b1cce22ee6a1"></script>

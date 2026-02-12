@@ -103,9 +103,9 @@ export const friendsData: FriendItem[] = [
 	{
 		id: 17,
 		title: "Ad_closeNN 的小站",
-		imgurl: "https://www.adclosenn.dev/assets/avatar.jpg",
-		desc: "永远相信美好的事情即将发生",
-		siteurl: "https://www.adclosenn.dev/",
+		imgurl: "https://adclosenn.top/assets/avatar.jpg",
+		desc: "Ad_closeNN 的小站，时不时会刷新一些野生东西",
+		siteurl: "https://adclosenn.top",
 		tags: ["Blog"],
 	},
 	{
