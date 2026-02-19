@@ -185,7 +185,7 @@ export const zh_CN: Translation = {
 
 	// 密码保护
 	[Key.passwordProtected]: "密码保护",
-	[Key.passwordProtectedTitle]: "此内容已被网站站长加密，找找看密码在哪里？ ./Tip：密码有可能在文章的描述中或者其他地方，如果没找到，请联系管理员。",
+	[Key.passwordProtectedTitle]: "此内容已被网站站长加密。",
 	[Key.passwordProtectedDescription]: "请输入密码以查看受加密的内容",
 	[Key.passwordPlaceholder]: "请输入密码",
 	[Key.passwordUnlock]: "解锁",

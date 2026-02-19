@@ -35,6 +35,12 @@
 - ✉️ **Email**: [init@tbmiao.dpdns.org](mailto:init@tbmiao.dpdns.org)   --站长邮箱
 - ✉️ **Email**: [maoca@foxmail.com](mailto:maoca@foxmail.com)   --管理员邮箱
 
+:::tip
+
+:::
+
 ---
 
 *感谢你的来访！希望在这里能找到对你有用的内容！*
+
+*此内容部分由网站管理员编写，不用站长ヾ(≧▽≦*)o*
