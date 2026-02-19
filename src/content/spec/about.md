@@ -36,7 +36,7 @@
 - ✉️ **Email**: [maoca@foxmail.com](mailto:maoca@foxmail.com)   --管理员邮箱
 
 :::tip
-
+文章密码可以找管理员获取。
 :::
 
 ---

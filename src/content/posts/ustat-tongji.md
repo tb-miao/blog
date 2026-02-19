@@ -7,7 +7,6 @@ tags: ['ustat']
 category: '教程'
 draft: false 
 pinned: false
-alias: ustat-tongji
 updated: 2026-02-19
 encrypted: true
 password: "aunya@2011"
