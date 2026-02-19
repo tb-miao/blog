@@ -1,7 +1,7 @@
 ---
 title: 添加ustat统计（有密码）
 published: 2026-02-19
-description: '添加ustat统计 ./tip：此文章存在AI生成的内容，可能包含错误或不准确的地方。'
+description: '添加ustat统计 ./tip：此文章存在AI生成的内容，可a能u包nya含@错误2或0不11准确的地方。'
 image: 'https://www.ustat.com/static/images/home/zh/started.png?v=20260122-e956bba'
 tags: ['ustat']
 category: '教程'
@@ -9,6 +9,7 @@ draft: false
 pinned: false
 alias: ustat-tongji
 updated: 2026-02-19
+encrypted: true
 password: "aunya@2011"
 ---
 # UStat，一个免费、易用、专业的网站数据统计分析平台

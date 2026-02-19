@@ -8,6 +8,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "..");
 
+
+console.log(`
+%c   █████╗ ██╗   ██╗███╗   ██╗██╗   ██╗ █████╗ 
+  ██╔══██╗██║   ██║████╗  ██║╚██╗ ██╔╝██╔══██╗
+  ███████║██║   ██║██╔██╗ ██║ ╚████╔╝ ███████║
+  ██╔══██║██║   ██║██║╚██╗██║  ╚██╔╝  ██╔══██║
+  ██║  ██║╚██████╔╝██║ ╚████║   ██║   ██║  ██║
+  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝
+    `, 'color: #ff9ff3; font-family: monospace;');
+console.log("启动中...\n");
+
 loadEnv();
 console.log("Loaded .env configuration file\n");
 

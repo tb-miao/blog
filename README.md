@@ -14,14 +14,15 @@ pnpm dev
 
 ```yaml
 ---
-title: 
-published: 
-description: 
+title: 文章标题
+published:  # 文章发布时间
+description:  # 文章描述
 image: ./cover.jpg
 tags: [""]
 category: 
 draft: false
 pinned: false
+encrypted: false  # 是否加密文章
 password:  # 设置文章密码，留空则不设置密码
 alias:  # 文章别名，留空则使用文件名
 updated: 
