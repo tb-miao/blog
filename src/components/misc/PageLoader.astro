@@ -176,14 +176,24 @@ import "../../styles/page-loader.css";
 
 		updatePageInfo();
 
+		const panelWasClosed = sessionStorage.getItem("loader-panel-closed") === "true";
+
 		if (pageLoader) {
 			pageLoader.classList.add("loader-hidden");
 			setTimeout(() => {
 				pageLoader.style.display = "none";
-				showInfoPanel();
+				if (!panelWasClosed) {
+					showInfoPanel();
+				} else if (fabBtn) {
+					fabBtn.classList.add("fab-visible");
+				}
 			}, 500);
 		} else {
-			showInfoPanel();
+			if (!panelWasClosed) {
+				showInfoPanel();
+			} else if (fabBtn) {
+				fabBtn.classList.add("fab-visible");
+			}
 		}
 
 		console.log("%c[PageLoader] 页面加载完成", "color: #10b981; font-weight: bold;");
