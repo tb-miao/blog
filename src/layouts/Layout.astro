@@ -2,6 +2,7 @@
 import ConfigCarrier from "@components/ConfigCarrier.astro";
 import MusicPlayer from "@components/widget/MusicPlayer.svelte";
 import Pio from "@components/widget/Pio.svelte"; // 使用 Svelte 版本的 Pio 组件
+import PageLoader from "@components/misc/PageLoader.astro";
 import {
 	musicPlayerConfig,
 	pioConfig,
@@ -351,6 +352,7 @@ if (siteConfig.font) {
 		style={bodyFontFamily ? `font-family: ${bodyFontFamily};` : ""}
 		data-overlayscrollbars-initialize
 	>
+		<PageLoader />
 		<noscript
 			><iframe
 				src="https://www.googletagmanager.com/ns.html?id=GTM-KRX3XGVH"

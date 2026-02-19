@@ -35,7 +35,7 @@
     
     text.split('').forEach((char, index) => {
         if (char !== ' ') {
-            styleArgs.push(`font-size: 24px; font-weight: bold; color: ${colors[colorIndex % colors.length]};`);
+            styleArgs.push(`font-size: 20px; font-weight: bold; color: ${colors[colorIndex % colors.length]};`);
             colorIndex++;
         }
     });

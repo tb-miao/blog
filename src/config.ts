@@ -89,25 +89,26 @@ export const siteConfig: SiteConfig = {
 		// "mobile" = 仅在移动端显示
 		// "desktop" = 仅在桌面端显示
 		// "both" = 在所有设备上显示
-		showModeSwitchOnMobile: "off",
+		showModeSwitchOnMobile: "both",
 	},
 
 	banner: {
 		// 支持单张图片或图片数组，当数组长度 > 1 时自动启用轮播
 		src: {
 			desktop: [
-				"/assets/desktop-banner/kky5.jpg"
+				"/assets/desktop-banner/7.webp"
 			], // 桌面横幅图片
 			mobile: [
-				"/assets/mobile-banner/kky1.png",
-				"/assets/mobile-banner/kky2.png",
-				"/assets/mobile-banner/kky3.png",
-				"/assets/mobile-banner/kky4.png",
-				"/assets/mobile-banner/kky5.png",
+				"/assets/mobile-banner/1.png",
+				"/assets/mobile-banner/2.png",
+				"/assets/mobile-banner/3.png",
+				"/assets/mobile-banner/4.png",
+				"/assets/mobile-banner/5.png",
+				"/assets/mobile-banner/6.png",
 			], // 移动横幅图片
 		}, // 使用本地横幅图片
 
-		position: "top", // 等同于 object-position，仅支持 'top', 'center', 'bottom'。默认为 'center'
+		position: "center", // 等同于 object-position，仅支持 'top', 'center', 'bottom'。默认为 'center'
 
 		carousel: {
 			enable: false, // 为 true 时：为多张图片启用轮播。为 false 时：从数组中随机显示一张图片
@@ -135,9 +136,9 @@ export const siteConfig: SiteConfig = {
 			title: "你好", // 主页横幅主标题
 
 			subtitle: [
-				"超时空辉夜姬太好看啦！！！",
+				"こんにちは",
 				"月見（るなみ） ヤチヨ (Runami Yachiyo)",
-				"siku",
+				"suki",
 				"ヾ(•ω•`)o",
 			],
 			typewriter: {
@@ -152,8 +153,8 @@ export const siteConfig: SiteConfig = {
 		credit: {
 			enable: true, // 显示横幅图片来源文本
 
-			text: "超时空辉夜姬", // 要显示的来源文本
-			url: "https://www.cho-kaguyahime.com", // （可选）原始艺术品或艺术家页面的 URL 链接
+			text: "amashiro", // 要显示的来源文本
+			url: "https://amashiro.com", // （可选）原始艺术品或艺术家页面的 URL 链接
 		},
 
 		navbar: {
@@ -202,14 +203,15 @@ export const siteConfig: SiteConfig = {
 export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
 	src: {
 		desktop: [
-			"/assets/desktop-banner/kky5.jpg"
+			"/assets/desktop-banner/7.webp"
 		], // 桌面横幅图片
 		mobile: [
-			"/assets/mobile-banner/kky2.png",
-			"/assets/mobile-banner/kky1.png",
-			"/assets/mobile-banner/kky3.png",
-			"/assets/mobile-banner/kky4.png",
-			"/assets/mobile-banner/kky5.png",
+			"/assets/mobile-banner/1.png",
+			"/assets/mobile-banner/2.png",
+			"/assets/mobile-banner/3.png",
+			"/assets/mobile-banner/4.png",
+			"/assets/mobile-banner/5.png",
+			"/assets/mobile-banner/6.png",
 		], // 移动横幅图片
 	}, // 使用本地横幅图片
 	position: "center", // 壁纸位置，等同于 object-position
@@ -238,28 +240,41 @@ export const navBarConfig: NavBarConfig = {
 			icon: "material-symbols:person",
 			children: [
 				{
-					name: "项目",
-					url: "/projects/",
-					icon: "material-symbols:developer-board",
-				},
-				{
 					name: "关于",
 					url: "/about/",
 					icon: "material-symbols:person",
 				},
+				{
+					name: "项目",
+					url: "/projects/",
+					icon: "material-symbols:developer-board",
+				},
 			],
 		},
 		{
-			name: "博客统计",
-			url: "https://cloud.umami.is/analytics/us/share/pBFqYW1e5248KxEz",
-			icon: "material-symbols:group",
-			external: true,
-		},
-		{
-			name: "监测统计",
-			url: "https://cloud.umami.is/share/uldxG2QTnboi9OlF",
-			icon: "material-symbols:group",
-			external: true,
+			name: "链接",
+			url: "/content/",
+			icon: "material-symbols:link",
+			children: [
+			{
+				name: "博客统计",
+				url: "https://cloud.umami.is/analytics/us/share/pBFqYW1e5248KxEz",
+				icon: "material-symbols:group",
+				external: true,
+			},
+			{
+				name: "监测统计",
+				url: "https://cloud.umami.is/share/uldxG2QTnboi9OlF",
+				icon: "material-symbols:group",
+				external: true,
+			},
+			{
+				name: "ustat统计（密码）",
+				url: "https://user.ustat.com/#/to-view-report?id=019c73c4-cd64-7b5a-9e01-f8ff102b48e2&name=AUNyaの小窝-统计",
+				icon: "material-symbols:group",
+				external: true,
+			}
+			]
 		},
 	],
 };
@@ -267,7 +282,7 @@ export const navBarConfig: NavBarConfig = {
 export const profileConfig: ProfileConfig = {
 	avatar: "https://avatars.githubusercontent.com/u/172878250?v=4", // 相对于 /src 目录。如果以 '/' 开头，则相对于 /public 目录
 	name: "AUNya",
-	bio: "是一个热爱二次元的小萌新~ /.太喜欢超时空辉夜姬了！！！！！！！！！",
+	bio: "是一个热爱二次元的小萌新~ ",
 	typewriter: {
 		enable: true, // 启用个人简介打字机效果
 		speed: 80, // 打字速度（毫秒）
@@ -352,7 +367,7 @@ export const shareConfig: ShareConfig = {
 
 export const announcementConfig: AnnouncementConfig = {
 	title: "公告呀~", // 公告标题
-	content: "🎉🎉 欢迎来到我的博客喵！本站2周年啦！/.看板娘出问题了，正在修复。", // 公告内容
+	content: "🎉🎉 欢迎来到我的博客喵！本站2周年啦！", // 公告内容
 	closable: false, // 允许用户关闭公告
 	link: {
 		enable: false, // 启用链接
@@ -366,7 +381,7 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	enable: true, // 启用音乐播放器功能
 	mode: "meting", // 音乐播放器模式，可选 "local" 或 "meting"
 	meting_api:
-		"https://www.bilibili.uno/api?server=:server&type=:type&id=:id&auth=:auth&r=:r", // Meting API 地址
+		"https://api.injahow.cn/meting/?server=:server&type=:type&id=:id&auth=:auth&r=:r", // Meting API 地址
 	id: "17699473409", // 歌单ID
 	server: "netease", // 音乐源服务器。有的meting的api源支持更多平台,一般来说,netease=网易云音乐, tencent=QQ音乐, kugou=酷狗音乐, xiami=虾米音乐, baidu=百度音乐
 	type: "playlist", // 播单类型
@@ -594,7 +609,7 @@ export const sakuraConfig: SakuraConfig = {
 
 // Pio 看板娘配置
 export const pioConfig: import("./types/config").PioConfig = {
-	enable: false, // 启用看板娘
+	enable: true, // 启用看板娘
 	models: ["/pio/models/pio/model.json"], // 默认模型路径
 	position: "left", // 默认位置在右侧
 	width: 280, // 默认宽度
@@ -634,5 +649,6 @@ export const umamiConfig = {
 	baseUrl: "https://api.umami.is", // Umami Cloud API地址
 	scripts: `
 <script defer src="https://cloud.umami.is/script.js" data-website-id="50cd57c4-1d49-4941-88d5-b1cce22ee6a1"></script>
+<script async src="https://019c73c4-cd64-7b5a-9e01-f8ff102b48e2.spst2.com/ustat.js"></script>
   `.trim(), // 上面填你要插入的Script,不用再去Layout中插入
 } as const;

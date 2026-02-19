@@ -1,0 +1,218 @@
+---
+import "../../styles/page-loader.css";
+---
+
+<div id="page-loader" class="page-loader">
+	<div class="loader-content">
+		<div class="loader-spinner">
+			<div class="spinner-ring"></div>
+			<div class="spinner-ring"></div>
+			<div class="spinner-ring"></div>
+		</div>
+		<div class="loader-text">
+			<span data-text="L">L</span>
+			<span data-text="o">o</span>
+			<span data-text="a">a</span>
+			<span data-text="d">d</span>
+			<span data-text="i">i</span>
+			<span data-text="n">n</span>
+			<span data-text="g">g</span>
+			<span class="dots">
+				<span>.</span>
+				<span>.</span>
+				<span>.</span>
+			</span>
+		</div>
+	</div>
+</div>
+
+<button id="loader-fab" class="loader-fab" title="显示加载信息">
+	<span class="fab-icon">⚡</span>
+	<span id="fab-time" class="fab-time">0ms</span>
+</button>
+
+<div id="loader-info-panel" class="loader-info-panel">
+	<div class="info-header">
+		<span class="info-icon">⚡</span>
+		<span class="info-title">PageLoader</span>
+		<button id="close-info-panel" class="close-btn" title="关闭">×</button>
+	</div>
+	<div class="info-content">
+		<div class="info-row">
+			<span class="info-label">状态:</span>
+			<span id="loader-status" class="info-value status-loading">加载中...</span>
+		</div>
+		<div class="info-row">
+			<span class="info-label">耗时:</span>
+			<span id="loader-time" class="info-value">-</span>
+		</div>
+		<div class="info-row">
+			<span class="info-label">首次:</span>
+			<span id="loader-initial" class="info-value">-</span>
+		</div>
+		<div class="info-row info-row-url">
+			<span class="info-label">页面:</span>
+			<span id="loader-page" class="info-value info-value-url">-</span>
+		</div>
+		<div class="info-row info-row-ua">
+			<span class="info-label">UA:</span>
+			<span id="loader-ua" class="info-value info-value-ua">-</span>
+		</div>
+	</div>
+</div>
+
+<script>
+	const pageLoader = document.getElementById("page-loader");
+	const infoPanel = document.getElementById("loader-info-panel");
+	const closeBtn = document.getElementById("close-info-panel");
+	const fabBtn = document.getElementById("loader-fab");
+	const fabTime = document.getElementById("fab-time");
+	const startTime = performance.now();
+	const statusEl = document.getElementById("loader-status");
+	const timeEl = document.getElementById("loader-time");
+	const initialEl = document.getElementById("loader-initial");
+	const pageEl = document.getElementById("loader-page");
+	const uaEl = document.getElementById("loader-ua");
+
+	const isInitialLoad = !sessionStorage.getItem("site-loaded");
+
+	console.log("%c[PageLoader] 加载动画初始化", "color: #6366f1; font-weight: bold;");
+	console.log(`%c[PageLoader] 首次加载: ${isInitialLoad ? "是" : "否"}`, "color: #8b5cf6;");
+
+	if (initialEl) {
+		initialEl.textContent = isInitialLoad ? "是" : "否";
+	}
+
+	let timeInterval: ReturnType<typeof setInterval> | null = null;
+
+	function updateTime() {
+		const elapsed = (performance.now() - startTime).toFixed(0);
+		if (fabTime) {
+			fabTime.textContent = `${elapsed}ms`;
+		}
+	}
+
+	function showInfoPanel() {
+		if (infoPanel) {
+			infoPanel.classList.remove("info-panel-hidden");
+			infoPanel.classList.add("info-panel-visible");
+			infoPanel.style.display = "";
+		}
+		if (fabBtn) {
+			fabBtn.classList.remove("fab-visible");
+		}
+	}
+
+	function closeInfoPanel() {
+		if (infoPanel) {
+			infoPanel.classList.remove("info-panel-visible");
+			infoPanel.classList.add("info-panel-hidden");
+			setTimeout(() => {
+				infoPanel.style.display = "none";
+			}, 300);
+		}
+		if (fabBtn) {
+			fabBtn.classList.add("fab-visible");
+		}
+	}
+
+	function updateLoadTime(newTime: string) {
+		if (fabTime) {
+			fabTime.textContent = newTime;
+		}
+		if (timeEl) {
+			timeEl.textContent = `${newTime}`;
+		}
+	}
+
+	function updatePageInfo() {
+		if (pageEl) {
+			pageEl.textContent = window.location.href;
+			pageEl.title = window.location.href;
+		}
+		if (uaEl) {
+			uaEl.textContent = navigator.userAgent;
+			uaEl.title = navigator.userAgent;
+		}
+	}
+
+	if (closeBtn) {
+		closeBtn.addEventListener("click", closeInfoPanel);
+	}
+
+	if (fabBtn) {
+		fabBtn.addEventListener("click", showInfoPanel);
+	}
+
+	if (!isInitialLoad && pageLoader) {
+		pageLoader.style.display = "none";
+		console.log("%c[PageLoader] 跳过加载动画（非首次访问）", "color: #10b981;");
+	}
+
+	timeInterval = setInterval(updateTime, 50);
+
+	function hideLoader() {
+		const endTime = performance.now();
+		const loadTime = (endTime - startTime).toFixed(2);
+
+		if (timeInterval) {
+			clearInterval(timeInterval);
+		}
+
+		updateLoadTime(`${loadTime}ms`);
+
+		if (statusEl) {
+			statusEl.textContent = "完成";
+			statusEl.classList.remove("status-loading");
+			statusEl.classList.add("status-complete");
+		}
+
+		updatePageInfo();
+
+		if (pageLoader) {
+			pageLoader.classList.add("loader-hidden");
+			setTimeout(() => {
+				pageLoader.style.display = "none";
+				showInfoPanel();
+			}, 500);
+		} else {
+			showInfoPanel();
+		}
+
+		console.log("%c[PageLoader] 页面加载完成", "color: #10b981; font-weight: bold;");
+		console.log(`%c[PageLoader] 加载耗时: ${loadTime}ms`, "color: #f59e0b;");
+		console.log(`%c[PageLoader] 当前页面: ${window.location.href}`, "color: #6366f1;");
+		console.log(`%c[PageLoader] 用户代理: ${navigator.userAgent}`, "color: #64748b;");
+		console.log("%c[PageLoader] 已显示信息面板", "color: #10b981;");
+	}
+
+	document.addEventListener("astro:page-load", () => {
+		const navStartTime = performance.now();
+		const navTime = (performance.now() - navStartTime).toFixed(2);
+		
+		if (statusEl) {
+			statusEl.textContent = "完成";
+			statusEl.classList.remove("status-loading");
+			statusEl.classList.add("status-complete");
+		}
+
+		updatePageInfo();
+		updateLoadTime(`${navTime}ms`);
+
+		console.log("%c[PageLoader] 页面导航完成", "color: #10b981; font-weight: bold;");
+		console.log(`%c[PageLoader] 导航耗时: ${navTime}ms`, "color: #f59e0b;");
+	});
+
+	if (document.readyState === "complete") {
+		hideLoader();
+		sessionStorage.setItem("site-loaded", "true");
+		console.log("%c[PageLoader] 已标记为已加载状态", "color: #10b981;");
+	} else {
+		console.log("%c[PageLoader] 等待页面加载...", "color: #f59e0b;");
+		window.addEventListener("load", () => {
+			hideLoader();
+			sessionStorage.setItem("site-loaded", "true");
+			console.log("%c[PageLoader] 已标记为已加载状态", "color: #10b981;");
+		});
+	}
+</script>

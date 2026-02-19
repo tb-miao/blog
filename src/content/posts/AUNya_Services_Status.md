@@ -8,7 +8,7 @@ category: 'uptimerobot'
 draft: false 
 pinned: false
 alias: status-panel
-updated: 2026-01-27
+updated: 2026-01-30
 ---
 # 服务状态监控面板
 
@@ -37,7 +37,7 @@ npm run preview
 - 🖼️ **嵌入模式** - 支持 iframe 嵌入其他页面
 - 📲 **PWA 支持** - 可添加到桌面
 - 🔤 **字体自适应** - 自动适配各平台最佳中文字体（苹方/微软雅黑等）
-- 📈 **访问统计** - 集成不蒜子统计
+- 📈 **访问统计** - 集成umami统计
 - ♿ **无障碍支持** - 键盘导航、屏幕阅读器支持、跳过链接
 - 🔄 **智能刷新** - 显示最后更新时间、loading 状态、自动重试
 - 🔐 **密码保护** - 支持通过环境变量配置访问密码，提供退出登录功能
@@ -100,6 +100,9 @@ VITE_HCAPTCHA_SECRET=your-hcaptcha-secret
 - 验证通过后才能点击"验证并进入"按钮
 - 如果验证失败或过期，需要重新完成验证
 - 支持暗色主题，会自动适配当前页面主题
+
+## 仓库地址
+::github{repo="tb-miao/status"}
 
 ## 访问统计
 地址：[https://cloud.umami.is/share/uldxG2QTnboi9OlF](https://cloud.umami.is/share/uldxG2QTnboi9OlF)
