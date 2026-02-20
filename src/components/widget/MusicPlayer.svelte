@@ -315,52 +315,65 @@ function setProgress(event: MouseEvent) {
 }
 
 let isVolumeDragging = false;
-let isMouseDown = false;
-let volumeBarRect: DOMRect | null = null;
-let rafId: number | null = null;
 
 function startVolumeDrag(event: MouseEvent) {
     if (!volumeBar) return;
-    
-    isMouseDown = true; 
-
-    volumeBarRect = volumeBar.getBoundingClientRect();
-    
-    updateVolumeLogic(event.clientX);
+    event.preventDefault();
+    isVolumeDragging = true;
+    updateVolumeFromEvent(event);
 }
 
 function handleVolumeMove(event: MouseEvent) {
-    if (!isMouseDown) return;
-    isVolumeDragging = true; 
-    if (rafId) return;
-
-    rafId = requestAnimationFrame(() => {
-        updateVolumeLogic(event.clientX);
-        rafId = null;
-    });
+    if (!isVolumeDragging) return;
+    event.preventDefault();
+    updateVolumeFromEvent(event);
 }
 
 function stopVolumeDrag() {
-    isMouseDown = false;
     isVolumeDragging = false;
-    volumeBarRect = null;
-    
-    if (rafId) {
-        cancelAnimationFrame(rafId);
-        rafId = null;
-    }
 }
 
-function updateVolumeLogic(clientX: number) {
+function updateVolumeFromEvent(event: MouseEvent) {
     if (!audio || !volumeBar) return;
+    const rect = volumeBar.getBoundingClientRect();
+    const percent = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+    volume = percent;
+    audio.volume = volume;
+    isMuted = volume === 0;
+}
 
-    const rect = volumeBarRect || volumeBar.getBoundingClientRect();
-    
-    const percent = Math.max(
-        0,
-        Math.min(1, (clientX - rect.left) / rect.width),
-    );
+function setVolumeDirect(event: MouseEvent) {
+    if (!audio || !volumeBar) return;
+    const rect = volumeBar.getBoundingClientRect();
+    const percent = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+    volume = percent;
+    audio.volume = volume;
+    isMuted = volume === 0;
+}
 
+function handleTouchStart(event: TouchEvent) {
+    if (!volumeBar) return;
+    event.preventDefault();
+    isVolumeDragging = true;
+    const touch = event.touches[0];
+    updateVolumeFromTouch(touch.clientX);
+}
+
+function handleTouchMove(event: TouchEvent) {
+    if (!isVolumeDragging) return;
+    event.preventDefault();
+    const touch = event.touches[0];
+    updateVolumeFromTouch(touch.clientX);
+}
+
+function handleTouchEnd() {
+    isVolumeDragging = false;
+}
+
+function updateVolumeFromTouch(clientX: number) {
+    if (!audio || !volumeBar) return;
+    const rect = volumeBar.getBoundingClientRect();
+    const percent = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
     volume = percent;
     audio.volume = volume;
     isMuted = volume === 0;
@@ -454,6 +467,8 @@ onDestroy(() => {
 <svelte:window 
     on:mousemove={handleVolumeMove} 
     on:mouseup={stopVolumeDrag} 
+    on:touchmove={handleTouchMove}
+    on:touchend={handleTouchEnd}
 />
 
 {#if musicPlayerConfig.enable}
@@ -662,7 +677,7 @@ onDestroy(() => {
             </button>
         </div>
         <div class="bottom-controls flex items-center gap-2">
-            <button class="btn-plain w-8 h-8 rounded-lg" on:click={toggleMute}>
+            <button class="btn-plain w-8 h-8 rounded-lg flex-shrink-0" on:click={toggleMute}>
                 {#if isMuted || volume === 0}
                     <Icon icon="material-symbols:volume-off" class="text-lg" />
                 {:else if volume < 0.5}
@@ -671,25 +686,27 @@ onDestroy(() => {
                     <Icon icon="material-symbols:volume-up" class="text-lg" />
                 {/if}
             </button>
-            <div class="flex-1 h-2 bg-[var(--btn-regular-bg)] rounded-full cursor-pointer"
+            <div class="volume-slider-container flex-1 h-6 flex items-center relative cursor-pointer select-none"
                  bind:this={volumeBar}
                  on:mousedown={startVolumeDrag}
-                 on:keydown={(e) => {
-                     if (e.key === 'Enter' || e.key === ' ') {
-                         e.preventDefault();
-                         if (e.key === 'Enter') toggleMute();
-                     }
-                 }}
+                 on:click={setVolumeDirect}
+                 on:touchstart={handleTouchStart}
                  role="slider"
                  tabindex="0"
                  aria-label="音量控制"
                  aria-valuemin="0"
                  aria-valuemax="100"
-                 aria-valuenow={volume * 100}>
-                <div class="h-full bg-[var(--primary)] rounded-full transition-all"
-                     class:duration-100={!isVolumeDragging}
-                     class:duration-0={isVolumeDragging}
-                     style="width: {volume * 100}%"></div>
+                 aria-valuenow={Math.round(volume * 100)}>
+                <div class="volume-track w-full h-1.5 bg-[var(--btn-regular-bg)] rounded-full relative overflow-visible">
+                    <div class="volume-fill h-full bg-[var(--primary)] rounded-full"
+                         class:transition-all={!isVolumeDragging}
+                         class:duration-100={!isVolumeDragging}
+                         style="width: {volume * 100}%"></div>
+                    <div class="volume-thumb absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 bg-[var(--primary)] rounded-full shadow-md border-2 border-white transition-transform duration-100"
+                         style="left: calc({volume * 100}% - 7px)"
+                         class:scale-125={isVolumeDragging}
+                         class:shadow-lg={isVolumeDragging}></div>
+                </div>
             </div>
             <button class="btn-plain w-8 h-8 rounded-lg flex items-center justify-center"
                     on:click={toggleExpanded}
@@ -818,6 +835,18 @@ onDestroy(() => {
 .bottom-controls > div:hover {
     transform: scaleY(1.2);
     transition: transform 0.2s ease;
+}
+.volume-slider-container:hover .volume-track {
+    height: 6px;
+}
+.volume-slider-container:hover .volume-thumb {
+    transform: translateY(-50%) scale(1.2);
+}
+.volume-track {
+    transition: height 0.2s ease;
+}
+.volume-thumb {
+    pointer-events: none;
 }
 @media (max-width: 768px) {
     .music-player {

@@ -7,6 +7,7 @@ import { getShuffledFriendsList } from "../data/friends";
 import I18nKey from "../i18n/i18nKey";
 import { i18n } from "../i18n/translation";
 import MainGridLayout from "../layouts/MainGridLayout.astro";
+import PageEncryptor from "../components/PageEncryptor.astro";
 
 // 检查友链页面是否启用
 if (!siteConfig.featurePages.friends) {
@@ -24,6 +25,8 @@ const friendsList = getShuffledFriendsList();
 
 // 获取所有标签
 const allTags = Array.from(new Set(friendsList.flatMap((item) => item.tags)));
+
+let isEncrypted = friendsPost.data.encrypted && friendsPost.data.password;
 ---
 
 <MainGridLayout title={i18n(I18nKey.friends)} description={i18n(I18nKey.friends)}>
@@ -49,169 +52,339 @@ const allTags = Array.from(new Set(friendsList.flatMap((item) => item.tags)));
         </p>
 			</div>
 
-			<!-- 搜索和筛选栏 -->
-			<div class="mb-6 space-y-3">
-				<!-- 搜索框 -->
-				<div class="w-full">
-					<div class="relative">
-						<input 
-							type="text" 
-							id="friend-search"
-							placeholder={i18n(I18nKey.friendsSearchPlaceholder)}
-							class="w-full px-4 py-2 pl-10 rounded-lg bg-[var(--btn-regular-bg)] 
-									text-black/90 dark:text-white/90
-									border border-black/10 dark:border-white/10
-									focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50
-									transition-all duration-200"
-						/>
-						<svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-black/40 dark:text-white/40" 
-							 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-								d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-						</svg>
-					</div>
-				</div>
-
-				<!-- 标签筛选 -->
-				<div class="filter-container flex flex-wrap gap-2">
-					<button 
-						class="filter-tag active"
-						data-tag="all"
-					>
-						{i18n(I18nKey.friendsFilterAll)}
-					</button>
-					{allTags.map(tag => (
-						<button 
-							class="filter-tag"
-							data-tag={tag}
-						>
-							{tag}
-						</button>
-					))}
-				</div>
-			</div>
-
-			<!-- 友链卡片网格 -->
-			<div id="friends-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
-				{friendsList.map((item) => (
-					<div 
-						class="friend-card group relative bg-transparent rounded-xl border border-black/10 dark:border-white/10
-								 overflow-hidden transition-all duration-300
-								 hover:shadow-xl hover:-translate-y-1"
-						data-title={item.title.toLowerCase()}
-						data-desc={item.desc.toLowerCase()}
-						data-tags={item.tags.join(',')}
-					>
-						<!-- 卡片内容 -->
-						<div class="p-6">
-							<!-- 头像和标题区 -->
-							<div class="flex items-start gap-4 mb-4">
-								<!-- 网站图标 -->
-								<div class="w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden 
-												bg-[var(--btn-regular-bg)] 
-												ring-2 ring-transparent
-												transition-all duration-300">
-									<img 
-										src={item.imgurl} 
-										alt={item.title}
-										class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
-										loading="lazy"
-									/>
-								</div>
-
-								<!-- 标题和链接 -->
-								<div class="flex-1 min-w-0">
-									<h3 class="text-xl font-bold text-black/90 dark:text-white/90 mb-1 truncate
-												 group-hover:text-[var(--primary)] transition-colors duration-200">
-										{item.title}
-									</h3>
-									<a 
-										href={item.siteurl} 
-										target="_blank" 
-										rel="noopener noreferrer"
-										class="text-xs text-black/50 dark:text-white/50 hover:text-[var(--primary)] 
-												 truncate block transition-colors duration-200"
-									>
-										{new URL(item.siteurl).hostname}
-									</a>
-								</div>
+			{isEncrypted ? (
+				<PageEncryptor password={friendsPost.data.password}>
+					<!-- 搜索和筛选栏 -->
+					<div class="mb-6 space-y-3">
+						<!-- 搜索框 -->
+						<div class="w-full">
+							<div class="relative">
+								<input 
+									type="text" 
+									id="friend-search"
+									placeholder={i18n(I18nKey.friendsSearchPlaceholder)}
+									class="w-full px-4 py-2 pl-10 rounded-lg bg-[var(--btn-regular-bg)] 
+											text-black/90 dark:text-white/90
+											border border-black/10 dark:border-white/10
+											focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50
+											transition-all duration-200"
+								/>
+								<svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-black/40 dark:text-white/40" 
+									 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+										d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+								</svg>
 							</div>
+						</div>
 
-							<!-- 描述 -->
-							<p class="text-sm text-black/60 dark:text-white/60 mb-4 line-clamp-2 min-h-[2.5rem]">
-								{item.desc}
-							</p>
-
-							<!-- 标签 -->
-							<div class="flex flex-wrap gap-2 mb-4">
-								{item.tags.map(tag => (
-									<span class="px-2 py-1 text-xs rounded-md 
-													bg-[var(--primary)]/10 text-[var(--primary)] 
-													font-medium">
-										{tag}
-									</span>
-								))}
-							</div>
-
-							<!-- 操作按钮 -->
-							<div class="flex gap-2">
-								<a 
-									href={item.siteurl}
-									target="_blank"
-									rel="noopener noreferrer"
-									class="flex-1 flex items-center justify-center gap-2 px-4 py-2 
-											 rounded-lg bg-[var(--primary)] text-white 
-											 hover:bg-[var(--primary)]/90 
-											 active:scale-95 transition-all duration-200
-											 font-medium text-sm"
-								>
-									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-											d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-									</svg>
-									{i18n(I18nKey.friendsVisit)}
-								</a>
+						<!-- 标签筛选 -->
+						<div class="filter-container flex flex-wrap gap-2">
+							<button 
+								class="filter-tag active"
+								data-tag="all"
+							>
+								{i18n(I18nKey.friendsFilterAll)}
+							</button>
+							{allTags.map(tag => (
 								<button 
-									class="copy-link-btn px-3 py-2 rounded-lg 
-											 bg-[var(--btn-regular-bg)] 
-											 hover:bg-[var(--btn-regular-bg-hover)] 
-											 active:scale-95 transition-all duration-200
-											 text-black/70 dark:text-white/70"
-									data-url={item.siteurl}
-									title={i18n(I18nKey.friendsCopyLink)}
+									class="filter-tag"
+									data-tag={tag}
 								>
-									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-											d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-									</svg>
+									{tag}
 								</button>
+							))}
+						</div>
+					</div>
+
+					<!-- 友链卡片网格 -->
+					<div id="friends-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
+						{friendsList.map((item) => (
+							<div 
+								class="friend-card group relative bg-transparent rounded-xl border border-black/10 dark:border-white/10
+										 overflow-hidden transition-all duration-300
+										 hover:shadow-xl hover:-translate-y-1"
+								data-title={item.title.toLowerCase()}
+								data-desc={item.desc.toLowerCase()}
+								data-tags={item.tags.join(',')}
+							>
+								<!-- 卡片内容 -->
+								<div class="p-6">
+									<!-- 头像和标题区 -->
+									<div class="flex items-start gap-4 mb-4">
+										<!-- 网站图标 -->
+										<div class="w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden 
+														bg-[var(--btn-regular-bg)] 
+														ring-2 ring-transparent
+														transition-all duration-300">
+											<img 
+												src={item.imgurl} 
+												alt={item.title}
+												class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
+												loading="lazy"
+											/>
+										</div>
+
+										<!-- 标题和链接 -->
+										<div class="flex-1 min-w-0">
+											<h3 class="text-xl font-bold text-black/90 dark:text-white/90 mb-1 truncate
+														 group-hover:text-[var(--primary)] transition-colors duration-200">
+												{item.title}
+											</h3>
+											<a 
+												href={item.siteurl} 
+												target="_blank" 
+												rel="noopener noreferrer"
+												class="text-xs text-black/50 dark:text-white/50 hover:text-[var(--primary)] 
+														 truncate block transition-colors duration-200"
+											>
+												{new URL(item.siteurl).hostname}
+											</a>
+										</div>
+									</div>
+
+									<!-- 描述 -->
+									<p class="text-sm text-black/60 dark:text-white/60 mb-4 line-clamp-2 min-h-[2.5rem]">
+										{item.desc}
+									</p>
+
+									<!-- 标签 -->
+									<div class="flex flex-wrap gap-2 mb-4">
+										{item.tags.map(tag => (
+											<span class="px-2 py-1 text-xs rounded-md 
+															bg-[var(--primary)]/10 text-[var(--primary)] 
+															font-medium">
+												{tag}
+											</span>
+										))}
+									</div>
+
+									<!-- 操作按钮 -->
+									<div class="flex gap-2">
+										<a 
+											href={item.siteurl}
+											target="_blank"
+											rel="noopener noreferrer"
+											class="flex-1 flex items-center justify-center gap-2 px-4 py-2 
+													 rounded-lg bg-[var(--primary)] text-white 
+													 hover:bg-[var(--primary)]/90 
+													 active:scale-95 transition-all duration-200
+													 font-medium text-sm"
+										>
+											<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+													d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+											</svg>
+											{i18n(I18nKey.friendsVisit)}
+										</a>
+										<button 
+											class="copy-link-btn px-3 py-2 rounded-lg 
+													 bg-[var(--btn-regular-bg)] 
+													 hover:bg-[var(--btn-regular-bg-hover)] 
+													 active:scale-95 transition-all duration-200
+													 text-black/70 dark:text-white/70"
+											data-url={item.siteurl}
+											title={i18n(I18nKey.friendsCopyLink)}
+										>
+											<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+													d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+											</svg>
+										</button>
+									</div>
+								</div>
+
+								<!-- 悬停装饰效果 -->
+								<div class="absolute inset-0 bg-gradient-to-br from-[var(--primary)]/5 to-transparent 
+												opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+								</div>
+							</div>
+						))}
+					</div>
+
+					<!-- 无结果提示 -->
+					<div id="no-results" class="hidden text-center py-12">
+						<svg class="w-16 h-16 mx-auto mb-4 text-black/20 dark:text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+								d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+						</svg>
+						<p class="text-black/50 dark:text-white/50 text-lg">{i18n(I18nKey.friendsNoResults)}</p>
+					</div>
+
+					<!-- 说明文档 -->
+					<Markdown class="mt-8 prose dark:prose-invert max-w-none">
+						<Content />
+					</Markdown>
+					
+					<!-- 隐藏元素用于传递 i18n 文本到全局脚本 -->
+					<div id="friends-copy-success-text" style="display: none;">{i18n(I18nKey.friendsCopySuccess)}</div>
+				</PageEncryptor>
+			) : (
+				<>
+					<!-- 搜索和筛选栏 -->
+					<div class="mb-6 space-y-3">
+						<!-- 搜索框 -->
+						<div class="w-full">
+							<div class="relative">
+								<input 
+									type="text" 
+									id="friend-search"
+									placeholder={i18n(I18nKey.friendsSearchPlaceholder)}
+									class="w-full px-4 py-2 pl-10 rounded-lg bg-[var(--btn-regular-bg)] 
+											text-black/90 dark:text-white/90
+											border border-black/10 dark:border-white/10
+											focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/50
+											transition-all duration-200"
+								/>
+								<svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-black/40 dark:text-white/40" 
+									 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+										d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+								</svg>
 							</div>
 						</div>
 
-						<!-- 悬停装饰效果 -->
-						<div class="absolute inset-0 bg-gradient-to-br from-[var(--primary)]/5 to-transparent 
-										opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+						<!-- 标签筛选 -->
+						<div class="filter-container flex flex-wrap gap-2">
+							<button 
+								class="filter-tag active"
+								data-tag="all"
+							>
+								{i18n(I18nKey.friendsFilterAll)}
+							</button>
+							{allTags.map(tag => (
+								<button 
+									class="filter-tag"
+									data-tag={tag}
+								>
+									{tag}
+								</button>
+							))}
 						</div>
 					</div>
-				))}
-			</div>
 
-			<!-- 无结果提示 -->
-			<div id="no-results" class="hidden text-center py-12">
-				<svg class="w-16 h-16 mx-auto mb-4 text-black/20 dark:text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-						d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-				</svg>
-				<p class="text-black/50 dark:text-white/50 text-lg">{i18n(I18nKey.friendsNoResults)}</p>
-			</div>
+					<!-- 友链卡片网格 -->
+					<div id="friends-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
+						{friendsList.map((item) => (
+							<div 
+								class="friend-card group relative bg-transparent rounded-xl border border-black/10 dark:border-white/10
+										 overflow-hidden transition-all duration-300
+										 hover:shadow-xl hover:-translate-y-1"
+								data-title={item.title.toLowerCase()}
+								data-desc={item.desc.toLowerCase()}
+								data-tags={item.tags.join(',')}
+							>
+								<!-- 卡片内容 -->
+								<div class="p-6">
+									<!-- 头像和标题区 -->
+									<div class="flex items-start gap-4 mb-4">
+										<!-- 网站图标 -->
+										<div class="w-16 h-16 flex-shrink-0 rounded-xl overflow-hidden 
+														bg-[var(--btn-regular-bg)] 
+														ring-2 ring-transparent
+														transition-all duration-300">
+											<img 
+												src={item.imgurl} 
+												alt={item.title}
+												class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
+												loading="lazy"
+											/>
+										</div>
 
-			<!-- 说明文档 -->
-			<Markdown class="mt-8 prose dark:prose-invert max-w-none">
-				<Content />
-			</Markdown>
-			
-			<!-- 隐藏元素用于传递 i18n 文本到全局脚本 -->
-			<div id="friends-copy-success-text" style="display: none;">{i18n(I18nKey.friendsCopySuccess)}</div>
+										<!-- 标题和链接 -->
+										<div class="flex-1 min-w-0">
+											<h3 class="text-xl font-bold text-black/90 dark:text-white/90 mb-1 truncate
+														 group-hover:text-[var(--primary)] transition-colors duration-200">
+												{item.title}
+											</h3>
+											<a 
+												href={item.siteurl} 
+												target="_blank" 
+												rel="noopener noreferrer"
+												class="text-xs text-black/50 dark:text-white/50 hover:text-[var(--primary)] 
+														 truncate block transition-colors duration-200"
+											>
+												{new URL(item.siteurl).hostname}
+											</a>
+										</div>
+									</div>
+
+									<!-- 描述 -->
+									<p class="text-sm text-black/60 dark:text-white/60 mb-4 line-clamp-2 min-h-[2.5rem]">
+										{item.desc}
+									</p>
+
+									<!-- 标签 -->
+									<div class="flex flex-wrap gap-2 mb-4">
+										{item.tags.map(tag => (
+											<span class="px-2 py-1 text-xs rounded-md 
+															bg-[var(--primary)]/10 text-[var(--primary)] 
+															font-medium">
+												{tag}
+											</span>
+										))}
+									</div>
+
+									<!-- 操作按钮 -->
+									<div class="flex gap-2">
+										<a 
+											href={item.siteurl}
+											target="_blank"
+											rel="noopener noreferrer"
+											class="flex-1 flex items-center justify-center gap-2 px-4 py-2 
+													 rounded-lg bg-[var(--primary)] text-white 
+													 hover:bg-[var(--primary)]/90 
+													 active:scale-95 transition-all duration-200
+													 font-medium text-sm"
+										>
+											<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+													d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+											</svg>
+											{i18n(I18nKey.friendsVisit)}
+										</a>
+										<button 
+											class="copy-link-btn px-3 py-2 rounded-lg 
+													 bg-[var(--btn-regular-bg)] 
+													 hover:bg-[var(--btn-regular-bg-hover)] 
+													 active:scale-95 transition-all duration-200
+													 text-black/70 dark:text-white/70"
+											data-url={item.siteurl}
+											title={i18n(I18nKey.friendsCopyLink)}
+										>
+											<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+													d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+											</svg>
+										</button>
+									</div>
+								</div>
+
+								<!-- 悬停装饰效果 -->
+								<div class="absolute inset-0 bg-gradient-to-br from-[var(--primary)]/5 to-transparent 
+												opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+								</div>
+							</div>
+						))}
+					</div>
+
+					<!-- 无结果提示 -->
+					<div id="no-results" class="hidden text-center py-12">
+						<svg class="w-16 h-16 mx-auto mb-4 text-black/20 dark:text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+								d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+						</svg>
+						<p class="text-black/50 dark:text-white/50 text-lg">{i18n(I18nKey.friendsNoResults)}</p>
+					</div>
+
+					<!-- 说明文档 -->
+					<Markdown class="mt-8 prose dark:prose-invert max-w-none">
+						<Content />
+					</Markdown>
+					
+					<!-- 隐藏元素用于传递 i18n 文本到全局脚本 -->
+					<div id="friends-copy-success-text" style="display: none;">{i18n(I18nKey.friendsCopySuccess)}</div>
+				</>
+			)}
 		</div>
 	</div>
 	
