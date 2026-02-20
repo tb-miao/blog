@@ -1,7 +1,7 @@
 ---
 title: 通知系统
 description: 通知系统的配置和使用说明
-published: 2026-02-20
+published: 2026-02-20 15:55:00
 image: '/images/notification/notification-1.png'
 tags: ['本站博客通知系统']
 category: '笔记'
@@ -41,28 +41,43 @@ updated: 2026-02-20
 
 在任意页面的 `<script>` 标签中或浏览器控制台中修改配置：
 
+已`info`页面为演示
+
 ```javascript
-<script>
-	function showAboutNotification() {
+	// 使用 sessionStorage 记录是否已在此会话中显示过
+	if (!sessionStorage.getItem('infoNotificationShown')) {
 		if (window.notification) {
 			window.notification.show({
-				title: '欢迎访问“关于”',
-				message: '关于页面加载完成！',
+				title: '欢迎访问“信息”',
+				message: '信息页面加载完成！',
 				type: 'success',
 				duration: 7000,
 				closable: true
 			});
 		}
+		sessionStorage.setItem('infoNotificationShown', 'true');
 	}
 
-	showAboutNotification();
-
+	// 监听页面切换回来
 	document.addEventListener('astro:page-load', () => {
-		if (window.location.pathname.includes('/about')) {
-			showAboutNotification();
+		if (window.location.pathname.includes('/info')) {
+			if (!sessionStorage.getItem('infoNotificationShown')) {
+				if (window.notification) {
+					window.notification.show({
+						title: '欢迎访问“信息”',
+						message: '信息页面加载完成！',
+						type: 'success',
+						duration: 7000,
+						closable: true
+					});
+				}
+				sessionStorage.setItem('infoNotificationShown', 'true');
+			}
+		} else {
+			// 离开 /info 页面时清除标记，以便下次切回时再显示
+			sessionStorage.removeItem('infoNotificationShown');
 		}
 	});
-</script>
 ```
 ## 通知 API
 

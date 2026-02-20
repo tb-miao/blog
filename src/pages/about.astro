@@ -51,7 +51,8 @@ let isEncrypted = aboutPost.data.encrypted && aboutPost.data.password;
 </MainGridLayout>
 
 <script>
-	function showAboutNotification() {
+	// 使用 sessionStorage 记录是否已在此会话中显示过
+	if (!sessionStorage.getItem('aboutNotificationShown')) {
 		if (window.notification) {
 			window.notification.show({
 				title: '欢迎访问“关于”',
@@ -61,13 +62,27 @@ let isEncrypted = aboutPost.data.encrypted && aboutPost.data.password;
 				closable: true
 			});
 		}
+		sessionStorage.setItem('aboutNotificationShown', 'true');
 	}
 
-	showAboutNotification();
-
+	// 监听页面切换回来
 	document.addEventListener('astro:page-load', () => {
 		if (window.location.pathname.includes('/about')) {
-			showAboutNotification();
+			if (!sessionStorage.getItem('aboutNotificationShown')) {
+				if (window.notification) {
+					window.notification.show({
+						title: '欢迎访问“关于”',
+						message: '关于页面加载完成！',
+						type: 'success',
+						duration: 7000,
+						closable: true
+					});
+				}
+				sessionStorage.setItem('aboutNotificationShown', 'true');
+			}
+		} else {
+			// 离开 /about 页面时清除标记，以便下次切回时再显示
+			sessionStorage.removeItem('aboutNotificationShown');
 		}
 	});
 </script>
