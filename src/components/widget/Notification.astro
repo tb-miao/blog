@@ -41,6 +41,7 @@ const className = Astro.props.class;
 		animation: notification-slide-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 		transform-origin: top left;
 		border: 1px solid rgba(0, 0, 0, 0.05);
+		transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
 	}
 
 	.notification-item::before {
@@ -274,6 +275,35 @@ const className = Astro.props.class;
 		animation-play-state: paused;
 	}
 
+	.notification-item.stacked-1 {
+		transform: translateX(8px) scale(0.98);
+		opacity: 0.95;
+		filter: brightness(0.98);
+	}
+
+	.notification-item.stacked-2 {
+		transform: translateX(16px) scale(0.96);
+		opacity: 0.85;
+		filter: brightness(0.96);
+	}
+
+	.notification-item.stacked-3 {
+		transform: translateX(24px) scale(0.94);
+		opacity: 0.75;
+		filter: brightness(0.94);
+	}
+
+	.notification-item.stacked-4,
+	.notification-item.stacked-5,
+	.notification-item.stacked-6,
+	.notification-item.stacked-7,
+	.notification-item.stacked-8,
+	.notification-item.stacked-9 {
+		transform: translateX(32px) scale(0.92);
+		opacity: 0.65;
+		filter: brightness(0.92);
+	}
+
 	@keyframes notification-slide-in {
 		0% {
 			opacity: 0;
@@ -360,7 +390,6 @@ const className = Astro.props.class;
 		private notifications: Map<string, HTMLElement> = new Map();
 		private counter = 0;
 		private baseZIndex = 88888;
-		private stackOffsetY = 8;
 
 		static getInstance(): NotificationManager {
 			if (!NotificationManager.instance) {
@@ -443,9 +472,9 @@ const className = Astro.props.class;
 			const notification = document.createElement('div');
 			notification.className = `notification-item type-${type}`;
 			notification.id = id;
-			const stackIndex = this.notifications.size;
-			notification.style.zIndex = String(this.baseZIndex - stackIndex);
-			notification.style.transform = `translateY(${stackIndex * this.stackOffsetY}px)`;
+			notification.style.zIndex = String(this.baseZIndex - this.notifications.size);
+
+			this.updateStackedClasses();
 
 			const iconSvg = this.getIcon(type);
 
@@ -509,7 +538,20 @@ const className = Astro.props.class;
 			const notifications = Array.from(this.notifications.values());
 			notifications.forEach((notification, index) => {
 				notification.style.zIndex = String(this.baseZIndex - index);
-				notification.style.transform = `translateY(${index * this.stackOffsetY}px)`;
+			});
+			this.updateStackedClasses();
+		}
+
+		private updateStackedClasses() {
+			const notifications = Array.from(this.notifications.values());
+			notifications.forEach((notification, index) => {
+				for (let i = 1; i <= 9; i++) {
+					notification.classList.remove(`stacked-${i}`);
+				}
+				if (index > 0) {
+					const stackLevel = Math.min(index, 9);
+					notification.classList.add(`stacked-${stackLevel}`);
+				}
 			});
 		}
 
@@ -582,9 +624,6 @@ const className = Astro.props.class;
 	}
 
 	function setupWelcomeNotification() {
-		const hasShownWelcome = sessionStorage.getItem('notification-welcome-shown');
-		if (hasShownWelcome) return;
-
 		const pageLoader = document.getElementById('page-loader');
 		
 		if (pageLoader) {
@@ -592,14 +631,12 @@ const className = Astro.props.class;
 			
 			if (isHidden) {
 				showWelcomeNotification();
-				sessionStorage.setItem('notification-welcome-shown', 'true');
 			} else {
 				const observer = new MutationObserver(() => {
 					const nowHidden = pageLoader.classList.contains('loader-hidden') || pageLoader.style.display === 'none';
 					if (nowHidden) {
 						observer.disconnect();
 						showWelcomeNotification();
-						sessionStorage.setItem('notification-welcome-shown', 'true');
 					}
 				});
 				observer.observe(pageLoader, { 
@@ -610,11 +647,9 @@ const className = Astro.props.class;
 		} else {
 			if (document.readyState === 'complete') {
 				showWelcomeNotification();
-				sessionStorage.setItem('notification-welcome-shown', 'true');
 			} else {
 				window.addEventListener('load', () => {
 					showWelcomeNotification();
-					sessionStorage.setItem('notification-welcome-shown', 'true');
 				});
 			}
 		}
