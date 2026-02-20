@@ -54,9 +54,19 @@ import "../../styles/page-loader.css";
 			<span class="info-label">页面:</span>
 			<span id="loader-page" class="info-value info-value-url">-</span>
 		</div>
-		<div class="info-row info-row-ua">
-			<span class="info-label">UA:</span>
-			<span id="loader-ua" class="info-value info-value-ua">-</span>
+		<div class="info-divider"></div>
+		<div class="info-section-title">通知系统</div>
+		<div class="info-row">
+			<span class="info-label">状态:</span>
+			<span id="notification-status" class="info-value status-loading">初始化中...</span>
+		</div>
+		<div class="info-row">
+			<span class="info-label">欢迎通知:</span>
+			<span id="notification-welcome" class="info-value">-</span>
+		</div>
+		<div class="info-row">
+			<span class="info-label">当前队列:</span>
+			<span id="notification-queue" class="info-value">0</span>
 		</div>
 	</div>
 </div>
@@ -72,7 +82,9 @@ import "../../styles/page-loader.css";
 	const timeEl = document.getElementById("loader-time");
 	const initialEl = document.getElementById("loader-initial");
 	const pageEl = document.getElementById("loader-page");
-	const uaEl = document.getElementById("loader-ua");
+	const notificationStatusEl = document.getElementById("notification-status");
+	const notificationWelcomeEl = document.getElementById("notification-welcome");
+	const notificationQueueEl = document.getElementById("notification-queue");
 
 	const isInitialLoad = !sessionStorage.getItem("site-loaded");
 	const isPanelClosed = sessionStorage.getItem("loader-panel-closed") === "true";
@@ -135,11 +147,49 @@ import "../../styles/page-loader.css";
 	function updatePageInfo() {
 		if (pageEl) {
 			pageEl.textContent = window.location.href;
-			pageEl.title = window.location.href;
 		}
-		if (uaEl) {
-			uaEl.textContent = navigator.userAgent;
-			uaEl.title = navigator.userAgent;
+
+	}
+
+	function updateNotificationStatus() {
+		const notification = (window as any).notification;
+		
+		if (notificationStatusEl) {
+			if (notification && notification.getStatus) {
+				const status = notification.getStatus();
+				if (status.initialized) {
+					notificationStatusEl.textContent = "就绪";
+					notificationStatusEl.classList.remove("status-loading");
+					notificationStatusEl.classList.add("status-complete");
+				} else {
+					notificationStatusEl.textContent = "初始化中...";
+					notificationStatusEl.classList.add("status-loading");
+					notificationStatusEl.classList.remove("status-complete");
+				}
+			} else {
+				notificationStatusEl.textContent = "加载中...";
+				notificationStatusEl.classList.add("status-loading");
+				notificationStatusEl.classList.remove("status-complete");
+			}
+		}
+
+		if (notificationWelcomeEl) {
+			const welcomeConfig = (window as any).notificationWelcomeConfig;
+			if (welcomeConfig && welcomeConfig.enable) {
+				notificationWelcomeEl.textContent = "已启用";
+				notificationWelcomeEl.classList.add("status-complete");
+				notificationWelcomeEl.classList.remove("status-loading");
+			} else if (welcomeConfig) {
+				notificationWelcomeEl.textContent = "已禁用";
+				notificationWelcomeEl.classList.remove("status-complete");
+				notificationWelcomeEl.classList.remove("status-loading");
+			} else {
+				notificationWelcomeEl.textContent = "-";
+			}
+		}
+
+		if (notificationQueueEl && notification && notification.getQueueCount) {
+			notificationQueueEl.textContent = String(notification.getQueueCount());
 		}
 	}
 
@@ -176,6 +226,14 @@ import "../../styles/page-loader.css";
 
 		updatePageInfo();
 
+		setTimeout(() => {
+			updateNotificationStatus();
+		}, 100);
+
+		setInterval(() => {
+			updateNotificationStatus();
+		}, 2000);
+
 		const panelWasClosed = sessionStorage.getItem("loader-panel-closed") === "true";
 
 		if (pageLoader) {
@@ -199,10 +257,8 @@ import "../../styles/page-loader.css";
 		console.log("%c[PageLoader] 页面加载完成", "color: #10b981; font-weight: bold;");
 		console.log(`%c[PageLoader] 加载耗时: ${loadTime}ms`, "color: #f59e0b;");
 		console.log(`%c[PageLoader] 当前页面: ${window.location.href}`, "color: #6366f1;");
-		console.log(`%c[PageLoader] 用户代理: ${navigator.userAgent}`, "color: #64748b;");
 		console.log("%c[PageLoader] 已显示信息面板", "color: #10b981;");
 	}
-
 	document.addEventListener("astro:page-load", () => {
 		const navStartTime = performance.now();
 		const navTime = (performance.now() - navStartTime).toFixed(2);
@@ -215,6 +271,10 @@ import "../../styles/page-loader.css";
 
 		updatePageInfo();
 		updateLoadTime(`${navTime}ms`);
+
+		setTimeout(() => {
+			updateNotificationStatus();
+		}, 100);
 
 		const panelWasClosed = sessionStorage.getItem("loader-panel-closed") === "true";
 		if (!panelWasClosed) {

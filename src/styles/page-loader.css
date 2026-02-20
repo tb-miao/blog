@@ -198,7 +198,7 @@
 }
 
 .info-title {
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #fff;
   letter-spacing: 0.5px;
@@ -239,8 +239,7 @@
   align-items: center;
 }
 
-.info-row-url,
-.info-row-ua {
+.info-row-url {
   flex-direction: column;
   align-items: flex-start;
   gap: 4px;
@@ -264,6 +263,21 @@
   max-width: 200px;
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.85);
+}
+
+.info-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 12px 0;
+}
+
+.info-section-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
 }
 
 .status-loading {

@@ -1,7 +1,8 @@
 ---
 import ConfigCarrier from "@components/ConfigCarrier.astro";
 import MusicPlayer from "@components/widget/MusicPlayer.svelte";
-import Pio from "@components/widget/Pio.svelte"; // 使用 Svelte 版本的 Pio 组件
+import Notification from "@components/widget/Notification.astro";
+import Pio from "@components/widget/Pio.svelte";
 import PageLoader from "@components/misc/PageLoader.astro";
 import {
 	musicPlayerConfig,
@@ -364,6 +365,7 @@ if (siteConfig.font) {
 		{shouldShowTopHighlight && <div class="top-gradient-highlight" />}
 
 		<ConfigCarrier />
+		<Notification />
 		<slot />
 
 		<!-- Music Player - 仅在启用时加载 -->

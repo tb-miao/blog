@@ -1,0 +1,658 @@
+---
+interface Props {
+	class?: string;
+}
+
+const className = Astro.props.class;
+---
+
+<div id="notification-container" class:list={["notification-container", className]}>
+	<div id="notification-wrapper" class="notification-wrapper"></div>
+</div>
+
+<style is:global>
+	.notification-container {
+		position: fixed;
+		top: 24px;
+		left: 24px;
+		z-index: 88888;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		pointer-events: none;
+		max-width: 400px;
+		width: calc(100vw - 48px);
+	}
+
+	.notification-wrapper {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.notification-item {
+		position: relative;
+		background: #ffffff;
+		border-radius: 16px;
+		padding: 0;
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+		pointer-events: auto;
+		overflow: hidden;
+		animation: notification-slide-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+		transform-origin: top left;
+		border: 1px solid rgba(0, 0, 0, 0.05);
+	}
+
+	.notification-item::before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		width: 4px;
+		background: var(--primary, #6366f1);
+		border-radius: 16px 0 0 16px;
+	}
+
+	.notification-item.type-success::before {
+		background: #10b981;
+	}
+
+	.notification-item.type-error::before {
+		background: #ef4444;
+	}
+
+	.notification-item.type-warning::before {
+		background: #f59e0b;
+	}
+
+	.notification-item.type-info::before {
+		background: var(--primary, #6366f1);
+	}
+
+	:root.dark .notification-item {
+		background: #1e202c;
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.15);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	.notification-item.closing {
+		animation: notification-slide-out 0.35s cubic-bezier(0.4, 0, 1, 1) forwards;
+	}
+
+	.notification-inner {
+		padding: 16px 20px 16px 24px;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.notification-header {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+	.notification-icon-wrapper {
+		flex-shrink: 0;
+		width: 36px;
+		height: 36px;
+		border-radius: 10px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(0, 0, 0, 0.04);
+	}
+
+	.notification-item.type-success .notification-icon-wrapper {
+		background: rgba(16, 185, 129, 0.1);
+	}
+
+	.notification-item.type-error .notification-icon-wrapper {
+		background: rgba(239, 68, 68, 0.1);
+	}
+
+	.notification-item.type-warning .notification-icon-wrapper {
+		background: rgba(245, 158, 11, 0.1);
+	}
+
+	.notification-item.type-info .notification-icon-wrapper {
+		background: rgba(99, 102, 241, 0.1);
+	}
+
+	:root.dark .notification-icon-wrapper {
+		background: rgba(255, 255, 255, 0.08);
+	}
+
+	:root.dark .notification-item.type-success .notification-icon-wrapper {
+		background: rgba(16, 185, 129, 0.15);
+	}
+
+	:root.dark .notification-item.type-error .notification-icon-wrapper {
+		background: rgba(239, 68, 68, 0.15);
+	}
+
+	:root.dark .notification-item.type-warning .notification-icon-wrapper {
+		background: rgba(245, 158, 11, 0.15);
+	}
+
+	:root.dark .notification-item.type-info .notification-icon-wrapper {
+		background: rgba(99, 102, 241, 0.15);
+	}
+
+	.notification-icon {
+		width: 20px;
+		height: 20px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.notification-icon svg {
+		width: 100%;
+		height: 100%;
+	}
+
+	.notification-title-wrapper {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		min-width: 0;
+	}
+
+	.notification-title {
+		font-weight: 600;
+		font-size: 14px;
+		color: #1e293b;
+		letter-spacing: -0.01em;
+	}
+
+	:root.dark .notification-title {
+		color: #f1f5f9;
+	}
+
+	.notification-content {
+		font-size: 13px;
+		color: #64748b;
+		line-height: 1.5;
+		padding-right: 28px;
+	}
+
+	:root.dark .notification-content {
+		color: #94a3b8;
+	}
+
+	.notification-close {
+		position: absolute;
+		top: 12px;
+		right: 12px;
+		width: 28px;
+		height: 28px;
+		border: none;
+		background: rgba(0, 0, 0, 0.04);
+		cursor: pointer;
+		opacity: 0.6;
+		transition: all 0.2s ease;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 8px;
+		padding: 0;
+		color: #64748b;
+	}
+
+	.notification-close:hover {
+		opacity: 1;
+		background: rgba(0, 0, 0, 0.08);
+		transform: scale(1.05);
+	}
+
+	.notification-close:active {
+		transform: scale(0.95);
+	}
+
+	:root.dark .notification-close {
+		background: rgba(255, 255, 255, 0.06);
+		color: #94a3b8;
+	}
+
+	:root.dark .notification-close:hover {
+		background: rgba(255, 255, 255, 0.1);
+	}
+
+	.notification-close svg {
+		width: 14px;
+		height: 14px;
+	}
+
+	.notification-progress-wrapper {
+		position: absolute;
+		bottom: 0;
+		left: 4px;
+		right: 0;
+		height: 3px;
+		background: rgba(0, 0, 0, 0.05);
+		overflow: hidden;
+	}
+
+	:root.dark .notification-progress-wrapper {
+		background: rgba(255, 255, 255, 0.05);
+	}
+
+	.notification-progress {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		background: var(--primary, #6366f1);
+		animation: notification-progress linear forwards;
+		border-radius: 0 2px 2px 0;
+	}
+
+	:root.dark .notification-progress {
+		background: var(--primary, #818cf8);
+	}
+
+	.notification-item.type-success .notification-progress {
+		background: #10b981;
+	}
+
+	.notification-item.type-error .notification-progress {
+		background: #ef4444;
+	}
+
+	.notification-item.type-warning .notification-progress {
+		background: #f59e0b;
+	}
+
+	.notification-item.type-info .notification-progress {
+		background: var(--primary, #6366f1);
+	}
+
+	.notification-item:hover .notification-progress {
+		animation-play-state: paused;
+	}
+
+	@keyframes notification-slide-in {
+		0% {
+			opacity: 0;
+			transform: translateX(-120%) scale(0.85) rotateY(-10deg);
+		}
+		50% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 1;
+			transform: translateX(0) scale(1) rotateY(0);
+		}
+	}
+
+	@keyframes notification-slide-out {
+		0% {
+			opacity: 1;
+			transform: translateX(0) scale(1);
+		}
+		100% {
+			opacity: 0;
+			transform: translateX(-100%) scale(0.9);
+		}
+	}
+
+	@keyframes notification-progress {
+		from {
+			width: 100%;
+		}
+		to {
+			width: 0%;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.notification-container {
+			top: 12px;
+			left: 12px;
+			max-width: calc(100vw - 24px);
+		}
+
+		.notification-inner {
+			padding: 14px 16px 14px 20px;
+		}
+
+		.notification-icon-wrapper {
+			width: 32px;
+			height: 32px;
+		}
+
+		.notification-title {
+			font-size: 13px;
+		}
+
+		.notification-content {
+			font-size: 12px;
+		}
+	}
+</style>
+
+<script>
+	export interface NotificationOptions {
+		title?: string;
+		message: string;
+		type?: 'info' | 'success' | 'warning' | 'error';
+		duration?: number;
+		closable?: boolean;
+	}
+
+	export interface WelcomeNotificationConfig {
+		enable: boolean;
+		title?: string;
+		message: string;
+		type?: 'info' | 'success' | 'warning' | 'error';
+		duration?: number;
+		closable?: boolean;
+		delay?: number;
+	}
+
+	class NotificationManager {
+		private static instance: NotificationManager | null = null;
+		private container: HTMLElement | null = null;
+		private wrapper: HTMLElement | null = null;
+		private notifications: Map<string, HTMLElement> = new Map();
+		private counter = 0;
+		private baseZIndex = 88888;
+		private stackOffsetY = 8;
+
+		static getInstance(): NotificationManager {
+			if (!NotificationManager.instance) {
+				NotificationManager.instance = new NotificationManager();
+			}
+			return NotificationManager.instance;
+		}
+
+		init() {
+			this.container = document.getElementById('notification-container');
+			this.wrapper = document.getElementById('notification-wrapper');
+			this.logSystemInfo();
+		}
+
+		getStatus(): { initialized: boolean; containerReady: boolean; wrapperReady: boolean } {
+			return {
+				initialized: !!(this.container || this.wrapper),
+				containerReady: !!this.container,
+				wrapperReady: !!this.wrapper
+			};
+		}
+
+		getQueueCount(): number {
+			return this.notifications.size;
+		}
+
+		private logSystemInfo() {
+			console.group('%c📢 Notification System Info', 'color: #6366f1; font-size: 14px; font-weight: bold;');
+			console.log('%c容器状态:', 'color: #10b981; font-weight: bold;');
+			console.log('  ├─ Container:', this.container ? '✅ 已找到' : '❌ 未找到');
+			console.log('  ├─ Wrapper:', this.wrapper ? '✅ 已找到' : '❌ 未找到');
+			console.log('  └─ 基础 Z-Index:', this.baseZIndex);
+			console.log('%c欢迎通知配置:', 'color: #f59e0b; font-weight: bold;');
+			const welcomeConfig = getWelcomeConfig();
+			console.log('  ├─ 启用状态:', welcomeConfig.enable ? '✅ 已启用' : '❌ 已禁用');
+			console.log('  ├─ 类型:', welcomeConfig.type);
+			console.log('  ├─ 持续时间:', welcomeConfig.duration + 'ms');
+			console.log('  ├─ 可关闭:', welcomeConfig.closable ? '是' : '否');
+			console.log('  └─ 延迟显示:', welcomeConfig.delay + 'ms');
+			console.log('%cAPI 方法:', 'color: #8b5cf6; font-weight: bold;');
+			console.log('  ├─ notification.show(options)');
+			console.log('  ├─ notification.info(message, title?)');
+			console.log('  ├─ notification.success(message, title?)');
+			console.log('  ├─ notification.warning(message, title?)');
+			console.log('  ├─ notification.error(message, title?)');
+			console.log('  ├─ notification.close(id)');
+			console.log('  └─ notification.setWelcomeConfig(config)');
+			console.groupEnd();
+		}
+
+		show(options: NotificationOptions): string {
+			if (!this.wrapper) {
+				this.init();
+			}
+
+			if (!this.wrapper) {
+				console.warn('Notification container not found');
+				return '';
+			}
+
+			const id = `notification-${++this.counter}`;
+			const baseDuration = options.duration ?? 7000;
+			const type = options.type ?? 'info';
+			const closable = options.closable ?? true;
+			const stackOffset = this.notifications.size * 8000;
+			const duration = baseDuration + stackOffset;
+
+			console.group(`%c📬 通知显示 [${id}]`, 'color: #6366f1; font-weight: bold;');
+			console.log('%c参数信息:', 'color: #10b981; font-weight: bold;');
+			console.log('  ├─ 标题:', options.title || '(无)');
+			console.log('  ├─ 消息:', options.message);
+			console.log('  ├─ 类型:', type);
+			console.log('  ├─ 基础持续时间:', baseDuration + 'ms');
+			console.log('  ├─ 堆叠偏移:', stackOffset + 'ms');
+			console.log('  ├─ 实际持续时间:', duration + 'ms');
+			console.log('  ├─ 可关闭:', closable ? '是' : '否');
+			console.log('  └─ 当前队列数量:', this.notifications.size + 1);
+			console.groupEnd();
+
+			const notification = document.createElement('div');
+			notification.className = `notification-item type-${type}`;
+			notification.id = id;
+			const stackIndex = this.notifications.size;
+			notification.style.zIndex = String(this.baseZIndex - stackIndex);
+			notification.style.transform = `translateY(${stackIndex * this.stackOffsetY}px)`;
+
+			const iconSvg = this.getIcon(type);
+
+			notification.innerHTML = `
+				<div class="notification-inner">
+					<div class="notification-header">
+						<div class="notification-icon-wrapper">
+							<div class="notification-icon">${iconSvg}</div>
+						</div>
+						<div class="notification-title-wrapper">
+							${options.title ? `<div class="notification-title">${this.escapeHtml(options.title)}</div>` : ''}
+							<div class="notification-content">${this.escapeHtml(options.message)}</div>
+						</div>
+					</div>
+				</div>
+				${closable ? `
+					<button class="notification-close" aria-label="关闭通知">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+							<path d="M18 6L6 18M6 6l12 12"/>
+						</svg>
+					</button>
+				` : ''}
+				<div class="notification-progress-wrapper">
+					<div class="notification-progress" style="animation-duration: ${duration}ms;"></div>
+				</div>
+			`;
+
+			if (closable) {
+				const closeBtn = notification.querySelector('.notification-close');
+				if (closeBtn) {
+					closeBtn.addEventListener('click', () => this.close(id));
+				}
+			}
+
+			this.wrapper.appendChild(notification);
+			this.notifications.set(id, notification);
+
+			setTimeout(() => {
+				this.close(id);
+			}, duration);
+
+			return id;
+		}
+
+		close(id: string) {
+			const notification = this.notifications.get(id);
+			if (!notification) return;
+
+			console.log(`%c📪 通知关闭 [${id}]`, 'color: #ef4444; font-weight: bold;', `剩余通知: ${this.notifications.size - 1}`);
+
+			notification.classList.add('closing');
+			
+			setTimeout(() => {
+				notification.remove();
+				this.notifications.delete(id);
+				this.updateZIndices();
+			}, 350);
+		}
+
+		private updateZIndices() {
+			const notifications = Array.from(this.notifications.values());
+			notifications.forEach((notification, index) => {
+				notification.style.zIndex = String(this.baseZIndex - index);
+				notification.style.transform = `translateY(${index * this.stackOffsetY}px)`;
+			});
+		}
+
+		private getIcon(type: string): string {
+			const icons: Record<string, string> = {
+				info: `<svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round">
+					<circle cx="12" cy="12" r="9"/>
+					<path d="M12 8v4M12 16h.01"/>
+				</svg>`,
+				success: `<svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+					<circle cx="12" cy="12" r="9"/>
+					<path d="M9 12l2 2 4-4"/>
+				</svg>`,
+				warning: `<svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round">
+					<path d="M12 9v4M12 16h.01"/>
+					<path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+				</svg>`,
+				error: `<svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round">
+					<circle cx="12" cy="12" r="9"/>
+					<path d="M15 9l-6 6M9 9l6 6"/>
+				</svg>`
+			};
+			return icons[type] || icons.info;
+		}
+
+		private escapeHtml(text: string): string {
+			const div = document.createElement('div');
+			div.textContent = text;
+			return div.innerHTML;
+		}
+	}
+
+	const notificationManager = NotificationManager.getInstance();
+
+	function getWelcomeConfig(): WelcomeNotificationConfig {
+		if (!(window as any).notificationWelcomeConfig) {
+			(window as any).notificationWelcomeConfig = {
+				enable: true,
+				title: '欢迎访问”AUNyaの小窝“',
+				message: '页面加载完成，祝您浏览愉快！',
+				type: 'success',
+				duration: 7000,
+				closable: true,
+				delay: 500
+			};
+		}
+		return (window as any).notificationWelcomeConfig;
+	}
+
+	function showWelcomeNotification() {
+		const welcomeConfig = getWelcomeConfig();
+		if (welcomeConfig && welcomeConfig.enable !== false) {
+			console.log('%c🎉 欢迎通知准备显示', 'color: #10b981; font-weight: bold;', `延迟: ${welcomeConfig.delay || 300}ms`);
+			setTimeout(() => {
+				notificationManager.show({
+					title: welcomeConfig.title || '欢迎',
+					message: welcomeConfig.message || '页面加载完成',
+					type: welcomeConfig.type || 'info',
+					duration: welcomeConfig.duration || 7000,
+					closable: welcomeConfig.closable !== false
+				});
+			}, welcomeConfig.delay || 300);
+		} else {
+			console.log('%c⚠️ 欢迎通知已禁用', 'color: #f59e0b; font-weight: bold;');
+		}
+	}
+
+	function initNotification() {
+		notificationManager.init();
+	}
+
+	function setupWelcomeNotification() {
+		const hasShownWelcome = sessionStorage.getItem('notification-welcome-shown');
+		if (hasShownWelcome) return;
+
+		const pageLoader = document.getElementById('page-loader');
+		
+		if (pageLoader) {
+			const isHidden = pageLoader.classList.contains('loader-hidden') || pageLoader.style.display === 'none';
+			
+			if (isHidden) {
+				showWelcomeNotification();
+				sessionStorage.setItem('notification-welcome-shown', 'true');
+			} else {
+				const observer = new MutationObserver(() => {
+					const nowHidden = pageLoader.classList.contains('loader-hidden') || pageLoader.style.display === 'none';
+					if (nowHidden) {
+						observer.disconnect();
+						showWelcomeNotification();
+						sessionStorage.setItem('notification-welcome-shown', 'true');
+					}
+				});
+				observer.observe(pageLoader, { 
+					attributes: true, 
+					attributeFilter: ['class', 'style'] 
+				});
+			}
+		} else {
+			if (document.readyState === 'complete') {
+				showWelcomeNotification();
+				sessionStorage.setItem('notification-welcome-shown', 'true');
+			} else {
+				window.addEventListener('load', () => {
+					showWelcomeNotification();
+					sessionStorage.setItem('notification-welcome-shown', 'true');
+				});
+			}
+		}
+	}
+
+	function init() {
+		console.log('%c🔧 通知系统初始化中...', 'color: #8b5cf6; font-weight: bold;');
+		initNotification();
+		setupWelcomeNotification();
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', init);
+	} else {
+		init();
+	}
+
+	document.addEventListener('astro:page-load', () => {
+		initNotification();
+	});
+
+	function createNotificationAPI() {
+		return {
+			show: (options: NotificationOptions) => notificationManager.show(options),
+			info: (message: string, title?: string) => notificationManager.show({ message, title, type: 'info' }),
+			success: (message: string, title?: string) => notificationManager.show({ message, title, type: 'success' }),
+			warning: (message: string, title?: string) => notificationManager.show({ message, title, type: 'warning' }),
+			error: (message: string, title?: string) => notificationManager.show({ message, title, type: 'error' }),
+			close: (id: string) => notificationManager.close(id),
+			setWelcomeConfig: (config: Partial<WelcomeNotificationConfig>) => {
+				(window as any).notificationWelcomeConfig = { ...getWelcomeConfig(), ...config };
+			},
+			getStatus: () => notificationManager.getStatus(),
+			getQueueCount: () => notificationManager.getQueueCount()
+		};
+	}
+
+	(window as any).notification = createNotificationAPI();
+
+	export const notification = createNotificationAPI();
+</script>

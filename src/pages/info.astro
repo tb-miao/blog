@@ -31,3 +31,24 @@ let isEncrypted = infoPost.data.encrypted && infoPost.data.password;
         </div>
     </div>
 </MainGridLayout>
+<script>
+	function showinfoNotification() {
+		if (window.notification) {
+			window.notification.show({
+				title: '欢迎访问“信息”',
+				message: '信息页面加载完成！',
+				type: 'success',
+				duration: 7000,
+				closable: true
+			});
+		}
+	}
+
+	showinfoNotification();
+
+	document.addEventListener('astro:page-load', () => {
+		if (window.location.pathname.includes('/info')) {
+			showinfoNotification();
+		}
+	});
+</script>

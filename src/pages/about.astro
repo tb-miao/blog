@@ -1,5 +1,4 @@
 ---
-
 import { getEntry, render } from "astro:content";
 import Markdown from "@components/misc/Markdown.astro";
 import I18nKey from "../i18n/i18nKey";
@@ -50,3 +49,25 @@ let isEncrypted = aboutPost.data.encrypted && aboutPost.data.password;
         </div>
     </div>
 </MainGridLayout>
+
+<script>
+	function showAboutNotification() {
+		if (window.notification) {
+			window.notification.show({
+				title: '欢迎访问“关于”',
+				message: '关于页面加载完成！',
+				type: 'success',
+				duration: 7000,
+				closable: true
+			});
+		}
+	}
+
+	showAboutNotification();
+
+	document.addEventListener('astro:page-load', () => {
+		if (window.location.pathname.includes('/about')) {
+			showAboutNotification();
+		}
+	});
+</script>

@@ -367,7 +367,7 @@ export const shareConfig: ShareConfig = {
 
 export const announcementConfig: AnnouncementConfig = {
 	title: "公告呀~", // 公告标题
-	content: "🎉🎉 欢迎来到我的博客喵！本站2周年啦！", // 公告内容
+	content: "🎉🎉 欢迎来到我的博客喵！本站2周年啦！ ./通知系统上线啦！！！（目前处于测试阶段）", // 公告内容
 	closable: false, // 允许用户关闭公告
 	link: {
 		enable: false, // 启用链接
@@ -609,7 +609,7 @@ export const sakuraConfig: SakuraConfig = {
 
 // Pio 看板娘配置
 export const pioConfig: import("./types/config").PioConfig = {
-	enable: true, // 启用看板娘
+	enable: false, // 启用看板娘
 	models: ["/pio/models/pio/model.json"], // 默认模型路径
 	position: "left", // 默认位置在右侧
 	width: 280, // 默认宽度
