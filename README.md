@@ -34,7 +34,7 @@ updated:  # 文章更新时间
 ---
 ```
 
-## Pages 页面加密格式---Markdown
+### Pages 页面加密格式---Markdown
 
 ```markdown
 ---
@@ -48,5 +48,11 @@ password: "123456"
 ## 🔔 通知系统配置
 
 - 请访问：[通知系统文章](https://tbmiao.dpdns.org/posts/notification-mizuki-astro/)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=tb-miao/blog&type=date&legend=top-left)](https://www.star-history.com/#tb-miao/blog&type=date&legend=top-left)
+
+
 
 ![](https://avatars.githubusercontent.com/u/172878250?v=4)

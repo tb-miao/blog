@@ -314,4 +314,8 @@ export const ja: Translation = {
 	[Key.shareOnSocial]: "シェア",
 	[Key.shareOnSocialDescription]:
 		"この記事が役に立った場合は、ぜひ他の人とシェアしてください！",
+
+	// GitHub 統計
+	[Key.githubStats]: "GitHub コントリビューション",
+	[Key.githubViewProfile]: "プロフィールを見る",
 };

@@ -291,6 +291,10 @@ enum I18nKey {
 	scanToRead = "scanToRead",
 	shareOnSocial = "shareOnSocial",
 	shareOnSocialDescription = "shareOnSocialDescription",
+
+	// GitHub 统计
+	githubStats = "githubStats",
+	githubViewProfile = "githubViewProfile",
 }
 
 export default I18nKey;

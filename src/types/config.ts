@@ -337,6 +337,7 @@ export type WidgetComponentType =
 	| "music-player"
 	| "pio" // 添加 pio 组件类型
 	| "site-stats" // 站点统计组件
+	| "github-stats" // GitHub 贡献统计组件
 	| "calendar" // 日历组件
 	| "network-check" // 网络检查组件
 	| "line-switch"
@@ -356,6 +357,8 @@ export type WidgetComponentConfig = {
 		collapseThreshold?: number; // 折叠阈值
 	};
 	customProps?: Record<string, any>; // 自定义属性，用于扩展组件功能
+	username?: string; // GitHub 用户名，用于 github-stats 组件
+	repository?: string; // GitHub 仓库地址，格式：username/repo
 };
 
 export type SidebarLayoutConfig = {

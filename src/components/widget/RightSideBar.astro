@@ -1,6 +1,7 @@
 ---
 import { sidebarLayoutConfig } from "../../config";
 import Calendar from "./Calendar.astro";
+import GithubStats from "./GithubStats.astro";
 import SiteStats from "./SiteStats.astro";
 
 // 获取右侧栏组件配置
@@ -30,6 +31,7 @@ const stickyComponents = rightSidebarComponents.filter(
       <div class={`sidebar-component ${component.class || ''}`} 
            style={`animation-delay: ${component.animationDelay || 0}ms; ${component.style || ''}`}>
         {component.type === "site-stats" && <SiteStats />}
+        {component.type === "github-stats" && <GithubStats repository={component.repository} />}
         {component.type === "calendar" && <Calendar />}
       </div>
     ))}
@@ -41,6 +43,7 @@ const stickyComponents = rightSidebarComponents.filter(
       <div class={`sidebar-component ${component.class || ''}`} 
            style={`animation-delay: ${component.animationDelay || 0}ms; ${component.style || ''}`}>
         {component.type === "site-stats" && <SiteStats />}
+        {component.type === "github-stats" && <GithubStats repository={component.repository} />}
         {component.type === "calendar" && <Calendar />}
       </div>
     ))}

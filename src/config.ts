@@ -513,6 +513,24 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			animationDelay: 200,
 		},
 		{
+			// 组件类型：GitHub 贡献统计组件
+			type: "github-stats",
+			// 是否启用该组件
+			enable: true,
+			// 组件显示顺序（在站点统计之后）
+			order: 7,
+			// 组件位置
+			position: "top",
+			// 所在侧边栏
+			sidebar: "right",
+			// CSS 类名
+			class: "onload-animation",
+			// 动画延迟时间
+			animationDelay: 225,
+			// GitHub 仓库地址
+			repository: "tb-miao/blog",
+		},
+		{
 			// 组件类型：日历组件(移动端不显示)
 			type: "calendar",
 			// 是否启用该组件

@@ -1,0 +1,215 @@
+---
+import { Icon } from "astro-icon/components";
+import I18nKey from "../../i18n/i18nKey";
+import { i18n } from "../../i18n/translation";
+import WidgetLayout from "./WidgetLayout.astro";
+
+interface Props {
+	class?: string;
+	style?: string;
+	repository?: string;
+}
+
+const { class: className, style, repository = "tb-miao/blog" } = Astro.props;
+const [username, repo] = repository.split('/');
+
+const githubRepoUrl = `https://github.com/${repository}`;
+const starHistoryUrl = `https://api.star-history.com/svg?repos=${repository}&type=Date`;
+---
+
+<WidgetLayout name={i18n(I18nKey.githubStats)} id="github-stats" class={className} style={style}>
+  <div class="flex flex-col gap-4">
+    <div class="flex items-center justify-between px-2">
+      <div class="flex items-center gap-2">
+        <div class="text-[var(--primary)] text-lg">
+          <Icon name="fa6-brands:github" />
+        </div>
+        <a 
+          href={githubRepoUrl} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="text-neutral-700 dark:text-neutral-300 font-medium text-sm hover:text-[var(--primary)] transition-colors"
+        >
+          {repository}
+        </a>
+      </div>
+      <a 
+        href={githubRepoUrl} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        class="text-xs text-neutral-500 dark:text-neutral-400 hover:text-[var(--primary)] transition-colors"
+      >
+        {i18n(I18nKey.githubViewProfile)}
+      </a>
+    </div>
+    
+    <!-- 仓库统计信息 -->
+    <div class="github-stats-grid">
+      <a 
+        href={`${githubRepoUrl}/stargazers`} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        class="stat-card"
+      >
+        <div class="stat-icon text-yellow-500">
+          <Icon name="material-symbols:star" />
+        </div>
+        <div class="stat-info">
+          <div class="stat-label">Stars</div>
+        </div>
+      </a>
+      
+      <a 
+        href={`${githubRepoUrl}/forks`} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        class="stat-card"
+      >
+        <div class="stat-icon text-blue-500">
+          <Icon name="material-symbols:fork-right" />
+        </div>
+        <div class="stat-info">
+          <div class="stat-label">Forks</div>
+        </div>
+      </a>
+      
+      <a 
+        href={`${githubRepoUrl}/watchers`} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        class="stat-card"
+      >
+        <div class="stat-icon text-purple-500">
+          <Icon name="material-symbols:visibility" />
+        </div>
+        <div class="stat-info">
+          <div class="stat-label">Watchers</div>
+        </div>
+      </a>
+      
+      <a 
+        href={`${githubRepoUrl}/issues`} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        class="stat-card"
+      >
+        <div class="stat-icon text-red-500">
+          <Icon name="material-symbols:error" />
+        </div>
+        <div class="stat-info">
+          <div class="stat-label">Issues</div>
+        </div>
+      </a>
+    </div>
+    
+    <!-- Star History -->
+    <div class="github-chart-container">
+      <a href="https://star-history.com/#${repository}&Date" target="_blank" rel="noopener noreferrer">
+        <img 
+          src={starHistoryUrl} 
+          alt={`Star History for ${repository}`}
+          class="w-full h-auto"
+          loading="lazy"
+          onerror="this.style.display='none'"
+        />
+      </a>
+    </div>
+    
+    <!-- 快速操作 -->
+    <div class="flex items-center justify-center gap-3 px-2">
+      <a 
+        href={`${githubRepoUrl}/commits`} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 text-xs hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+      >
+        <Icon name="material-symbols:history" />
+        <span>提交</span>
+      </a>
+      <a 
+        href={`${githubRepoUrl}/contributors`} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 text-xs hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+      >
+        <Icon name="material-symbols:group" />
+        <span>贡献者</span>
+      </a>
+    </div>
+  </div>
+</WidgetLayout>
+
+<style>
+  .github-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .stat-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: var(--card-bg);
+    border-radius: 10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .stat-icon {
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+  }
+  
+  :root.dark .stat-icon {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .stat-info {
+    flex: 1;
+  }
+  
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  
+  .github-chart-container {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 10px;
+    background: var(--card-bg);
+    padding: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .github-chart-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .github-chart-container img {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-height: 100px;
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    .github-chart-container img {
+      filter: brightness(0.9) contrast(1.1);
+    }
+  }
+</style>

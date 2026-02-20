@@ -4,6 +4,7 @@ import { widgetManager } from "../../utils/widget-manager";
 import Announcement from "./Announcement.astro";
 import Calendar from "./Calendar.astro";
 import Categories from "./Categories.astro";
+import GithubStats from "./GithubStats.astro";
 import MusicPlayer from "./MusicPlayer.svelte";
 import Profile from "./Profile.astro";
 import SiteStats from "./SiteStats.astro";
@@ -39,6 +40,7 @@ const componentMap = {
 	toc: TOC,
 	"music-player": MusicPlayer,
 	"site-stats": SiteStats,
+	"github-stats": GithubStats,
 	calendar: Calendar,
 	"line-switch": LineSwitch,
 };
@@ -58,6 +60,7 @@ function renderComponent(component: any, index: number, _components: any[]) {
 			class: componentClass,
 			style: componentStyle,
 			headings: component.type === "toc" ? headings : undefined,
+			repository: component.type === "github-stats" ? component.repository : undefined,
 			...component.customProps,
 		},
 	};

@@ -311,4 +311,8 @@ export const en: Translation = {
 	[Key.shareOnSocial]: "Share",
 	[Key.shareOnSocialDescription]:
 		"If this article helped you, please share it with others!",
+
+	// GitHub Stats	
+	[Key.githubStats]: "GitHub Contributions",
+	[Key.githubViewProfile]: "View Profile",
 };

@@ -302,4 +302,8 @@ export const zh_TW: Translation = {
 	[Key.shareOnSocial]: "分享",
 	[Key.shareOnSocialDescription]:
 		"如果這篇文章對你有幫助，歡迎分享給更多人！",
+
+	// GitHub 統計
+	[Key.githubStats]: "GitHub 貢獻",
+	[Key.githubViewProfile]: "查看主頁",
 };
