@@ -601,11 +601,19 @@ const className = Astro.props.class;
 		return (window as any).notificationWelcomeConfig;
 	}
 
+	const WELCOME_SHOWN_KEY = 'mizuki-welcome-shown';
+
 	function showWelcomeNotification() {
+		if (sessionStorage.getItem(WELCOME_SHOWN_KEY)) {
+			console.log('%c⚠️ 欢迎通知已在本会话中显示过', 'color: #f59e0b; font-weight: bold;');
+			return;
+		}
+
 		const welcomeConfig = getWelcomeConfig();
 		if (welcomeConfig && welcomeConfig.enable !== false) {
 			console.log('%c🎉 欢迎通知准备显示', 'color: #10b981; font-weight: bold;', `延迟: ${welcomeConfig.delay || 300}ms`);
 			setTimeout(() => {
+				sessionStorage.setItem(WELCOME_SHOWN_KEY, 'true');
 				notificationManager.show({
 					title: welcomeConfig.title || '欢迎',
 					message: welcomeConfig.message || '页面加载完成',
@@ -623,7 +631,15 @@ const className = Astro.props.class;
 		notificationManager.init();
 	}
 
+	let welcomeSetupComplete = false;
+
 	function setupWelcomeNotification() {
+		if (welcomeSetupComplete) {
+			console.log('%c⚠️ 欢迎通知已设置，跳过重复设置', 'color: #f59e0b; font-weight: bold;');
+			return;
+		}
+		welcomeSetupComplete = true;
+
 		const pageLoader = document.getElementById('page-loader');
 		
 		if (pageLoader) {
