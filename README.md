@@ -29,4 +29,15 @@ updated:
 ---
 ```
 
+## Pages 页面格式---Markdown
+
+```markdown
+---
+encrypted: false | true
+password: "" | "123456"
+---
+```
+- 密码会存储在 sessionStorage 中，刷新页面无需重新输入。
+
+
 ![](https://avatars.githubusercontent.com/u/172878250?v=4)
