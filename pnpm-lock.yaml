@@ -101,9 +101,6 @@ importers:
       node-html-parser:
         specifier: ^7.0.2
         version: 7.0.2
-      nodemailer:
-        specifier: ^8.0.1
-        version: 8.0.1
       overlayscrollbars:
         specifier: ^2.14.0
         version: 2.14.0
@@ -4016,10 +4013,6 @@ packages:
 
   node-releases@2.0.21:
     resolution: {integrity: sha512-5b0pgg78U3hwXkCM8Z9b2FJdPZlr9Psr9V2gQPESdGHqbntyFJKFW4r5TeWGFzafGY3hzs1JC62VEQMbl1JFkw==}
-
-  nodemailer@8.0.1:
-    resolution: {integrity: sha512-5kcldIXmaEjZcHR6F28IKGSgpmZHaF1IXLWFTG+Xh3S+Cce4MiakLtWY+PlBU69fLbRa8HlaGIrC/QolUpHkhg==}
-    engines: {node: '>=6.0.0'}
 
   nopt@6.0.0:
     resolution: {integrity: sha512-ZwLpbTgdhuZUnZzjd7nb1ZV+4DoiC6/sfiVKok72ym/4Tlf+DFdlHYmT2JPmcNNWV6Pi3SDf1kT+A4r9RTuT9g==}
@@ -10516,8 +10509,6 @@ snapshots:
   node-mock-http@1.0.4: {}
 
   node-releases@2.0.21: {}
-
-  nodemailer@8.0.1: {}
 
   nopt@6.0.0:
     dependencies:
