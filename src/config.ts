@@ -249,6 +249,11 @@ export const navBarConfig: NavBarConfig = {
 					url: "/projects/",
 					icon: "material-symbols:developer-board",
 				},
+				{
+					name: "监测",
+					url: "/services-status/",
+					icon: "material-symbols:monitor-heart",
+				},
 			],
 		},
 		{
@@ -367,7 +372,6 @@ export const shareConfig: ShareConfig = {
 
 export const announcementConfig: AnnouncementConfig = {
 	title: "公告呀~", // 公告标题
-	content: "🎉🎉 欢迎来到我的博客喵！本站2周年啦！ ./通知系统上线啦！！！（目前处于测试阶段）", // 公告内容
 	closable: false, // 允许用户关闭公告
 	link: {
 		enable: false, // 启用链接
@@ -425,8 +429,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 		{
 			// 组件类型：公告组件
 			type: "announcement",
-			// 是否启用该组件（现在通过统一配置控制）
-			enable: true,
+			// 已禁用，公告现在显示在主内容区域上方
+			enable: false,
 			// 组件显示顺序
 			order: 2,
 			// 组件位置："top" 表示固定在顶部

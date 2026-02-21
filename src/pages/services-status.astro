@@ -1,0 +1,53 @@
+---
+import { getEntry, render } from "astro:content";
+import Markdown from "@components/misc/Markdown.astro";
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+import PageEncryptor from "../components/PageEncryptor.astro";
+import ServicesStatusComponent from "@components/widget/ServicesStatus.astro";
+
+const servicesPost = await getEntry("spec", "services-status");
+
+if (!servicesPost) {
+	throw new Error("服务状态监测页面内容未找到");
+}
+
+const { Content } = await render(servicesPost);
+const title = servicesPost.data.title || "服务状态监测页面";
+
+let isEncrypted = servicesPost.data.encrypted && servicesPost.data.password;
+---
+<MainGridLayout title={title}>
+	<!-- 引入右侧边栏布局管理器 -->
+  <script>
+    import('../scripts/right-sidebar-layout.js');
+  </script>
+  
+    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+        <div class="card-base z-10 px-9 py-6 relative w-full">
+            <!-- 页面标题 -->
+            <div class="flex flex-col items-start justify-center mb-8">
+                <h1 class="text-4xl font-bold text-black/90 dark:text-white/90 mb-2 relative
+                          before:w-1 before:h-8 before:rounded-md before:bg-[var(--primary)]
+                          before:absolute before:top-1/2 before:-translate-y-1/2 before:-left-4">
+                    {title}
+                </h1>
+            </div>
+            
+            <!-- 从MD文件读取的内容 -->
+			{isEncrypted ? (
+				<PageEncryptor password={servicesPost.data.password}>
+					<Markdown class="mt-2">
+						<Content />
+					</Markdown>
+				</PageEncryptor>
+			) : (
+				<Markdown class="mt-2">
+					<Content />
+				</Markdown>
+			)}
+            
+            <!-- 服务状态组件 -->
+            <div class="mt-8">
+                <ServicesStatusComponent apiKey={import.meta.env.STATUS_API_KEY} />
+            </div>
+</MainGridLayout>

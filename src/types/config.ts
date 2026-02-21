@@ -301,7 +301,7 @@ export type ExpressiveCodeConfig = {
 export type AnnouncementConfig = {
 	// enable属性已移除，现在通过sidebarLayoutConfig统一控制
 	title?: string; // 公告栏标题
-	content: string; // 公告栏内容
+	content?: string; // 公告栏内容（可选，优先从 md 文件读取）
 	icon?: string; // 公告栏图标
 	type?: "info" | "warning" | "success" | "error"; // 公告类型
 	closable?: boolean; // 是否可关闭

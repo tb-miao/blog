@@ -1,0 +1,560 @@
+---
+interface Props {
+  apiUrl?: string;
+  apiKey?: string;
+  days?: number;
+}
+
+const {
+  apiUrl = "https://api.status.tbmiao.dpdns.org/api/monitors",
+  apiKey = "",
+  days = 30,
+} = Astro.props;
+---
+
+<div class="services-status-container">
+  <div class="status-header">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-bold text-black/90 dark:text-white/90 flex items-center gap-2">
+        <iconify-icon icon="material-symbols:monitor-heart" class="text-2xl text-[var(--primary)]"></iconify-icon>
+        服务状态监控
+      </h2>
+      <div class="flex items-center gap-3">
+        <span id="countdown" class="countdown-text">
+          <iconify-icon icon="material-symbols:timer-outline" class="text-sm"></iconify-icon>
+          <span id="countdownValue">30</span>秒后刷新
+        </span>
+        <button
+          id="refreshBtn"
+          class="refresh-btn"
+          title="刷新数据"
+        >
+          <iconify-icon icon="material-symbols:refresh" class="text-lg"></iconify-icon>
+          <span class="ml-1">刷新</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="statusContent" class="status-content">
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <p class="text-black/60 dark:text-white/60 mt-3">正在获取服务状态...</p>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .services-status-container {
+    @apply rounded-xl overflow-hidden;
+    background: var(--card-bg);
+    border: 1px solid var(--line-divider);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  }
+
+  .status-header {
+    @apply p-6 border-b;
+    border-color: var(--line-divider);
+  }
+
+  .countdown-text {
+    @apply text-xs flex items-center gap-1 px-3 py-1.5 rounded-full;
+    background: var(--btn-regular-bg);
+    color: var(--content-meta);
+  }
+
+  .refresh-btn {
+    @apply flex items-center px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 shadow-sm;
+    background: linear-gradient(135deg, var(--primary), var(--btn-content));
+    color: white;
+  }
+
+  .refresh-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .refresh-btn:active {
+    transform: translateY(0);
+  }
+
+  .refresh-btn:disabled {
+    @apply opacity-60 cursor-not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .refresh-btn.loading iconify-icon {
+    @apply animate-spin;
+  }
+
+  .status-content {
+    @apply p-6 min-h-[200px];
+  }
+
+  .loading-state {
+    @apply flex flex-col items-center justify-center py-12;
+  }
+
+  .loading-spinner {
+    @apply w-12 h-12 rounded-full border-4;
+    border-color: var(--btn-regular-bg);
+    border-top-color: var(--primary);
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .stats-grid {
+    @apply grid grid-cols-2 md:grid-cols-4 gap-4 mb-8;
+  }
+
+  .stat-card {
+    @apply rounded-2xl p-5 text-center transition-all duration-300 relative overflow-hidden;
+    background: var(--btn-regular-bg);
+    border: 1px solid var(--line-divider);
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .stat-card:hover::before {
+    opacity: 1;
+  }
+
+  .stat-card.ok {
+    border-color: rgba(34, 197, 94, 0.3);
+  }
+
+  .stat-card.ok::before {
+    background: linear-gradient(90deg, transparent, #22c55e, transparent);
+  }
+
+  .stat-card.down {
+    border-color: rgba(239, 68, 68, 0.3);
+  }
+
+  .stat-card.down::before {
+    background: linear-gradient(90deg, transparent, #ef4444, transparent);
+  }
+
+  .stat-card.paused {
+    border-color: rgba(234, 179, 8, 0.3);
+  }
+
+  .stat-card.paused::before {
+    background: linear-gradient(90deg, transparent, #eab308, transparent);
+  }
+
+  .stat-card.ok .stat-value {
+    color: #22c55e;
+  }
+
+  .stat-card.down .stat-value {
+    color: #ef4444;
+  }
+
+  .stat-card.paused .stat-value {
+    color: #eab308;
+  }
+
+  .stat-label {
+    @apply text-xs font-medium mb-2 uppercase tracking-wider;
+    color: var(--content-meta);
+  }
+
+  .stat-value {
+    @apply text-4xl font-bold;
+    color: var(--deep-text);
+  }
+
+  .monitor-list {
+    @apply space-y-3;
+  }
+
+  .monitor-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-radius: 1rem;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    background: var(--btn-regular-bg);
+    border: 1px solid var(--line-divider);
+  }
+
+  .monitor-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--primary);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .monitor-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  }
+
+  .monitor-item:hover::before {
+    opacity: 1;
+  }
+
+  .monitor-item.ok::before {
+    background: #22c55e;
+  }
+
+  .monitor-item.down::before {
+    background: #ef4444;
+  }
+
+  .monitor-item.paused::before {
+    background: #eab308;
+  }
+
+  .monitor-info {
+    @apply flex-1 min-w-0;
+  }
+
+  .monitor-name {
+    @apply font-semibold text-base truncate;
+    color: var(--deep-text);
+  }
+
+  .monitor-url {
+    @apply text-xs mt-1 truncate;
+    color: var(--content-meta);
+  }
+
+  .monitor-status {
+    @apply flex flex-col items-end ml-4;
+  }
+
+  .status-badge {
+    @apply px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider;
+  }
+
+  .status-badge.ok {
+    background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+    color: #166534;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.2);
+  }
+
+  .status-badge.down {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    color: #991b1b;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
+  }
+
+  .status-badge.paused {
+    background: linear-gradient(135deg, #fef9c3, #fef08a);
+    color: #854d0e;
+    box-shadow: 0 2px 8px rgba(234, 179, 8, 0.2);
+  }
+
+  .status-badge.unknown {
+    background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+    color: #374151;
+  }
+
+  .uptime-text {
+    @apply text-sm mt-2 font-mono font-medium;
+    color: var(--content-meta);
+  }
+
+  .uptime-text strong {
+    color: var(--deep-text);
+  }
+
+  .last-updated {
+    @apply text-xs mt-6 pt-4 border-t text-center flex items-center justify-center gap-2;
+    border-color: var(--line-divider);
+    color: var(--content-meta);
+  }
+
+  .error-state {
+    @apply text-center py-12;
+  }
+
+  .error-icon {
+    @apply text-6xl mb-4;
+  }
+
+  .error-message {
+    @apply text-red-600 dark:text-red-400 font-semibold mb-3 text-lg;
+  }
+
+  .error-details {
+    @apply text-sm p-4 rounded-xl mt-4 text-left overflow-auto max-h-48;
+    background: var(--codeblock-bg);
+    color: var(--content-meta);
+    border: 1px solid var(--line-divider);
+  }
+
+  .empty-state {
+    @apply text-center py-12;
+    color: var(--content-meta);
+  }
+
+  .empty-icon {
+    @apply text-6xl mb-4 opacity-50;
+  }
+
+  .dark .status-badge.ok {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.1));
+    color: #4ade80;
+  }
+
+  .dark .status-badge.down {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.1));
+    color: #f87171;
+  }
+
+  .dark .status-badge.paused {
+    background: linear-gradient(135deg, rgba(234, 179, 8, 0.2), rgba(234, 179, 8, 0.1));
+    color: #facc15;
+  }
+</style>
+
+<script define:vars={{ apiUrl, apiKey, days }}>
+  const statusContent = document.getElementById('statusContent');
+  const refreshBtn = document.getElementById('refreshBtn');
+  const countdownValue = document.getElementById('countdownValue');
+  let isLoading = false;
+  let countdown = 30;
+  let countdownInterval = null;
+
+  function resetCountdown() {
+    countdown = 30;
+    if (countdownValue) {
+      countdownValue.textContent = countdown;
+    }
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text || '';
+    return div.innerHTML;
+  }
+
+  function formatTimestamp(timestamp) {
+    return new Date(timestamp).toLocaleString('zh-CN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
+
+  function renderLoading() {
+    statusContent.innerHTML = `
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p class="text-black/60 dark:text-white/60 mt-3">正在获取服务状态...</p>
+      </div>
+    `;
+  }
+
+  function renderError(message, details = null) {
+    let html = `
+      <div class="error-state">
+        <div class="error-icon">😢</div>
+        <div class="error-message">${escapeHtml(message)}</div>
+        <button onclick="window.loadStatus()" class="refresh-btn mt-4">
+          <iconify-icon icon="material-symbols:refresh" class="text-lg"></iconify-icon>
+          <span class="ml-1">重试</span>
+        </button>
+    `;
+
+    if (details) {
+      html += `<pre class="error-details">${escapeHtml(details)}</pre>`;
+    }
+
+    html += '</div>';
+    statusContent.innerHTML = html;
+  }
+
+  function renderMonitors(monitors) {
+    if (!monitors || monitors.length === 0) {
+      statusContent.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">📭</div>
+          <p>暂无监控数据</p>
+        </div>
+      `;
+      return;
+    }
+
+    const stats = {
+      total: monitors.length,
+      ok: monitors.filter(m => m.status === 'ok').length,
+      down: monitors.filter(m => m.status === 'down').length,
+      paused: monitors.filter(m => m.status === 'paused').length,
+    };
+
+    const statusMap = {
+      'ok': { text: '正常', class: 'ok' },
+      'down': { text: '异常', class: 'down' },
+      'paused': { text: '暂停', class: 'paused' },
+      'unknown': { text: '未知', class: 'unknown' }
+    };
+
+    const statsHtml = `
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">总计</div>
+          <div class="stat-value">${stats.total}</div>
+        </div>
+        <div class="stat-card ok">
+          <div class="stat-label">正常</div>
+          <div class="stat-value">${stats.ok}</div>
+        </div>
+        <div class="stat-card down">
+          <div class="stat-label">异常</div>
+          <div class="stat-value">${stats.down}</div>
+        </div>
+        <div class="stat-card paused">
+          <div class="stat-label">暂停</div>
+          <div class="stat-value">${stats.paused}</div>
+        </div>
+      </div>
+    `;
+
+    const monitorsHtml = monitors.map(monitor => {
+      const status = statusMap[monitor.status] || statusMap['unknown'];
+      const uptime = typeof monitor.average === 'number' ? monitor.average.toFixed(2) : '0.00';
+      return `
+        <div class="monitor-item ${status.class}">
+          <div class="monitor-info">
+            <div class="monitor-name">${escapeHtml(monitor.name)}</div>
+          </div>
+          <div class="monitor-status">
+            <span class="status-badge ${status.class}">${status.text}</span>
+            <div class="uptime-text">可用率: <strong>${uptime}%</strong></div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    const lastUpdated = formatTimestamp(Date.now());
+
+    statusContent.innerHTML = `
+      ${statsHtml}
+      <div class="monitor-list">
+        ${monitorsHtml}
+      </div>
+      <div class="last-updated">
+        <iconify-icon icon="material-symbols:update" class="text-sm"></iconify-icon>
+        最后更新: ${lastUpdated}
+      </div>
+    `;
+  }
+
+  async function loadStatus() {
+    if (isLoading) return;
+
+    isLoading = true;
+    refreshBtn.disabled = true;
+    refreshBtn.classList.add('loading');
+    renderLoading();
+
+    try {
+      const url = new URL(apiUrl);
+      if (!url.searchParams.has('days')) {
+        url.searchParams.append('days', days);
+      }
+
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+
+      if (apiKey && apiKey.trim()) {
+        headers['X-API-Key'] = apiKey.trim();
+      }
+
+      const response = await fetch(url.toString(), {
+        method: 'GET',
+        headers,
+      });
+
+      const contentType = response.headers.get('content-type');
+      let data;
+
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        throw new Error(`服务器返回了非 JSON 响应: ${response.status}`);
+      }
+
+      if (response.ok && data.success) {
+        renderMonitors(data.data);
+      } else {
+        const errorMsg = data.error || `请求失败 (${response.status})`;
+        renderError(errorMsg, JSON.stringify(data, null, 2));
+      }
+    } catch (error) {
+      console.error('请求失败:', error);
+      let errorDetails = '';
+
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        errorDetails = '可能是 CORS 问题或网络连接失败\n\n解决方法：\n1. 检查 API 地址是否正确\n2. 确认 API 服务器已配置 CORS\n3. 检查网络连接';
+      } else {
+        errorDetails = `错误类型: ${error.name}\n错误信息: ${error.message}`;
+      }
+
+      renderError('请求失败: ' + error.message, errorDetails);
+    } finally {
+      isLoading = false;
+      refreshBtn.disabled = false;
+      refreshBtn.classList.remove('loading');
+    }
+  }
+
+  window.loadStatus = loadStatus;
+
+  refreshBtn.addEventListener('click', () => {
+    resetCountdown();
+    loadStatus();
+  });
+
+  document.addEventListener('astro:page-load', loadStatus);
+
+  loadStatus();
+
+  countdownInterval = setInterval(() => {
+    countdown--;
+    if (countdownValue) {
+      countdownValue.textContent = countdown;
+    }
+    if (countdown <= 0) {
+      resetCountdown();
+      loadStatus();
+    }
+  }, 1000);
+</script>
