@@ -96,7 +96,8 @@ export const siteConfig: SiteConfig = {
 		// 支持单张图片或图片数组，当数组长度 > 1 时自动启用轮播
 		src: {
 			desktop: [
-				"/assets/desktop-banner/7.webp"
+				"/assets/desktop-banner/7.webp",
+				"/assets/desktop-banner/8.png"
 			], // 桌面横幅图片
 			mobile: [
 				"/assets/mobile-banner/1.png",
@@ -117,7 +118,7 @@ export const siteConfig: SiteConfig = {
 		},
 
 		waves: {
-			enable: false, // 是否启用水波纹效果(这个功能比较吃性能)
+			enable: true, // 是否启用水波纹效果(这个功能比较吃性能)
 			performanceMode: true, // 性能模式：减少动画复杂度(性能提升40%)
 			mobileDisable: false, // 移动端禁用
 		},
@@ -132,7 +133,7 @@ export const siteConfig: SiteConfig = {
 		// 请自行搭建API
 
 		homeText: {
-			enable: true, // 在主页显示自定义文本
+			enable: false, // 在主页显示自定义文本
 			title: "你好", // 主页横幅主标题
 
 			subtitle: [
@@ -142,7 +143,7 @@ export const siteConfig: SiteConfig = {
 				"ヾ(•ω•`)o",
 			],
 			typewriter: {
-				enable: true, // 启用副标题打字机效果
+				enable: false, // 启用副标题打字机效果
 
 				speed: 100, // 打字速度（毫秒）
 				deleteSpeed: 50, // 删除速度（毫秒）
@@ -158,7 +159,7 @@ export const siteConfig: SiteConfig = {
 		},
 
 		navbar: {
-			transparentMode: "full", // 导航栏透明模式："semi" 半透明加圆角，"full" 完全透明，"semifull" 动态透明
+			transparentMode: "semifull", // 导航栏透明模式："semi" 半透明加圆角，"full" 完全透明，"semifull" 动态透明
 		},
 	},
 	toc: {
@@ -203,7 +204,8 @@ export const siteConfig: SiteConfig = {
 export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
 	src: {
 		desktop: [
-			"/assets/desktop-banner/7.webp"
+			"/assets/desktop-banner/7.webp",
+			"/assets/desktop-banner/8.png"
 		], // 桌面横幅图片
 		mobile: [
 			"/assets/mobile-banner/1.png",
@@ -299,9 +301,9 @@ export const profileConfig: ProfileConfig = {
 	},
 	// 时间进度配置
 	timeProgress: {
-		enable: true, // 启用时间进度显示
-		showYearProgress: true, // 显示年度进度
-		showDayProgress: true, // 显示今日进度
+		enable: false, // 启用时间进度显示
+		showYearProgress: false, // 显示年度进度
+		showDayProgress: false, // 显示今日进度
 		updateInterval: 60000, // 更新间隔（毫秒），默认1分钟
 	},
 	links: [
