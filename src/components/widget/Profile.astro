@@ -107,8 +107,15 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
 
         // 数字格式化函数，全部显示数字，使用千位分隔符
         function formatNumber(num) {
-            return num.toLocaleString();
-            
+            if (num < 1000) {
+                return num.toString();
+            } else if (num < 1000000) {
+                return (num / 1000).toFixed(1) + 'k';
+            } else if (num < 1000000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else {
+                return (num / 1000000000).toFixed(1) + 'B';
+            }
         }
         
         // 获取访问量统计
@@ -128,9 +135,11 @@ const umamiBaseUrl = umamiConfig.baseUrl || "";
                 
                 if (pageviewsElement) {
                     pageviewsElement.textContent = formatNumber(pageViews);
+                    pageviewsElement.title = pageViews.toLocaleString();
                 }
                 if (visitsElement) {
                     visitsElement.textContent = formatNumber(visits);
+                    visitsElement.title = visits.toLocaleString();
                 }
                 if (displayElement) {
                     displayElement.textContent = '数据已加载';
