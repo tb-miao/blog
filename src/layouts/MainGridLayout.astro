@@ -5,7 +5,6 @@ import Footer from "@components/Footer.astro";
 import RightSideBar from "@components/layout/RightSideBar.astro";
 import Navbar from "@components/Navbar.astro";
 import SideBar from "@components/widget/SideBar.astro";
-import Announcement from "@components/widget/Announcement.astro";
 import type { MarkdownHeading } from "astro";
 import { Icon } from "astro-icon/components";
 import FullscreenWallpaper from "../components/misc/FullscreenWallpaper.astro";
@@ -768,9 +767,6 @@ const transparentClass = shouldEnableTransparency
 
             <main id="swup-container" class={`${mainContentClass} transition-main`}>
                 <div id="content-wrapper" class="onload-animation transition-leaving">
-                    <!-- 公告组件 - 显示在所有页面的文章列表上方 -->
-                    <Announcement useWidgetLayout={false} class="onload-animation" style="animation-delay: var(--content-delay);" />
-                    
                     <!-- the overflow-hidden here prevent long text break the layout-->
                     <!-- make id different from windows.swup global property -->
                     <slot></slot>

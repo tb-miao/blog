@@ -429,8 +429,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 		{
 			// 组件类型：公告组件
 			type: "announcement",
-			// 已禁用，公告现在显示在主内容区域上方
-			enable: false,
+			// 是否启用该组件
+			enable: true,
 			// 组件显示顺序
 			order: 2,
 			// 组件位置："top" 表示固定在顶部

@@ -1,5 +1,4 @@
 ---
-import { Icon } from "astro-icon/components";
 import { announcementConfig } from "../../config";
 import I18nKey from "../../i18n/i18nKey";
 import { i18n } from "../../i18n/translation";
@@ -20,95 +19,19 @@ if (announcementPost) {
 interface Props {
 	class?: string;
 	style?: string;
-	useWidgetLayout?: boolean;
 }
 const className = Astro.props.class;
 const style = Astro.props.style;
-const useWidgetLayout = Astro.props.useWidgetLayout !== false;
-
-const announcementId = useWidgetLayout ? "announcement" : "announcement-main";
 ---
 
-{useWidgetLayout ? (
-    <div class="h-1 bg-[var(--primary)] rounded-t-lg mb-3"></div>
-    <!-- 组件显示现在由sidebarLayoutConfig统一控制，无需检查config.enable -->
-    <WidgetLayout 
-        name={config.title || i18n(I18nKey.announcement)} 
-        id="announcement"
-        class={className} 
-        style={style}
-    >
-        <div>
-            <!-- 公告栏内容 -->
-            <div id="announcement-content" class="text-neutral-600 dark:text-neutral-300 leading-relaxed mb-3">
-                {AnnouncementContent ? (
-                    <AnnouncementContent />
-                ) : (
-                    <Markdown>
-                        {config.content}
-                    </Markdown>
-                )}
-            </div>
-            
-            <!-- 底部主题色分隔符 -->
-            <div class="h-1 bg-[var(--primary)] rounded-b-lg mb-3"></div>
-            
-            <!-- 可选链接和关闭按钮 -->
-            <div class="flex items-center justify-between gap-3">
-                <div class="flex items-center gap-2">
-                    <button 
-                        class="btn-regular rounded-lg px-3 py-1.5 text-sm font-medium active:scale-95 transition-transform flex items-center gap-1"
-                        onclick="toggleAnnouncement()"
-                        aria-label="折叠/展开公告"
-                    >
-                        <Icon name="fa6-solid:chevron-up" id="announcement-toggle-icon-up" class="text-sm" />
-                        <Icon name="fa6-solid:chevron-down" id="announcement-toggle-icon-down" class="text-sm hidden" />
-                        <span id="announcement-toggle-text">折叠</span>
-                    </button>
-                    {config.link && config.link.enable !== false && (
-                        <a 
-                            href={config.link.url} 
-                            target={config.link.external ? "_blank" : "_self"}
-                            rel={config.link.external ? "noopener noreferrer" : undefined}
-                            class="btn-regular rounded-lg px-3 py-1.5 text-sm font-medium active:scale-95 transition-transform"
-                        >
-                            {config.link.text}
-                        </a>
-                    )}
-                </div>
-                
-                {config.closable && (
-                    <button 
-                        class="btn-regular rounded-lg h-8 w-8 text-sm hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
-                        onclick="closeAnnouncement()"
-                        aria-label={i18n(I18nKey.announcementClose)}
-                    >
-                        <Icon name="fa6-solid:xmark" class="text-sm" />
-                    </button>
-                )}
-            </div>
-        </div>
-    </WidgetLayout>
-) : (
-    <!-- 主内容区域上方的公告组件 -->
-    <div 
-        id={announcementId} 
-        class={`card-base p-4 md:p-6 rounded-[var(--radius-large)] mb-4 ${className || ''}`}
-        style={style}
-        data-announcement
-    >
-        <div class="flex items-center gap-3 mb-3">
-            <Icon name="fa6-solid:bullhorn" class="text-[var(--primary)] text-lg" />
-            <h3 class="font-bold text-lg text-neutral-900 dark:text-neutral-100">
-                {config.title || i18n(I18nKey.announcement)}
-            </h3>
-        </div>
-        
-
-        
-        <!-- 公告栏内容 -->
-        <div id="announcement-main-content" class="text-neutral-600 dark:text-neutral-300 leading-relaxed mb-4">
-                <div class="h-1 bg-[var(--primary)] rounded-t-lg mb-4"></div>
+<WidgetLayout 
+    name={config.title || i18n(I18nKey.announcement)} 
+    id="announcement"
+    class={className} 
+    style={style}
+>
+    <div>
+        <div id="announcement-content" class="text-neutral-600 dark:text-neutral-300 leading-relaxed mb-3">
             {AnnouncementContent ? (
                 <AnnouncementContent />
             ) : (
@@ -116,96 +39,24 @@ const announcementId = useWidgetLayout ? "announcement" : "announcement-main";
                     {config.content}
                 </Markdown>
             )}
-                <div class="h-1 bg-[var(--primary)] rounded-b-lg mb-4"></div>
-        
         </div>
         
-        <!-- 可选链接和关闭按钮 -->
-        <div class="flex items-center justify-between gap-3">
-            <div class="flex items-center gap-2">
-                <button 
-                    class="btn-regular rounded-lg px-4 py-2 text-sm font-medium active:scale-95 transition-transform flex items-center gap-1"
-                    onclick="toggleAnnouncementMain()"
-                    aria-label="折叠/展开公告"
+        <div class="flex items-center gap-3">
+            {config.link && config.link.enable !== false && (
+                <a 
+                    href={config.link.url} 
+                    target={config.link.external ? "_blank" : "_self"}
+                    rel={config.link.external ? "noopener noreferrer" : undefined}
+                    class="btn-regular rounded-lg px-3 py-1.5 text-sm font-medium active:scale-95 transition-transform"
                 >
-                    <Icon name="fa6-solid:chevron-up" id="announcement-main-toggle-icon-up" class="text-base" />
-                    <Icon name="fa6-solid:chevron-down" id="announcement-main-toggle-icon-down" class="text-base hidden" />
-                    <span id="announcement-main-toggle-text">折叠</span>
-                </button>
-                {config.link && config.link.enable !== false && (
-                    <a 
-                        href={config.link.url} 
-                        target={config.link.external ? "_blank" : "_self"}
-                        rel={config.link.external ? "noopener noreferrer" : undefined}
-                        class="btn-regular rounded-lg px-4 py-2 text-sm font-medium active:scale-95 transition-transform"
-                    >
-                        {config.link.text}
-                    </a>
-                )}
-            </div>
-            
-            {config.closable && (
-                <button 
-                    class="btn-regular rounded-lg h-9 w-9 text-sm hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
-                    onclick="closeAnnouncementMain()"
-                    aria-label={i18n(I18nKey.announcementClose)}
-                >
-                    <Icon name="fa6-solid:xmark" class="text-base" />
-                </button>
+                    {config.link.text}
+                </a>
             )}
         </div>
     </div>
-)}
+</WidgetLayout>
 
 <script>
-    function toggleAnnouncement() {
-        const content = document.getElementById('announcement-content');
-        const iconUp = document.getElementById('announcement-toggle-icon-up');
-        const iconDown = document.getElementById('announcement-toggle-icon-down');
-        const text = document.getElementById('announcement-toggle-text');
-        
-        if (content && iconUp && iconDown && text) {
-            const isCollapsed = content.style.display === 'none';
-            content.style.display = isCollapsed ? 'block' : 'none';
-            
-            if (isCollapsed) {
-                iconUp.classList.remove('hidden');
-                iconDown.classList.add('hidden');
-                text.textContent = '折叠';
-            } else {
-                iconUp.classList.add('hidden');
-                iconDown.classList.remove('hidden');
-                text.textContent = '展开';
-            }
-            
-            localStorage.setItem('announcementCollapsed', isCollapsed ? 'false' : 'true');
-        }
-    }
-
-    function toggleAnnouncementMain() {
-        const content = document.getElementById('announcement-main-content');
-        const iconUp = document.getElementById('announcement-main-toggle-icon-up');
-        const iconDown = document.getElementById('announcement-main-toggle-icon-down');
-        const text = document.getElementById('announcement-main-toggle-text');
-        
-        if (content && iconUp && iconDown && text) {
-            const isCollapsed = content.style.display === 'none';
-            content.style.display = isCollapsed ? 'block' : 'none';
-            
-            if (isCollapsed) {
-                iconUp.classList.remove('hidden');
-                iconDown.classList.add('hidden');
-                text.textContent = '折叠';
-            } else {
-                iconUp.classList.add('hidden');
-                iconDown.classList.remove('hidden');
-                text.textContent = '展开';
-            }
-            
-            localStorage.setItem('announcementMainCollapsed', isCollapsed ? 'false' : 'true');
-        }
-    }
-
     function closeAnnouncement() {
         const widgetLayout = document.querySelector('widget-layout[data-id="announcement"]');
         if (widgetLayout) {
@@ -214,50 +65,12 @@ const announcementId = useWidgetLayout ? "announcement" : "announcement-main";
         }
     }
 
-    function closeAnnouncementMain() {
-        const announcementMain = document.getElementById('announcement-main');
-        if (announcementMain) {
-            announcementMain.style.display = 'none';
-            localStorage.setItem('announcementMainClosed', 'true');
-        }
-    }
-
     document.addEventListener('DOMContentLoaded', function() {
         const widgetLayout = document.querySelector('widget-layout[data-id="announcement"]');
         if (widgetLayout && localStorage.getItem('announcementClosed') === 'true') {
             widgetLayout.style.display = 'none';
         }
-
-        const announcementMain = document.getElementById('announcement-main');
-        if (announcementMain && localStorage.getItem('announcementMainClosed') === 'true') {
-            announcementMain.style.display = 'none';
-        }
-
-        const content = document.getElementById('announcement-content');
-        const iconUp = document.getElementById('announcement-toggle-icon-up');
-        const iconDown = document.getElementById('announcement-toggle-icon-down');
-        const text = document.getElementById('announcement-toggle-text');
-        if (content && iconUp && iconDown && text && localStorage.getItem('announcementCollapsed') === 'true') {
-            content.style.display = 'none';
-            iconUp.classList.add('hidden');
-            iconDown.classList.remove('hidden');
-            text.textContent = '展开';
-        }
-
-        const mainContent = document.getElementById('announcement-main-content');
-        const mainIconUp = document.getElementById('announcement-main-toggle-icon-up');
-        const mainIconDown = document.getElementById('announcement-main-toggle-icon-down');
-        const mainText = document.getElementById('announcement-main-toggle-text');
-        if (mainContent && mainIconUp && mainIconDown && mainText && localStorage.getItem('announcementMainCollapsed') === 'true') {
-            mainContent.style.display = 'none';
-            mainIconUp.classList.add('hidden');
-            mainIconDown.classList.remove('hidden');
-            mainText.textContent = '展开';
-        }
     });
 
     window.closeAnnouncement = closeAnnouncement;
-    window.closeAnnouncementMain = closeAnnouncementMain;
-    window.toggleAnnouncement = toggleAnnouncement;
-    window.toggleAnnouncementMain = toggleAnnouncementMain;
 </script>
