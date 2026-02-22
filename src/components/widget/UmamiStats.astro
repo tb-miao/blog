@@ -1,0 +1,579 @@
+---
+interface Props {
+  apiKey?: string;
+  baseUrl?: string;
+  websiteId?: string;
+}
+
+const {
+  apiKey = import.meta.env.UMAMI_API_KEY || "",
+  baseUrl = "https://api.umami.is",
+  websiteId = import.meta.env.UMAMI_WEBSITE_ID || "50cd57c4-1d49-4941-88d5-b1cce22ee6a1",
+} = Astro.props;
+---
+
+<div class="umami-stats-container">
+  <div class="stats-header">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-bold text-black/90 dark:text-white/90 flex items-center gap-2">
+        <iconify-icon icon="material-symbols:analytics" class="text-2xl text-[var(--primary)]"></iconify-icon>
+        网站访问统计
+      </h2>
+      <div class="flex items-center gap-3">
+        <span id="umamiCountdown" class="countdown-text">
+          <iconify-icon icon="material-symbols:timer-outline" class="text-sm"></iconify-icon>
+          <span id="umamiCountdownValue">60</span>秒后刷新
+        </span>
+        <button
+          id="umamiRefreshBtn"
+          class="refresh-btn"
+          title="刷新数据"
+        >
+          <iconify-icon icon="material-symbols:refresh" class="text-lg"></iconify-icon>
+          <span class="ml-1">刷新</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="umamiStatsContent" class="stats-content">
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <p class="text-black/60 dark:text-white/60 mt-3">正在获取统计数据...</p>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .umami-stats-container {
+    @apply rounded-xl overflow-hidden;
+    background: var(--card-bg);
+    border: 1px solid var(--line-divider);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  }
+
+  .umami-stats-container .stats-header {
+    @apply p-6 border-b;
+    border-color: var(--line-divider);
+  }
+
+  .umami-stats-container .countdown-text {
+    @apply text-xs flex items-center gap-1 px-3 py-1.5 rounded-full;
+    background: var(--btn-regular-bg);
+    color: var(--content-meta);
+  }
+
+  .umami-stats-container .refresh-btn {
+    @apply flex items-center px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 shadow-sm;
+    background: linear-gradient(135deg, var(--primary), var(--btn-content));
+    color: white;
+  }
+
+  .umami-stats-container .refresh-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .umami-stats-container .refresh-btn:active {
+    transform: translateY(0);
+  }
+
+  .umami-stats-container .refresh-btn:disabled {
+    @apply opacity-60 cursor-not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .umami-stats-container .refresh-btn.loading iconify-icon {
+    @apply animate-spin;
+  }
+
+  .umami-stats-container .stats-content {
+    @apply p-6 min-h-[200px];
+  }
+
+  .umami-stats-container .loading-state {
+    @apply flex flex-col items-center justify-center py-12;
+  }
+
+  .umami-stats-container .loading-spinner {
+    @apply w-12 h-12 rounded-full border-4;
+    border-color: var(--btn-regular-bg);
+    border-top-color: var(--primary);
+    animation: umami-spin 1s linear infinite;
+  }
+
+  @keyframes umami-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .umami-stats-container .stats-grid {
+    @apply grid grid-cols-2 md:grid-cols-4 gap-4 mb-8;
+  }
+
+  .umami-stats-container .stat-card {
+    @apply rounded-2xl p-5 text-center transition-all duration-300 relative overflow-hidden;
+    background: var(--btn-regular-bg);
+    border: 1px solid var(--line-divider);
+  }
+
+  .umami-stats-container .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .umami-stats-container .stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .umami-stats-container .stat-card:hover::before {
+    opacity: 1;
+  }
+
+  .umami-stats-container .stat-icon {
+    @apply text-3xl mb-2;
+    color: var(--primary);
+  }
+
+  .umami-stats-container .stat-label {
+    @apply text-xs font-medium mb-2 uppercase tracking-wider;
+    color: var(--content-meta);
+  }
+
+  .umami-stats-container .stat-value {
+    @apply text-3xl font-bold;
+    color: var(--deep-text);
+  }
+
+  .umami-stats-container .stat-value.clickable {
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .umami-stats-container .stat-value.clickable:hover {
+    color: var(--primary);
+    transform: scale(1.05);
+  }
+
+  .umami-stats-container .stat-value.clickable:active {
+    transform: scale(0.95);
+  }
+
+  .umami-stats-container .section-title {
+    @apply text-lg font-semibold mb-4 flex items-center gap-2;
+    color: var(--deep-text);
+  }
+
+  .umami-stats-container .pages-list {
+    @apply space-y-3;
+  }
+
+  .umami-stats-container .pages-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .umami-stats-container .page-card {
+    padding: 1rem;
+    border-radius: 1rem;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    background: var(--btn-regular-bg);
+    border: 1px solid var(--line-divider);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .umami-stats-container .page-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  }
+
+  .umami-stats-container .page-card .page-title {
+    @apply font-semibold text-base truncate;
+    color: var(--deep-text);
+    flex: 1;
+  }
+
+  .umami-stats-container .page-card .page-views {
+    @apply text-lg font-bold;
+    color: var(--primary);
+  }
+
+  .umami-stats-container .page-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-radius: 1rem;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    background: var(--btn-regular-bg);
+    border: 1px solid var(--line-divider);
+  }
+
+  .umami-stats-container .page-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  }
+
+  .umami-stats-container .page-info {
+    @apply flex-1 min-w-0;
+  }
+
+  .umami-stats-container .page-title {
+    @apply font-semibold text-base truncate;
+    color: var(--deep-text);
+  }
+
+  .umami-stats-container .page-url {
+    @apply text-xs mt-1 truncate;
+    color: var(--content-meta);
+  }
+
+  .umami-stats-container .page-stats {
+    @apply flex flex-col items-end ml-4;
+  }
+
+  .umami-stats-container .page-views {
+    @apply text-lg font-bold;
+    color: var(--primary);
+  }
+
+  .umami-stats-container .page-visitors {
+    @apply text-xs mt-1;
+    color: var(--content-meta);
+  }
+
+  .umami-stats-container .last-updated {
+    @apply text-xs mt-6 pt-4 border-t text-center flex items-center justify-center gap-2;
+    border-color: var(--line-divider);
+    color: var(--content-meta);
+  }
+
+  .umami-stats-container .error-state {
+    @apply text-center py-12;
+  }
+
+  .umami-stats-container .error-icon {
+    @apply text-6xl mb-4;
+  }
+
+  .umami-stats-container .error-message {
+    @apply text-red-600 dark:text-red-400 font-semibold mb-3 text-lg;
+  }
+
+  .umami-stats-container .error-details {
+    @apply text-sm p-4 rounded-xl mt-4 text-left overflow-auto max-h-48;
+    background: var(--codeblock-bg);
+    color: var(--content-meta);
+    border: 1px solid var(--line-divider);
+  }
+
+  .umami-stats-container .empty-state {
+    @apply text-center py-12;
+    color: var(--content-meta);
+  }
+
+  .umami-stats-container .empty-icon {
+    @apply text-6xl mb-4 opacity-50;
+  }
+
+  .umami-stats-container .time-filter {
+    @apply flex gap-2 mb-6 flex-wrap;
+  }
+
+  .umami-stats-container .time-btn {
+    @apply px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200;
+    background: var(--btn-regular-bg);
+    color: var(--content-meta);
+    border: 1px solid var(--line-divider);
+  }
+
+  .umami-stats-container .time-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+
+  .umami-stats-container .time-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+</style>
+
+<script define:vars={{ apiKey, baseUrl, websiteId }}>
+  const statsContent = document.getElementById('umamiStatsContent');
+  const refreshBtn = document.getElementById('umamiRefreshBtn');
+  const countdownValue = document.getElementById('umamiCountdownValue');
+  let isLoading = false;
+  let countdown = 60;
+  let countdownInterval = null;
+  let currentTimeRange = 'all';
+  let isInitialized = false;
+
+  const timeRanges = {
+    '7d': { label: '7天', startAt: () => Date.now() - 7 * 24 * 60 * 60 * 1000 },
+    'all': { label: '全部', startAt: () => 0 }
+  };
+
+  function resetCountdown() {
+    countdown = 60;
+    if (countdownValue) {
+      countdownValue.textContent = countdown;
+    }
+  }
+
+  function formatNumber(num) {
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1) + 'M';
+    }
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1) + 'K';
+    }
+    return num.toString();
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text || '';
+    return div.innerHTML;
+  }
+
+  function formatTimestamp(timestamp) {
+    return new Date(timestamp).toLocaleString('zh-CN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
+
+  function renderLoading() {
+    statsContent.innerHTML = `
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p class="text-black/60 dark:text-white/60 mt-3">正在获取统计数据...</p>
+      </div>
+    `;
+  }
+
+  function renderError(message, details = null) {
+    let html = `
+      <div class="error-state">
+        <div class="error-icon">😢</div>
+        <div class="error-message">${escapeHtml(message)}</div>
+        <button onclick="window.loadUmamiStats()" class="refresh-btn mt-4">
+          <iconify-icon icon="material-symbols:refresh" class="text-lg"></iconify-icon>
+          <span class="ml-1">重试</span>
+        </button>
+    `;
+
+    if (details) {
+      html += `<pre class="error-details">${escapeHtml(details)}</pre>`;
+    }
+
+    html += '</div>';
+    statsContent.innerHTML = html;
+  }
+
+  function renderStats(stats, pages) {
+    const timeFilterHtml = `
+      <div class="time-filter">
+        ${Object.entries(timeRanges).map(([key, range]) => `
+          <button class="time-btn ${key === currentTimeRange ? 'active' : ''}" data-range="${key}">
+            ${range.label}
+          </button>
+        `).join('')}
+      </div>
+    `;
+
+    const statsHtml = `
+      <div class="stats-grid">
+        <div class="stat-card">
+          <iconify-icon icon="material-symbols:visibility" class="stat-icon"></iconify-icon>
+          <div class="stat-label">页面浏览量</div>
+          <div class="stat-value clickable" data-raw="${stats.pageviews?.value || stats.pageviews || 0}" data-formatted="${formatNumber(stats.pageviews?.value || stats.pageviews || 0)}">${formatNumber(stats.pageviews?.value || stats.pageviews || 0)}</div>
+        </div>
+        <div class="stat-card">
+          <iconify-icon icon="material-symbols:group" class="stat-icon"></iconify-icon>
+          <div class="stat-label">访客数</div>
+          <div class="stat-value clickable" data-raw="${stats.visits?.value || stats.visits || 0}" data-formatted="${formatNumber(stats.visits?.value || stats.visits || 0)}">${formatNumber(stats.visits?.value || stats.visits || 0)}</div>
+        </div>
+        <div class="stat-card">
+          <iconify-icon icon="material-symbols:exit-to-app" class="stat-icon"></iconify-icon>
+          <div class="stat-label">跳出数</div>
+          <div class="stat-value clickable" data-raw="${stats.bounces?.value || stats.bounces || 0}" data-formatted="${formatNumber(stats.bounces?.value || stats.bounces || 0)}">${formatNumber(stats.bounces?.value || stats.bounces || 0)}</div>
+        </div>
+        <div class="stat-card">
+          <iconify-icon icon="material-symbols:timer" class="stat-icon"></iconify-icon>
+          <div class="stat-label">总停留时间</div>
+          <div class="stat-value clickable" data-raw="${stats.totaltime?.value || stats.totaltime || 0}" data-formatted="${formatNumber(stats.totaltime?.value || stats.totaltime || 0)}" data-unit="秒">${formatNumber(stats.totaltime?.value || stats.totaltime || 0)}秒</div>
+        </div>
+      </div>
+    `;
+
+    const pagesHtml = pages && pages.length > 0 ? `
+      <div class="mt-8">
+        <h3 class="section-title">
+          <iconify-icon icon="material-symbols:article" class="text-xl text-[var(--primary)]"></iconify-icon>
+          热门页面（显示30个）
+        </h3>
+        <div class="pages-grid">
+          ${pages.slice(0, 30).map(page => `
+            <div class="page-card">
+              <div class="page-title">${escapeHtml(page.x || page.path || '未知页面')}</div>
+              <div class="page-views">${formatNumber(page.y || page.views || 0)} 次访问</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    ` : '';
+
+    const lastUpdated = formatTimestamp(Date.now());
+
+    statsContent.innerHTML = `
+      ${timeFilterHtml}
+      ${statsHtml}
+      ${pagesHtml}
+      <div class="last-updated">
+        <iconify-icon icon="material-symbols:update" class="text-sm"></iconify-icon>
+        最后更新: ${lastUpdated}
+      </div>
+    `;
+
+    document.querySelectorAll('.time-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        currentTimeRange = e.target.dataset.range;
+        loadUmamiStats();
+      });
+    });
+
+    document.querySelectorAll('.stat-value.clickable').forEach(element => {
+      element.addEventListener('click', function() {
+        const raw = this.dataset.raw;
+        const formatted = this.dataset.formatted;
+        const unit = this.dataset.unit || '';
+        const currentText = this.textContent;
+        const formattedWithUnit = formatted + unit;
+        const rawWithUnit = raw + unit;
+        if (currentText === formattedWithUnit) {
+          this.textContent = rawWithUnit;
+        } else {
+          this.textContent = formattedWithUnit;
+        }
+      });
+    });
+  }
+
+  async function loadUmamiStats(forceRefresh = false) {
+    if (isLoading) return;
+    if (!apiKey || !websiteId) {
+      renderError('缺少 API 配置', '请检查 UMAMI_API_KEY 和 UMAMI_WEBSITE_ID 环境变量是否已配置 ./请使用自己的，不要用我的！！！o(≧口≦)o');
+      return;
+    }
+
+    if (!forceRefresh && isInitialized && statsContent.innerHTML.trim() !== '') {
+      console.log('数据已加载，跳过重复请求');
+      return;
+    }
+
+    isLoading = true;
+    isInitialized = true;
+    refreshBtn.disabled = true;
+    refreshBtn.classList.add('loading');
+    renderLoading();
+
+    try {
+      const range = timeRanges[currentTimeRange];
+      const startAt = range.startAt();
+      const endAt = Date.now();
+
+      const statsUrl = `${baseUrl}/v1/websites/${websiteId}/stats`;
+      const pagesUrl = `${baseUrl}/v1/websites/${websiteId}/metrics?type=url`;
+
+      const params = new URLSearchParams({
+        startAt: startAt.toString(),
+        endAt: endAt.toString()
+      });
+
+      const fullStatsUrl = `${statsUrl}?${params.toString()}`;
+      const fullPagesUrl = `${pagesUrl}&${params.toString()}`;
+
+      const headers = {
+        'x-umami-api-key': apiKey,
+        'Content-Type': 'application/json',
+      };
+
+
+      const [statsRes, pagesRes] = await Promise.all([
+        fetch(fullStatsUrl, { headers }),
+        fetch(fullPagesUrl, { headers })
+      ]);
+
+
+      if (!statsRes.ok) {
+        const errorText = await statsRes.text();
+        console.error('错误详情:', errorText);
+        throw new Error(`获取统计数据失败: ${statsRes.status} - ${errorText}`);
+      }
+
+      const stats = await statsRes.json();
+      console.log('统计系统 API 状态: 就绪');
+      
+      let pages = [];
+
+      if (pagesRes.ok) {
+        pages = await pagesRes.json();
+      }
+
+      renderStats(stats, pages);
+    } catch (error) {
+      console.error('获取统计数据失败:', error);
+      renderError('获取统计数据失败: ' + error.message, error.stack);
+    } finally {
+      isLoading = false;
+      refreshBtn.disabled = false;
+      refreshBtn.classList.remove('loading');
+    }
+  }
+
+  window.loadUmamiStats = loadUmamiStats;
+
+  refreshBtn.addEventListener('click', () => {
+    resetCountdown();
+    loadUmamiStats(true);
+  });
+
+  document.addEventListener('astro:page-load', loadUmamiStats);
+
+  loadUmamiStats();
+
+  countdownInterval = setInterval(() => {
+    countdown--;
+    if (countdownValue) {
+      countdownValue.textContent = countdown;
+    }
+    if (countdown <= 0) {
+      resetCountdown();
+      loadUmamiStats(true);
+    }
+  }, 1000);
+</script>

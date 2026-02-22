@@ -1,0 +1,49 @@
+---
+import { getEntry, render } from "astro:content";
+import Markdown from "@components/misc/Markdown.astro";
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+import PageEncryptor from "../components/PageEncryptor.astro";
+import UmamiStatsComponent from "@components/widget/UmamiStats.astro";
+
+const umamiPost = await getEntry("spec", "umami");
+
+if (!umamiPost) {
+	throw new Error("网站统计页面内容未找到");
+}
+
+const { Content } = await render(umamiPost);
+const title = umamiPost.data.title || "网站统计";
+
+let isEncrypted = umamiPost.data.encrypted && umamiPost.data.password;
+---
+<MainGridLayout title={title}>
+  <script>
+    import('../scripts/right-sidebar-layout.js');
+  </script>
+  
+    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+        <div class="card-base z-10 px-9 py-6 relative w-full">
+            <div class="flex flex-col items-start justify-center mb-8">
+                <h1 class="text-4xl font-bold text-black/90 dark:text-white/90 mb-2 relative
+                          before:w-1 before:h-8 before:rounded-md before:bg-[var(--primary)]
+                          before:absolute before:top-1/2 before:-translate-y-1/2 before:-left-4">
+                    {title}
+                </h1>
+            </div>
+            
+			{isEncrypted ? (
+				<PageEncryptor password={umamiPost.data.password}>
+					<Markdown class="mt-2">
+						<Content />
+					</Markdown>
+				</PageEncryptor>
+			) : (
+				<Markdown class="mt-2">
+					<Content />
+				</Markdown>
+			)}
+            
+            <div class="mt-8">
+                <UmamiStatsComponent />
+            </div>
+</MainGridLayout>
