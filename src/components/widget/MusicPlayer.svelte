@@ -28,7 +28,7 @@ let isPlaying = false;
 // 播放器是否展开，默认为 false
 let isExpanded = false;
 // 播放器是否隐藏，默认为 false
-let isHidden = false;
+let isHidden = true;
 // 是否显示播放列表，默认为 false
 let showPlaylist = false;
 // 当前播放时间，默认为 0
@@ -57,6 +57,7 @@ let currentSong = {
 	cover: "/favicon/favicon.ico",
 	url: "",
 	duration: 0,
+	lrc_url: "",
 };
 
 type Song = {
@@ -66,7 +67,17 @@ type Song = {
 	cover: string;
 	url: string;
 	duration: number;
+	lrc_url?: string;
 };
+
+type LyricLine = {
+	time: number;
+	text: string;
+};
+
+let lyrics: LyricLine[] = [];
+let currentLyricIndex = 0;
+let showLyrics = true;
 
 let playlist: Song[] = [];
 let currentIndex = 0;
@@ -120,6 +131,7 @@ async function fetchMetingPlaylist() {
 			let dur = song.duration ?? 0;
 			if (dur > 10000) dur = Math.floor(dur / 1000);
 			if (!Number.isFinite(dur) || dur <= 0) dur = 0;
+			const lrcUrl = song.lrc ?? "";
 			return {
 				id: song.id,
 				title,
@@ -127,6 +139,7 @@ async function fetchMetingPlaylist() {
 				cover: song.pic ?? "",
 				url: song.url ?? "",
 				duration: dur,
+				lrc_url: lrcUrl,
 			};
 		});
 		if (playlist.length > 0) {
@@ -153,6 +166,7 @@ function toggleExpanded() {
 	if (isExpanded) {
 		showPlaylist = false;
 		isHidden = false;
+		showLyrics = false;
 	}
 }
 
@@ -161,11 +175,44 @@ function toggleHidden() {
 	if (isHidden) {
 		isExpanded = false;
 		showPlaylist = false;
+		showLyrics = true;
 	}
 }
 
 function togglePlaylist() {
 	showPlaylist = !showPlaylist;
+	if (showPlaylist) {
+		showLyrics = true;
+	}
+}
+
+function toggleLyrics() {
+	showLyrics = !showLyrics;
+	if (showLyrics) {
+		showPlaylist = false;
+	}
+}
+
+async function initPlaylist() {
+	if (mode === "meting") {
+		await fetchMetingPlaylist();
+	} else {
+		playlist = [...localPlaylist];
+		if (playlist.length > 0) {
+			loadSong(playlist[0]);
+		} else {
+			showErrorMessage("本地播放列表为空");
+		}
+	}
+}
+
+function toggleMode() {
+	if (mode === "meting") {
+		mode = "local";
+	} else {
+		mode = "meting";
+	}
+	initPlaylist();
 }
 
 function toggleShuffle() {
@@ -234,6 +281,8 @@ function getAssetPath(path: string): string {
 function loadSong(song: typeof currentSong) {
 	if (!song || !audio) return;
 	currentSong = { ...song };
+	lyrics = [];
+	currentLyricIndex = 0;
 	if (song.url) {
 		isLoading = true;
 		audio.currentTime = 0;
@@ -247,6 +296,14 @@ function loadSong(song: typeof currentSong) {
 		audio.addEventListener("loadstart", handleLoadStart, { once: true });
 		audio.src = getAssetPath(song.url);
 		audio.load();
+		if (mode === "meting") {
+			if (song.lrc_url) {
+				fetchLyrics(song.lrc_url);
+			} else {
+				console.log("该歌曲没有歌词URL");
+				lyrics = [];
+			}
+		}
 	} else {
 		isLoading = false;
 	}
@@ -392,6 +449,87 @@ function formatTime(seconds: number): string {
 	return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
 
+function parseLRC(lrcText: string): LyricLine[] {
+	const lines: LyricLine[] = [];
+	if (!lrcText) return lines;
+	
+	
+	const lrcLines = lrcText.split('\n');
+	for (const line of lrcLines) {
+		const trimmedLine = line.trim();
+		if (!trimmedLine) continue;
+		
+		const timeTagRegex = /\[(\d{2}):(\d{2})[:\.](\d{2,3})\]/g;
+		const matches = [...trimmedLine.matchAll(timeTagRegex)];
+		
+		if (matches.length > 0) {
+			let textStartIndex = 0;
+			for (const match of matches) {
+				if (match.index !== undefined) {
+					textStartIndex = match.index + match[0].length;
+				}
+			}
+			
+			const text = trimmedLine.slice(textStartIndex).trim();
+			
+			for (const match of matches) {
+				if (match.index !== undefined) {
+					const minutes = parseInt(match[1]);
+					const seconds = parseInt(match[2]);
+					let milliseconds = parseInt(match[3]);
+					if (milliseconds < 100) {
+						milliseconds = milliseconds * 10;
+					}
+					const time = minutes * 60 + seconds + milliseconds / 1000;
+					
+					if (text) {
+						lines.push({ time, text });
+					}
+				}
+			}
+		}
+	}
+	
+	if (lines.length > 0) {
+	}
+	
+	return lines.sort((a, b) => a.time - b.time);
+}
+
+async function fetchLyrics(lrcUrl: string) {
+	if (!lrcUrl) {
+		lyrics = [];
+		currentLyricIndex = 0;
+		return;
+	}
+	try {
+		const url = getAssetPath(lrcUrl);
+		const res = await fetch(url);
+		if (!res.ok) throw new Error("lyrics fetch error");
+		const lrcText = await res.text();
+		lyrics = parseLRC(lrcText);
+		currentLyricIndex = 0;
+	} catch (e) {
+		console.error("歌词加载失败:", e);
+		lyrics = [];
+		currentLyricIndex = 0;
+	}
+}
+
+function updateCurrentLyric() {
+	if (lyrics.length === 0) {
+		currentLyricIndex = 0;
+		return;
+	}
+	let newIndex = 0;
+	for (let i = 0; i < lyrics.length; i++) {
+		if (currentTime >= lyrics[i].time) {
+			newIndex = i;
+		}
+	}
+	currentLyricIndex = newIndex;
+}
+
 function handleAudioEvents() {
 	if (!audio) return;
 	audio.addEventListener("play", () => {
@@ -402,6 +540,9 @@ function handleAudioEvents() {
 	});
 	audio.addEventListener("timeupdate", () => {
 		currentTime = audio.currentTime;
+		if (mode === "meting") {
+			updateCurrentLyric();
+		}
 	});
 	audio.addEventListener("ended", () => {
 		if (isRepeating === 1) {
@@ -437,17 +578,7 @@ onMount(() => {
 	if (!musicPlayerConfig.enable) {
 		return;
 	}
-	if (mode === "meting") {
-		fetchMetingPlaylist();
-	} else {
-		// 使用本地播放列表，不发送任何API请求
-		playlist = [...localPlaylist];
-		if (playlist.length > 0) {
-			loadSong(playlist[0]);
-		} else {
-			showErrorMessage("本地播放列表为空");
-		}
-	}
+	initPlaylist();
 });
 
 onDestroy(() => {
@@ -563,6 +694,15 @@ onDestroy(() => {
             </div>
             <div class="flex items-center gap-1">
                 <button class="btn-plain w-8 h-8 rounded-lg flex items-center justify-center"
+                        on:click={toggleMode}
+                        title={mode === "meting" ? "切换到本地模式" : "切换到meting模式"}>
+                    {#if mode === "meting"}
+                        <Icon icon="material-symbols:cloud" class="text-lg" />
+                    {:else}
+                        <Icon icon="material-symbols:folder" class="text-lg" />
+                    {/if}
+                </button>
+                <button class="btn-plain w-8 h-8 rounded-lg flex items-center justify-center"
                         on:click|stopPropagation={toggleHidden}
                         title="隐藏播放器">
                     <Icon icon="material-symbols:visibility-off" class="text-lg" />
@@ -594,6 +734,23 @@ onDestroy(() => {
                 </div>
             </div>
             <div class="flex items-center gap-1">
+                {#if mode === "meting"}
+                    <button class="btn-plain w-8 h-8 rounded-lg flex items-center justify-center"
+                            class:text-[var(--primary)]={showLyrics}
+                            on:click|stopPropagation={toggleLyrics}
+                            title="歌词">
+                        <Icon icon="material-symbols:lyrics" class="text-lg" />
+                    </button>
+                {/if}
+                <button class="btn-plain w-8 h-8 rounded-lg flex items-center justify-center"
+                        on:click={toggleMode}
+                        title={mode === "meting" ? "切换到本地模式" : "切换到meting模式"}>
+                    {#if mode === "meting"}
+                        <Icon icon="material-symbols:cloud" class="text-lg" />
+                    {:else}
+                        <Icon icon="material-symbols:folder" class="text-lg" />
+                    {/if}
+                </button>
                 <button class="btn-plain w-8 h-8 rounded-lg flex items-center justify-center"
                         on:click={toggleHidden}
                         title="隐藏播放器">
@@ -633,6 +790,30 @@ onDestroy(() => {
                      style="width: {duration > 0 ? (currentTime / duration) * 100 : 0}%"></div>
             </div>
         </div>
+        {#if mode === "meting" && showLyrics}
+            <div class="lyrics-container mb-4 overflow-hidden relative">
+                {#if lyrics.length > 0}
+                    <div class="lyrics-wrapper transition-transform duration-300 ease-out"
+                         style="transform: translateY({48 - currentLyricIndex * 24}px)">
+                        {#each lyrics as lyric, index}
+                            <div class="lyric-line h-6 flex items-center justify-center text-sm transition-all duration-300"
+                                 class:text-[var(--primary)]={index === currentLyricIndex}
+                                 class:text-90={index !== currentLyricIndex}
+                                 class:text-30={index !== currentLyricIndex}
+                                 class:font-semibold={index === currentLyricIndex}
+                                 class:opacity-100={index === currentLyricIndex}
+                                 class:opacity-50={index !== currentLyricIndex}>
+                                {lyric.text}
+                            </div>
+                        {/each}
+                    </div>
+                {:else}
+                    <div class="h-full flex items-center justify-center text-sm text-50">
+                        暂无歌词
+                    </div>
+                {/if}
+            </div>
+        {/if}
         <div class="controls flex items-center justify-center gap-2 mb-4">
             <!-- 随机按钮高亮 -->
             <button class="w-10 h-10 rounded-lg"
@@ -955,6 +1136,51 @@ onDestroy(() => {
 button.bg-\[var\(--primary\)\] {
     box-shadow: 0 0 0 2px var(--primary);
     border: none;
+}
+
+.lyrics-container {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 8px 0;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    height: 96px;
+}
+
+.lyrics-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.lyric-line {
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    padding: 0 12px;
+    line-height: 24px;
+}
+
+.lyric-line:hover {
+    opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+    .lyric-line {
+        font-size: 12px;
+        padding: 0 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .lyrics-container {
+        height: 80px;
+        border-radius: 8px;
+    }
+    
+    .lyric-line {
+        font-size: 11px;
+        padding: 0 6px;
+    }
 }
 </style>
 {/if}

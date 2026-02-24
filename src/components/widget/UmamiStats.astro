@@ -316,6 +316,95 @@ const {
     color: white;
     border-color: var(--primary);
   }
+
+  .dark .umami-stats-container .stat-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .dark .umami-stats-container .stat-label {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .dark .umami-stats-container .stat-value {
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .dark .umami-stats-container .stat-value.clickable:hover {
+    color: var(--primary);
+  }
+
+  .dark .umami-stats-container .section-title {
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .dark .umami-stats-container .page-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .dark .umami-stats-container .page-card .page-title {
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .dark .umami-stats-container .page-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .dark .umami-stats-container .page-title {
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .dark .umami-stats-container .page-url {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .dark .umami-stats-container .page-visitors {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .dark .umami-stats-container .last-updated {
+    border-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .dark .umami-stats-container .countdown-text {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .dark .umami-stats-container .error-message {
+    color: #f87171;
+  }
+
+  .dark .umami-stats-container .error-details {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .dark .umami-stats-container .empty-state {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .dark .umami-stats-container .time-btn {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.7);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .dark .umami-stats-container .time-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+
+  .dark .umami-stats-container .time-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
 </style>
 
 <script define:vars={{ apiKey, baseUrl, websiteId }}>
@@ -536,7 +625,6 @@ const {
       }
 
       const stats = await statsRes.json();
-      console.log('统计系统 API 状态: 就绪');
       
       let pages = [];
 

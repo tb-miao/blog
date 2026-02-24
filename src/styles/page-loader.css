@@ -308,6 +308,44 @@
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25), 0 1px 4px rgba(0, 0, 0, 0.15);
 }
 
+:root.dark .info-title {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+:root.dark .close-btn {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+:root.dark .close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+:root.dark .info-label {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+:root.dark .info-value {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+:root.dark .info-value-url,
+:root.dark .info-value-ua {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+:root.dark .info-divider {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+:root.dark .info-section-title {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+:root.dark .status-complete {
+  color: #34d399;
+}
+
 .loader-fab {
   position: fixed;
   top: 50%;
