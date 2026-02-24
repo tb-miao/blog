@@ -220,7 +220,7 @@ if (siteConfig.font) {
 
 		<title>{pageTitle}</title>
 		<meta charset="UTF-8" />
-		<meta name="description" content={description || pageTitle} />
+		<meta name="description" content={description || pageTitle || "feedId:249017486179431424+userId:249015934064153600"} />
 		{
 			siteConfig.keywords && siteConfig.keywords.length > 0 && (
 				<meta
@@ -234,7 +234,6 @@ if (siteConfig.font) {
 		<meta property="og:url" content={Astro.url} />
 		<meta property="og:title" content={pageTitle} />
 		<meta property="og:description" content={description || pageTitle} />
-		<meta name="description" content="feedId:249017486179431424+userId:249015934064153600" />
 		{ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
 		{
 			setOGTypeArticle ? (
