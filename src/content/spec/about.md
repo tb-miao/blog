@@ -15,7 +15,6 @@
 |   **博&emsp;客**    |    **https://tbmiao.dpdns.org**    |
 | :-----------------: | :-------------------------------: |
 |  **网站监测**   |    **https://status.tbmiao.dpdns.org**    |
-|  **网站统计(自建)**  | **https://umami.tbmiao.dpdns.org** |
 |  **Ba_logo**  | **https://ba.tbmiao.dpdns.org** |
 
 ---

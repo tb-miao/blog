@@ -76,5 +76,3 @@ pinned: true
   fetchCommits();
 </script>
 <div id="commit-container">加载中…</div>
-
-This message is used to verify that this feed (feedId:249017486179431424) belongs to me (userId:249015934064153600). Join me in enjoying the next generation information browser https://folo.is.
