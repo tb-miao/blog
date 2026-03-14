@@ -17,7 +17,7 @@ console.log(`
   ██║  ██║╚██████╔╝██║ ╚████║   ██║   ██║  ██║
   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝
     `, 'color: #ff9ff3; font-family: monospace;');
-console.log("启动中...\n");
+console.log("本地服务启动中...\n");
 
 loadEnv();
 console.log("Loaded .env configuration file\n");

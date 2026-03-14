@@ -51,7 +51,7 @@ tags: []
 category: ''
 draft: false 
 pinned: false
-alias: 
+alias: ''
 updated: ${getDate()}
 ---
 `;
