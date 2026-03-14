@@ -22,8 +22,8 @@ import { LinkPreset } from "./types/config";
 const SITE_LANG = "zh_CN"; // 语言代码，例如：'en', 'zh_CN', 'ja' 等。
 const SITE_TIMEZONE = 8; //设置你的网站时区 from -12 to 12 default in UTC+8
 export const siteConfig: SiteConfig = {
-	title: "AUNyaの小窝 - AUNya的碎碎念念.",
-	subtitle: "",
+	title: "AUNyaの小窝",
+	subtitle: "AUNya的碎碎念念.",
 	siteURL: "https://tbmiao.dpdns.org/", // 请替换为你的站点URL，以斜杠结尾
 	siteStartDate: "2024-01-01", // 站点开始运行日期，用于站点统计组件计算运行天数
 
@@ -96,7 +96,6 @@ export const siteConfig: SiteConfig = {
 		// 支持单张图片或图片数组，当数组长度 > 1 时自动启用轮播
 		src: {
 			desktop: [
-				"/assets/desktop-banner/7.webp",
 				"/assets/desktop-banner/8.png"
 			], // 桌面横幅图片
 			mobile: [
@@ -204,7 +203,6 @@ export const siteConfig: SiteConfig = {
 export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
 	src: {
 		desktop: [
-			"/assets/desktop-banner/7.webp",
 			"/assets/desktop-banner/8.png"
 		], // 桌面横幅图片
 		mobile: [
@@ -256,11 +254,6 @@ export const navBarConfig: NavBarConfig = {
 					url: "/services-status/",
 					icon: "material-symbols:monitor-heart",
 				},
-				{
-					name: "统计",
-					url: "/umami/",
-					icon: "material-symbols:analytics",
-				},
 			],
 		},
 		{
@@ -294,9 +287,9 @@ export const navBarConfig: NavBarConfig = {
 export const profileConfig: ProfileConfig = {
 	avatar: "https://avatars.githubusercontent.com/u/172878250?v=4", // 相对于 /src 目录。如果以 '/' 开头，则相对于 /public 目录
 	name: "AUNya",
-	bio: "是一个热爱二次元的小萌新~ ",
+	bio: "是一个热爱二次元的小萌新~  /.你好nya~",
 	typewriter: {
-		enable: true, // 启用个人简介打字机效果
+		enable: false, // 启用个人简介打字机效果
 		speed: 80, // 打字速度（毫秒）
 	},
 	// 时间进度配置
@@ -527,7 +520,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			// 组件类型：GitHub 贡献统计组件
 			type: "github-stats",
 			// 是否启用该组件
-			enable: true,
+			enable: false,
 			// 组件显示顺序（在站点统计之后）
 			order: 7,
 			// 组件位置
@@ -561,7 +554,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			// 组件类型：网络检查组件
 			type: "network-check",
 			// 是否启用该组件
-			enable: true,
+			enable: false,
 			// 组件显示顺序
 			order: 4,
 			// 组件位置

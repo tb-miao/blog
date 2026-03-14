@@ -20,22 +20,6 @@ export interface Project {
 
 export const projectsData: Project[] = [
 	{
-		id: "AUNya-PY",
-		title: "AUNya-PY",
-		description: "A very strange Python program.一个很奇怪的python程序",
-		image: "",
-		category: "desktop",
-		techStack: ["python"],
-		status: "planned",
-		liveDemo: "https://github.com/tb-miao/AUNya-PY",
-		sourceCode: "https://github.com/tb-miao/AUNya-PY",
-		startDate: "2025-11-01",
-		endDate: "2025-11-01",
-		featured: true,
-		tags: ["python"],
-		visitUrl: "https://github.com/tb-miao/AUNya-PY",
-	},
-	{
 		id: "AUNya_Services_Status",
 		title: "AUNya_Services_Status",
 		description: "一个基于uptimerobot API的服务状态监控面板",
