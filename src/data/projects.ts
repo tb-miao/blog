@@ -34,6 +34,22 @@ export const projectsData: Project[] = [
 		featured: true,
 		tags: ["react","vue","typescript"],
 		visitUrl: "https://github.com/tb-miao/status",
+	},
+		{
+		id: "Windows-time-synchronization",
+		title: "Windows-time-synchronization",
+		description: "Windows-time-synchronization , Windows 时间同步工具",
+		image: "",
+		category: "desktop",
+		techStack: ["python"],
+		status: "in-progress",
+		liveDemo: "https://github.com/tb-miao/Windows-time-synchronization",
+		sourceCode: "https://github.com/tb-miao/Windows-time-synchronization",
+		startDate: "2026-03-14",
+		endDate: "2026-03-15",
+		featured: true,
+		tags: ["python"],
+		visitUrl: "https://github.com/tb-miao/Windows-time-synchronization",
 	}
 ];
 

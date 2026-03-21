@@ -417,7 +417,7 @@ const className = Astro.props.class;
 		}
 
 		private logSystemInfo() {
-			console.group('%c📢 Notification System Info', 'color: #6366f1; font-size: 14px; font-weight: bold;');
+			console.groupCollapsed('%c📢 Notification System Info', 'color: #6366f1; font-size: 14px; font-weight: bold;');
 			console.log('%c容器状态:', 'color: #10b981; font-weight: bold;');
 			console.log('  ├─ Container:', this.container ? '✅ 已找到' : '❌ 未找到');
 			console.log('  ├─ Wrapper:', this.wrapper ? '✅ 已找到' : '❌ 未找到');

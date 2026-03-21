@@ -554,7 +554,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			// 组件类型：网络检查组件
 			type: "network-check",
 			// 是否启用该组件
-			enable: false,
+			enable: true,
 			// 组件显示顺序
 			order: 4,
 			// 组件位置
