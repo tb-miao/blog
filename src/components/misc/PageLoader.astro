@@ -115,6 +115,7 @@ import "../../styles/page-loader.css";
 		if (fabBtn) {
 			fabBtn.classList.add("fab-visible");
 		}
+		sessionStorage.setItem("loader-panel-closed", "true");
 	}
 
 	function updateLoadTime(newTime: string) {
