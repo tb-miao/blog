@@ -32,16 +32,16 @@
 	background: url(avatar.jpg) center / contain;
 }
 
-.pio-container.hidden .pio-show {
+.pio-container.pio-hidden .pio-show {
 	display: block;
 }
-.pio-container.hidden .pio-show:hover {
+.pio-container.pio-hidden .pio-show:hover {
 	transform: translateX(0.5em);
 }
 
-.pio-container.hidden #pio,
-.pio-container.hidden .pio-action,
-.pio-container.hidden .pio-dialog {
+.pio-container.pio-hidden #pio,
+.pio-container.pio-hidden .pio-action,
+.pio-container.pio-hidden .pio-dialog {
 	display: none;
 }
 

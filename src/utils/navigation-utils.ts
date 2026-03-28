@@ -137,6 +137,106 @@ export function preloadPage(url: string): void {
 }
 
 /**
+ * 检查是否为同源链接
+ */
+function isSameOrigin(url: string): boolean {
+	try {
+		const parsed = new URL(url, window.location.origin);
+		return parsed.origin === window.location.origin;
+	} catch {
+		return false;
+	}
+}
+
+/**
+ * 检查网络状态是否为慢速连接
+ */
+function isSlowConnection(): boolean {
+	const conn = (navigator as any).connection;
+	if (!conn) {
+		return false;
+	}
+	return conn.effectiveType === "2g" || conn.effectiveType === "slow-2g";
+}
+
+/**
+ * 初始化链接预加载功能
+ * 使用 IntersectionObserver 观察视口内的链接，在进入视野时预加载
+ */
+export function initLinkPreloading(): void {
+	// 如果 Swup 不可用或用户偏好减少动画，不进行预加载
+	if (!isSwupReady() || isSlowConnection()) {
+		return;
+	}
+
+	// 检查用户是否偏好减少动画
+	if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+		return;
+	}
+
+	// 已预加载的 URL 集合，避免重复预加载
+	const preloadedUrls = new Set<string>();
+
+	const observer = new IntersectionObserver(
+		(entries) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					const link = entry.target as HTMLAnchorElement;
+					const href = link.href;
+
+					// 检查是否有效、是否同源、是否已预加载、是否当前页面
+					if (
+						href &&
+						isSameOrigin(href) &&
+						!preloadedUrls.has(href) &&
+						href !== window.location.href &&
+						!href.includes("#")
+					) {
+						preloadedUrls.add(href);
+
+						// 使用 requestIdleCallback 在空闲时预加载
+						if ("requestIdleCallback" in window) {
+							requestIdleCallback(() => preloadPage(href), {
+								timeout: 2000,
+							});
+						} else {
+							setTimeout(() => preloadPage(href), 100);
+						}
+					}
+				}
+			});
+		},
+		{
+			rootMargin: "200px",
+		},
+	);
+
+	// 观察所有内部链接
+	const observeLinks = () => {
+		document
+			.querySelectorAll('a[href^="/"], a[href^="./"], a[href^="../"]')
+			.forEach((link) => {
+				observer.observe(link);
+			});
+	};
+
+	// 初始观察
+	observeLinks();
+
+	// 页面切换后重新观察（Swup 会替换 main 容器内容）
+	const mainContainer = document.querySelector("main");
+	if (mainContainer) {
+		const mutationObserver = new MutationObserver(() => {
+			observeLinks();
+		});
+		mutationObserver.observe(mainContainer, {
+			childList: true,
+			subtree: true,
+		});
+	}
+}
+
+/**
  * 获取当前页面路径
  */
 export function getCurrentPath(): string {

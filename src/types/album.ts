@@ -20,7 +20,5 @@ export interface AlbumGroup {
 	date: string;
 	location?: string;
 	tags?: string[];
-	layout?: "grid" | "masonry";
-	columns?: number;
 	photos: Photo[];
 }

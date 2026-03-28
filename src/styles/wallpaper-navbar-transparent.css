@@ -103,8 +103,11 @@ body.wallpaper-transparent #navbar[data-transparent-mode="semifull"].scrolled {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 子组件样式 (Sub-Components) */
-:is(.dropdown-content, #nav-menu-panel, #mobile-toc-panel, #display-setting, #search-panel, .music-player .mini-player, .float-panel) {
+/* 子组件样式 (Sub-Components)
+ * 注意：不再强制覆盖 .music-player .mini-player 的背景，
+ * 让其使用自身的 card-base / 主题卡片背景，以保持与主播放器一致。
+ */
+:is(.dropdown-content, #nav-menu-panel, #mobile-toc-panel, #display-setting, #search-panel, .float-panel) {
   /* 使用面板专用变量 */
   background: var(--panel-bg);
   backdrop-filter: var(--panel-blur);
@@ -142,5 +145,11 @@ body.wallpaper-transparent #navbar[data-transparent-mode="semifull"].scrolled {
   }
   :root.dark body:has(#navbar[data-dynamic-transparent="none"]) #search-panel #search-bar-inside {
     background: rgba(255, 255, 255, 0.15);
+  }
+
+  /* 非首页时，移动端各个弹出面板不透明 */
+  #navbar:not([data-is-home="true"]) :is(#nav-menu-panel, #mobile-toc-panel, #search-panel, #display-setting) {
+    background: var(--card-bg);
+    backdrop-filter: none;
   }
 }

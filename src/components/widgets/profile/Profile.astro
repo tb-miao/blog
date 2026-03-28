@@ -1,0 +1,272 @@
+---
+import { Icon } from "astro-icon/components";
+import { profileConfig } from "../../../config";
+import { url } from "../../../utils/url-utils";
+import Image from "../../atoms/Image/Image.astro";
+import TypewriterText from "../../atoms/typewriter-text/TypewriterText.astro";
+import I18nKey from "../../../i18n/i18nKey";
+import { i18n } from "../../../i18n/translation";
+---
+
+<div class="card-base p-3">
+	<a
+		aria-label="Go to About Page"
+		href={url("/about/")}
+		class="group block relative mx-auto mt-1 lg:mx-0 lg:mt-0 mb-3
+       max-w-[12rem] lg:max-w-none overflow-hidden rounded-xl active:scale-95"
+	>
+		<div
+			class="absolute transition pointer-events-none group-hover:bg-black/30 group-active:bg-black/50
+        w-full h-full z-50 flex items-center justify-center"
+		>
+			<Icon
+				name="fa7-regular:address-card"
+				class="transition opacity-0 scale-90 group-hover:scale-100 group-hover:opacity-100 text-white text-5xl"
+			/>
+		</div>
+		<Image
+			src={profileConfig.avatar || ""}
+			alt="Profile Image of the Author"
+			class="mx-auto lg:w-full h-full lg:mt-0"
+			widths={[96, 192, 384]}
+			sizes="(max-width: 1024px) 192px, 128px"
+		/>
+	</a>
+	<div class="px-2">
+		<div
+			class="font-bold text-xl text-center mb-1 dark:text-neutral-50 transition"
+		>
+			{profileConfig.name}
+		</div>
+		<div
+			class="h-1 w-5 bg-[var(--primary)] mx-auto rounded-full mb-2 transition"
+		>
+		</div>
+
+		<div class="text-center text-neutral-400 mb-2.5 transition">
+			{
+				profileConfig.typewriter?.enable ? (
+					<TypewriterText
+						text={profileConfig.bio || ""}
+						speed={profileConfig.typewriter.speed}
+						class="inline-block"
+					/>
+				) : (
+					profileConfig.bio
+				)
+			}
+		</div>
+
+		<div class="flex flex-wrap gap-2 justify-center mb-1">
+			{
+				profileConfig.links.length > 1 &&
+					profileConfig.links.map((item) => (
+						<a
+							rel="me"
+							aria-label={item.name}
+							href={item.url}
+							target="_blank"
+							class="btn-regular rounded-lg h-10 w-10 active:scale-90"
+						>
+							<Icon name={item.icon} class="text-[1.5rem]" />
+						</a>
+					))
+			}
+			{
+				profileConfig.links.length == 1 && (
+					<a
+						rel="me"
+						aria-label={profileConfig.links[0].name}
+						href={profileConfig.links[0].url}
+						target="_blank"
+						class="btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95"
+					>
+						<Icon
+							name={profileConfig.links[0].icon}
+							class="text-[1.5rem]"
+						/>
+						{profileConfig.links[0].name}
+					</a>
+				)
+			}
+		</div>
+
+		<div class="umami-stats-container hidden">
+			<hr
+				class="my-2 border-t border-dashed border-black/10 dark:border-white/10 transition-colors duration-150"
+			/>
+			<div
+				class="text-sm text-50 mt-2 text-center transition-colors duration-150"
+			>
+				<Icon
+					name="fa7-solid:eye"
+					class="inline-block mr-1 text-50 text-sm align-middle"
+				/>
+				<span class="site-stats-display"
+					>{i18n(I18nKey.profileStatsLoading)}</span
+				>
+			</div>
+		</div>
+
+		<div class="github-commit-container hidden">
+			<hr
+				class="my-2 border-t border-dashed border-black/10 dark:border-white/10 transition-colors duration-150"
+			/>
+			<div
+				class="text-sm text-50 mt-2 text-center transition-colors duration-150"
+			>
+				<Icon
+					name="fa7-brands:git-alt"
+					class="inline-block mr-1 text-50 text-sm align-middle"
+				/>
+				最新提交
+				<span class="commit-stats-display">加载中...</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script
+	is:inline
+	define:vars={{
+		profileStatsPageViews: i18n(I18nKey.profileStatsPageViews),
+		profileStatsVisits: i18n(I18nKey.profileStatsVisits),
+		profileStatsUnavailable: i18n(I18nKey.profileStatsUnavailable),
+	}}
+>
+	function generateStatsText(pageViews, visits) {
+		return `${profileStatsPageViews} ${pageViews} · ${profileStatsVisits} ${visits}`;
+	}
+
+	async function fetchSiteStats(isRetry = false) {
+		const containers = document.querySelectorAll(".umami-stats-container");
+
+		// oddmisc 未加载则等待重试
+		if (!window.oddmisc) {
+			if (!isRetry) {
+				setTimeout(() => fetchSiteStats(true), 500);
+			} else {
+				containers.forEach((c) => c.classList.add("hidden"));
+			}
+			return;
+		}
+
+		try {
+			const stats = await window.oddmisc.getSiteStats();
+			const pageViews = stats.pageviews || 0;
+			const visits = stats.visits || 0;
+
+			// 数据为 0 时隐藏
+			if (pageViews === 0 && visits === 0) {
+				containers.forEach((c) => c.classList.add("hidden"));
+				return;
+			}
+
+			containers.forEach((c) => c.classList.remove("hidden"));
+			document.querySelectorAll(".site-stats-display").forEach((el) => {
+				el.textContent = generateStatsText(pageViews, visits);
+			});
+		} catch (error) {
+			console.error("Error fetching site stats:", error);
+			containers.forEach((c) => c.classList.add("hidden"));
+		}
+	}
+
+	// 避免多个 Profile 实例重复请求
+	if (!window.__siteStatsFetching) {
+		window.__siteStatsFetching = true;
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", () =>
+				fetchSiteStats(),
+			);
+		} else {
+			fetchSiteStats();
+		}
+	}
+</script>
+
+<!-- 获取 Commit 信息 via API -->
+<script>
+	async function fetchCommitStats() {
+		const containers = document.querySelectorAll(".github-commit-container");
+
+		try {
+			const githubRepoOwner = "tb-miao";
+			const githubRepoName = "blog";
+
+			const githubResponse = await fetch(
+				`https://api.github.com/repos/${githubRepoOwner}/${githubRepoName}/commits?per_page=1`,
+			);
+
+			if (!githubResponse.ok) {
+				if (githubResponse.status === 403) {
+					throw new Error("GitHub API 速率限制");
+				} else if (githubResponse.status === 404) {
+					throw new Error("仓库不存在");
+				} else {
+					throw new Error(`获取失败 (HTTP ${githubResponse.status})`);
+				}
+			}
+
+			const commitsData = await githubResponse.json();
+
+			if (!Array.isArray(commitsData) || commitsData.length === 0) {
+				throw new Error("没有找到提交记录");
+			}
+
+			const latestCommit = commitsData[0];
+
+			if (!latestCommit || !latestCommit.sha || !latestCommit.commit) {
+				throw new Error("提交数据格式错误");
+			}
+
+			const commitData = {
+				hash: latestCommit.sha.slice(0, 7),
+				message: latestCommit.commit.message.split("\n")[0],
+				date: latestCommit.commit.author?.date || new Date().toISOString(),
+				url: latestCommit.html_url,
+			};
+
+			const commitDate = new Date(commitData.date);
+			const now = new Date();
+			const timeDiff = now - commitDate;
+			const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+			let timeText;
+			if (daysDiff === 0) {
+				timeText = "今天";
+			} else if (daysDiff === 1) {
+				timeText = "昨天";
+			} else if (daysDiff < 7) {
+				timeText = `${daysDiff}天前`;
+			} else {
+				timeText = `${daysDiff}天前`;
+			}
+
+			containers.forEach((c) => c.classList.remove("hidden"));
+			document.querySelectorAll(".commit-stats-display").forEach((el) => {
+				const link = document.createElement("a");
+				link.href = "/info/";
+				link.rel = "noopener noreferrer";
+				link.className = "text-50 hover:text-[var(--primary)] transition-colors";
+				link.textContent = `${commitData.hash} · ${timeText}`;
+				el.innerHTML = "";
+				el.appendChild(link);
+			});
+		} catch (error) {
+			console.error("Error fetching commit stats:", error);
+			containers.forEach((c) => c.classList.add("hidden"));
+		}
+	}
+
+	if (!window.__commitStatsFetching) {
+		window.__commitStatsFetching = true;
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", () =>
+				fetchCommitStats(),
+			);
+		} else {
+			fetchCommitStats();
+		}
+	}
+</script>

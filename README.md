@@ -4,10 +4,11 @@
 
 
 
-- 使用mizuki@7.6.5版本
+- 使用mizuki@9.0版本
 - 主题配置文件在`src/config.ts`
 
 [原主题仓库地址](https://github.com/matsuzaka-yuki/mizuki)
+[中文文档](./README.zh.md)
 
 ## 命令
 ```
@@ -47,7 +48,7 @@ password: "123456"
 
 ## 🔔 通知系统配置
 
-- 请访问：[通知系统文章](https://tbmiao.dpdns.org/posts/notification-mizuki-astro/)
+- 由于更新版本，通知系统正在迁移。
 
 ## Star History
 

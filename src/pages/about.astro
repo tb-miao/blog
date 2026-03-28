@@ -1,10 +1,11 @@
 ---
-import { getEntry, render } from "astro:content";
+import { PageHeader } from "@components/features/page-header";
 import Markdown from "@components/misc/Markdown.astro";
+import { getEntry, render } from "astro:content";
+
 import I18nKey from "../i18n/i18nKey";
 import { i18n } from "../i18n/translation";
 import MainGridLayout from "../layouts/MainGridLayout.astro";
-import PageEncryptor from "../components/PageEncryptor.astro";
 
 const aboutPost = await getEntry("spec", "about");
 
@@ -14,75 +15,23 @@ if (!aboutPost) {
 
 const { Content } = await render(aboutPost);
 const title = i18n(I18nKey.about);
-
-let isEncrypted = aboutPost.data.encrypted && aboutPost.data.password;
 ---
+
 <MainGridLayout title={title}>
 	<!-- 引入右侧边栏布局管理器 -->
-  <script>
-    import('../scripts/right-sidebar-layout.js');
-  </script>
-    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
-        <div class="card-base z-10 px-9 py-6 relative w-full">
-            <!-- 页面标题 -->
-            <div class="flex flex-col items-start justify-center mb-8">
-                <h1 class="text-4xl font-bold text-black/90 dark:text-white/90 mb-2 relative
-                          before:w-1 before:h-8 before:rounded-md before:bg-[var(--primary)]
-                          before:absolute before:top-1/2 before:-translate-y-1/2 before:-left-4">
-                    {title}
-                </h1>
-            </div>
-            
-            
-            <!-- 从MD文件读取的内容 -->
-			{isEncrypted ? (
-				<PageEncryptor password={aboutPost.data.password}>
-					<Markdown class="mt-2">
-						<Content />
-					</Markdown>
-				</PageEncryptor>
-			) : (
-				<Markdown class="mt-2">
-					<Content />
-				</Markdown>
-			)}
-        </div>
-    </div>
+	<script>
+		import("../scripts/right-sidebar-layout.js");
+	</script>
+	<div
+		class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32"
+	>
+		<div class="card-base z-10 px-9 py-6 relative w-full">
+			<PageHeader title={title} />
+
+			<!-- 从MD文件读取的内容 -->
+			<Markdown class="mt-2">
+				<Content />
+			</Markdown>
+		</div>
+	</div>
 </MainGridLayout>
-
-<script>
-	// 使用 sessionStorage 记录是否已在此会话中显示过
-	if (!sessionStorage.getItem('aboutNotificationShown')) {
-		if (window.notification) {
-			window.notification.show({
-				title: '欢迎访问“关于”',
-				message: '关于页面加载完成！',
-				type: 'success',
-				duration: 7000,
-				closable: true
-			});
-		}
-		sessionStorage.setItem('aboutNotificationShown', 'true');
-	}
-
-	// 监听页面切换回来
-	document.addEventListener('astro:page-load', () => {
-		if (window.location.pathname.includes('/about')) {
-			if (!sessionStorage.getItem('aboutNotificationShown')) {
-				if (window.notification) {
-					window.notification.show({
-						title: '欢迎访问“关于”',
-						message: '关于页面加载完成！',
-						type: 'success',
-						duration: 7000,
-						closable: true
-					});
-				}
-				sessionStorage.setItem('aboutNotificationShown', 'true');
-			}
-		} else {
-			// 离开 /about 页面时清除标记，以便下次切回时再显示
-			sessionStorage.removeItem('aboutNotificationShown');
-		}
-	});
-</script>

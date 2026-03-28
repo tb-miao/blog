@@ -1,0 +1,404 @@
+---
+// 源码来自https://blog.haokun.me/  -困
+import { lineSwitchConfig } from "../../../config"; // Import the centralized configuration
+import WidgetLayout from "../common/WidgetLayout.astro";
+
+interface Props {
+	class?: string;
+	style?: string;
+}
+
+const { class: className, style } = Astro.props;
+
+const lines = lineSwitchConfig;
+---
+
+<WidgetLayout name="线路切换" id="line-switch" class={className} style={style}>
+    <div slot="title-icon" class="ml-auto mr-4 flex items-center">
+        <button 
+            id="line-switch-toggle"
+            class="btn-regular rounded-lg h-8 w-8 active:scale-95 transition-all flex items-center justify-center"
+            aria-label="Toggle collapse"
+        >
+            <iconify-icon 
+                id="line-switch-icon" 
+                icon="material-symbols:keyboard-arrow-up-rounded" 
+                width="20" 
+                height="20"
+                class="transition-transform duration-[800ms] text-[var(--primary)]"
+            ></iconify-icon>
+        </button>
+    </div>
+    <div id="line-switch-content" class="line-switch-container flex flex-col gap-2 mb-2 overflow-hidden transition-all duration-[800ms]">
+        {lines.map((line) => (
+            <a 
+                href={line.url}
+                data-hostname={new URL(line.url).hostname}
+                data-id={line.id}
+                class="line-item group block w-full "
+            >
+                <button
+                    class="w-full h-12 rounded-lg bg-black/[0.03] dark:bg-white/[0.03] hover:bg-[var(--btn-plain-bg-hover)] active:bg-[var(--btn-plain-bg-active)] transition-all pl-4 hover:pl-5 text-neutral-700 hover:text-[var(--primary)] dark:text-neutral-300 dark:hover:text-[var(--primary)] text-left"
+                >
+                    <div class="flex items-center justify-between relative mr-4">
+                        <div class="flex items-center gap-2 overflow-hidden">
+                            <div class="flex items-center text-[14px] line-name">
+                                <span class="line-name-en overflow-hidden opacity-0 w-0 whitespace-nowrap text-left">{line.nameEn}</span>
+                                <span class="line-name-zh truncate">{line.nameZh}</span>
+                            </div>
+                            <div class="flex items-center justify-center flex-shrink-0" style={`width: ${line.size}px; height: ${line.size}px`}>
+                                {line.isLocal ? (
+                                    <img 
+                                        src={line.icon} 
+                                        alt="" 
+                                        style={`width: ${line.size}px; height: auto;`}
+                                        class="flex-shrink-0"
+                                    />
+                                ) : (
+                                    <iconify-icon 
+                                        icon={line.icon} 
+                                        width={line.size} 
+                                        height={line.size} 
+                                        class="flex-shrink-0" 
+                                    />
+                                )}
+                            </div>
+                        </div>
+                        
+                        <div class="latency-badge transition px-2 h-6 min-w-[2.5rem] rounded-lg text-[10px] font-bold font-mono
+                            flex items-center justify-center ml-2">
+                            ---
+                        </div>
+                    </div>
+                </button>
+            </a>
+        ))}
+    </div>
+</WidgetLayout>
+
+<style>
+    /* 展开/收起动画 */
+    #line-switch-content {
+        transition: max-height 0.8s cubic-bezier(0.22, 1, 0.36, 1), 
+                    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                    margin 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                    padding 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        max-height: 2000px; /* 默认设置一个足够大的值，但会被脚本覆盖 */
+        opacity: 1;
+    }
+
+    #line-switch-content.collapsed {
+        max-height: 0 !important;
+        opacity: 0;
+        margin-bottom: 0;
+        margin-top: 0;
+        pointer-events: none;
+    }
+
+    #line-switch-icon.collapsed {
+        transform: rotate(180deg);
+    }
+
+    /* 默认状态 */
+    .line-item button {
+        background: color-mix(in oklch, var(--primary), transparent 95%);
+        color: #000; /* 线路名称文字设为黑色 */
+        border: none;
+        transition: all 0.2s ease-in-out;
+    }
+    :global(.dark) .line-item button {
+        background: color-mix(in oklch, var(--primary), transparent 92%);
+        color: #fff; /* 暗色模式设为白色 */
+    }
+
+    /* 悬停状态 - 背景加深效果 */
+    .line-item button:hover,
+    .line-item.tapped button {
+        background: color-mix(in oklch, var(--primary), transparent 85%);
+        color: var(--primary);
+    }
+    .line-item:hover .line-name-en,
+    .line-item.tapped .line-name-en {
+        width: 71px;
+        opacity: 1;
+        margin-right: 4px;
+    }
+    :global(.dark) .line-item button:hover,
+    :global(.dark) .line-item.tapped button {
+        background: color-mix(in oklch, var(--primary), transparent 80%);
+        color: var(--primary);
+    }
+
+    /* 选中状态 */
+    .line-item.active button {
+        background: color-mix(in oklch, var(--primary), transparent 75%);
+        color: var(--primary); /* 选中时恢复主题色 */
+        font-weight: bold;
+    }
+    :global(.dark) .line-item.active button {
+        background: color-mix(in oklch, var(--primary), transparent 60%);
+    }
+
+    /* 选中状态下的悬停 - 进一步加深 */
+    .line-item.active button:hover {
+        background: color-mix(in oklch, var(--primary), transparent 65%);
+    }
+    :global(.dark) .line-item.active button:hover {
+        background: color-mix(in oklch, var(--primary), transparent 50%);
+    }
+
+    /* 点击效果 */
+    .line-item button:active {
+        transform: scale(0.97);
+        background: color-mix(in oklch, var(--primary), transparent 70%);
+    }
+    :global(.dark) .line-item button:active {
+        background: color-mix(in oklch, var(--primary), transparent 55%);
+    }
+
+    .line-name {
+        white-space: pre-wrap;
+    }
+
+    .line-name-en {
+        transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1), 
+                    opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                    margin 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* 延迟徽章样式 - 默认极淡背景 */
+    .latency-badge {
+        background: rgba(0, 0, 0, 0.03);
+        color: #000;
+    }
+    :global(.dark) .latency-badge {
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+    }
+
+    /* 选中状态下的徽章样式 - 移除强制背景色，让状态色能显示 */
+    .line-item.active .latency-badge {
+        /* background: var(--primary); 移除此行 */
+        color: inherit; /* 继承选中按钮的颜色 */
+    }
+
+    /* 延迟颜色分级 - 使用 !important 确保在任何状态下都能正确显示颜色背景 */
+    .latency-badge.ok {
+        color: #10b981 !important;
+        background: rgba(16, 185, 129, 0.1) !important;
+    }
+    .latency-badge.lime {
+        color: #84cc16 !important;
+        background: rgba(132, 204, 22, 0.1) !important;
+    }
+    .latency-badge.warn {
+        color: #f59e0b !important;
+        background: rgba(245, 158, 11, 0.1) !important;
+    }
+    .latency-badge.err {
+        color: #ef4444 !important;
+        background: rgba(239, 68, 68, 0.1) !important;
+    }
+    
+    iconify-icon, img {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+<script>
+    async function measurePing(url: string, isWarmup = false) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 1500);
+        
+        try {
+            const target = new URL(url);
+            target.protocol = 'https:';
+            const testUrl = target.origin + '/';
+
+            const start = performance.now();
+            await fetch(testUrl, { 
+                method: 'HEAD', 
+                mode: 'no-cors',
+                // cache: 'reload' 强制浏览器跳过缓存向网络发包，但保持 URL 不变以命中 CDN 边缘
+                cache: 'reload', 
+                signal: controller.signal
+            });
+            return Math.round(performance.now() - start);
+        } catch (e) {
+            return -1;
+        } finally {
+            clearTimeout(timeoutId);
+        }
+    }
+
+    async function checkLatency(url: string, id: string) {
+        // 1. 预热请求：建立连接，不计入结果（解决 70ms 握手问题）
+        await measurePing(url, true);
+
+        const results: number[] = [];
+        // 2. 正式采样 10 次（连接已热，数值将接近 RTT）
+        for (let i = 0; i < 10; i++) {
+            const ms = await measurePing(url);
+            if (ms > 0) results.push(ms);
+            await new Promise(r => setTimeout(r, 40));
+        }
+        
+        if (results.length === 0) {
+            updateLatencyUI(id, -1);
+            return;
+        }
+
+        // 取最小值，这能最有效地代表物理链路的 RTT
+        const finalLatency = Math.min(...results);
+        updateLatencyUI(id, finalLatency);
+    }
+
+    function updateLatencyUI(id: string, ms: number) {
+        const item = document.querySelector(`[data-id="${id}"]`);
+        if (!item) return;
+
+        const badge = item.querySelector('.latency-badge');
+        if (badge) {
+            badge.classList.remove('ok', 'lime', 'warn', 'err');
+            if (ms < 0) {
+                badge.textContent = 'ERR';
+                badge.classList.add('err');
+            } else {
+                badge.textContent = `${ms}ms`;
+                if (ms > 300) {
+                    badge.classList.add('err');
+                } else if (ms > 150) {
+                    badge.classList.add('warn');
+                } else if (ms > 100) {
+                    badge.classList.add('lime');
+                } else {
+                    badge.classList.add('ok');
+                }
+            }
+        }
+    }
+
+    function initLineSwitchToggle() {
+        const toggleBtn = document.getElementById('line-switch-toggle');
+        const content = document.getElementById('line-switch-content') as HTMLElement;
+        const icon = document.getElementById('line-switch-icon');
+        
+        if (!toggleBtn || !content || !icon) return;
+
+        // 初始状态检查：如果域名是 tbmiao.dpdns.org 则收起
+        if (window.location.hostname === 'tbmiao.dpdns.org') {
+            content.classList.add('collapsed');
+            icon.classList.add('collapsed');
+            content.style.maxHeight = '0px';
+        } else {
+            content.classList.remove('collapsed');
+            icon.classList.remove('collapsed');
+            content.style.maxHeight = content.scrollHeight + 'px';
+        }
+
+        toggleBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (content.classList.contains('collapsed')) {
+                // 展开
+                content.classList.remove('collapsed');
+                icon.classList.remove('collapsed');
+                content.style.maxHeight = content.scrollHeight + 'px';
+                // 动画结束后释放高度限制
+                setTimeout(() => {
+                    if (!content.classList.contains('collapsed')) {
+                        content.style.maxHeight = 'none';
+                    }
+                }, 800);
+            } else {
+                // 收起
+                content.style.maxHeight = content.scrollHeight + 'px';
+                // 强制重绘
+                content.offsetHeight;
+                content.classList.add('collapsed');
+                icon.classList.add('collapsed');
+                content.style.maxHeight = '0px';
+            }
+        });
+    }
+
+    async function initLineSwitch() {
+        initLineSwitchToggle();
+        const currentHostname = window.location.hostname;
+        const currentPath = window.location.pathname;
+        const currentSearch = window.location.search;
+        const items = document.querySelectorAll('.line-item');
+        
+        const linesToCheck: {url: string, id: string}[] = [];
+
+        items.forEach(item => {
+            const hostname = item.getAttribute('data-hostname');
+            const id = item.getAttribute('data-id');
+            const originalUrl = item.getAttribute('href');
+
+            if (originalUrl) {
+                try {
+                    const targetUrl = new URL(originalUrl);
+                    targetUrl.pathname = currentPath;
+                    targetUrl.search = currentSearch;
+                    (item as HTMLAnchorElement).href = targetUrl.toString();
+                } catch (e) {
+                    console.error('LineSwitch: Invalid URL', originalUrl);
+                }
+            }
+
+            if (hostname === currentHostname) {
+                item.classList.add('active');
+            }
+
+            if (id && originalUrl) {
+                linesToCheck.push({ url: originalUrl, id });
+            }
+
+            // 交互逻辑保持不变...
+            let lastPointerType = '';
+            item.addEventListener('pointerdown', (e) => {
+                lastPointerType = (e as PointerEvent).pointerType;
+            });
+
+            item.addEventListener('click', (e) => {
+                const isTouchInteraction = lastPointerType === 'touch' || lastPointerType === 'pen';
+                if (isTouchInteraction && !item.classList.contains('tapped')) {
+                    e.preventDefault();
+                    document.querySelectorAll('.line-item').forEach(i => i.classList.remove('tapped'));
+                    item.classList.add('tapped');
+                }
+            });
+        });
+
+        // 核心优化：避开页面加载高峰，并顺序执行测速
+        const startChecks = async () => {
+            // 等待一小会儿，确保页面其他资源（图片、字体）已经开始或完成加载
+            await new Promise(r => setTimeout(r, 1500));
+            
+            for (const line of linesToCheck) {
+                // 串行执行，一条线测完再测下一条，保证不排队
+                await checkLatency(line.url, line.id);
+            }
+        };
+
+        if (document.readyState === 'complete') {
+            startChecks();
+        } else {
+            window.addEventListener('load', startChecks, { once: true });
+        }
+
+        // 点击外部区域逻辑...
+        document.addEventListener('click', (e) => {
+            if (!(e.target as HTMLElement).closest('.line-item')) {
+                document.querySelectorAll('.line-item').forEach(i => i.classList.remove('tapped'));
+            }
+        });
+    }
+
+    initLineSwitch();
+    document.addEventListener('swup:contentReplace', initLineSwitch);
+</script>

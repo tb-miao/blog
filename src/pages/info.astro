@@ -1,8 +1,8 @@
 ---
+import { PageHeader } from "@components/features/page-header";
 import Markdown from "@components/misc/Markdown.astro";
 import { getEntry, render } from "astro:content";
-import MainGridLayout from "@/layouts/MainGridLayout.astro";
-import PageEncryptor from "../components/PageEncryptor.astro";
+import MainGridLayout from "../layouts/MainGridLayout.astro";
 
 const infoPost = await getEntry("spec", "info");
 
@@ -11,62 +11,24 @@ if (!infoPost) {
 }
 
 const { Content } = await render(infoPost);
-
-let isEncrypted = infoPost.data.encrypted && infoPost.data.password;
+const title = "信息";
 ---
-<MainGridLayout title="信息" description="信息">
-    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
-        <div class="card-base z-10 px-9 py-6 relative w-full ">
-			{isEncrypted ? (
-				<PageEncryptor password={infoPost.data.password}>
-					<Markdown class="mt-2">
-						<Content />
-					</Markdown>
-				</PageEncryptor>
-			) : (
-				<Markdown class="mt-2">
-					<Content />
-				</Markdown>
-			)}
-        </div>
-    </div>
-	
-<script>
-	// 使用 sessionStorage 记录是否已在此会话中显示过
-	if (!sessionStorage.getItem('infoNotificationShown')) {
-		if (window.notification) {
-			window.notification.show({
-				title: '欢迎访问“信息”',
-				message: '信息页面加载完成！',
-				type: 'success',
-				duration: 7000,
-				closable: true
-			});
-		}
-		sessionStorage.setItem('infoNotificationShown', 'true');
-	}
 
-	// 监听页面切换回来
-	document.addEventListener('astro:page-load', () => {
-		if (window.location.pathname.includes('/info')) {
-			if (!sessionStorage.getItem('infoNotificationShown')) {
-				if (window.notification) {
-					window.notification.show({
-						title: '欢迎访问“信息”',
-						message: '信息页面加载完成！',
-						type: 'success',
-						duration: 7000,
-						closable: true
-					});
-				}
-				sessionStorage.setItem('infoNotificationShown', 'true');
-			}
-		} else {
-			// 离开 /info 页面时清除标记，以便下次切回时再显示
-			sessionStorage.removeItem('infoNotificationShown');
-		}
-	});
-</script>
+<MainGridLayout title={title}>
+	<!-- 引入右侧边栏布局管理器 -->
+	<script>
+		import("../scripts/right-sidebar-layout.js");
+	</script>
+	<div
+		class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32"
+	>
+		<div class="card-base z-10 px-9 py-6 relative w-full">
+			<PageHeader title={title} />
 
-
+			<!-- 从MD文件读取的内容 -->
+			<Markdown class="mt-2">
+				<Content />
+			</Markdown>
+		</div>
+	</div>
 </MainGridLayout>

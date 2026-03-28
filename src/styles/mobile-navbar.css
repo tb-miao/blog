@@ -164,6 +164,23 @@
     width: 100%;
     margin-left: 0;
     margin-right: 0;
+    backdrop-filter: none;
+  }
+
+  /* 移动端禁用面板 blur 效果提升性能 */
+  #banner-wrapper ~ * .float-panel,
+  body:has(#banner-wrapper) .float-panel,
+  #banner-wrapper ~ * .dropdown-content,
+  body:has(#banner-wrapper) .dropdown-content,
+  #banner-wrapper ~ * #display-setting,
+  body:has(#banner-wrapper) #display-setting,
+  #banner-wrapper ~ * #nav-menu-panel,
+  body:has(#banner-wrapper) #nav-menu-panel,
+  #banner-wrapper ~ * #mobile-toc-panel,
+  body:has(#banner-wrapper) #mobile-toc-panel,
+  #banner-wrapper ~ * #search-panel,
+  body:has(#banner-wrapper) #search-panel {
+    backdrop-filter: none;
   }
 }
 

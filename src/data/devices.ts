@@ -9,9 +9,7 @@ export interface Device {
 }
 
 // 设备类别类型，支持品牌和自定义类别
-export type DeviceCategory = {
-	[categoryName: string]: Device[];
-} & {
+export type DeviceCategory = Record<string, Device[]> & {
 	自定义?: Device[];
 };
 
@@ -19,7 +17,7 @@ export const devicesData: DeviceCategory = {
 	OnePlus: [
 		{
 			name: "OnePlus 13T",
-			image: "/images/device/oneplus13t.png",
+			image: "/images/device/oneplus13t.webp",
 			specs: "Gray / 16G + 1TB",
 			description:
 				"Flagship performance, Hasselblad imaging, 80W SuperVOOC.",
@@ -29,7 +27,7 @@ export const devicesData: DeviceCategory = {
 	Router: [
 		{
 			name: "GL-MT3000",
-			image: "/images/device/mt3000.png",
+			image: "/images/device/mt3000.webp",
 			specs: "1000Mbps / 2.5G",
 			description:
 				"Portable WiFi 6 router suitable for business trips and home use.",

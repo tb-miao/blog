@@ -3,7 +3,7 @@ import type { Translation } from "../translation";
 
 export const zh_CN: Translation = {
 	[Key.home]: "主页",
-	[Key.about]: "关于我 / About Me",
+	[Key.about]: "关于我们",
 	[Key.archive]: "归档",
 	[Key.search]: "搜索",
 	[Key.other]: "其他",
@@ -19,6 +19,7 @@ export const zh_CN: Translation = {
 	[Key.recentPosts]: "最新文章",
 	[Key.postList]: "文章列表",
 	[Key.tableOfContents]: "目录",
+	[Key.tocEmpty]: "当前页面没有目录",
 
 	// 公告栏
 	[Key.announcement]: "公告",
@@ -26,7 +27,7 @@ export const zh_CN: Translation = {
 
 	[Key.comments]: "评论",
 	[Key.friends]: "友链",
-	[Key.friendsSubtitle]: "发现更多优秀网站",
+	[Key.friendsSubtitle]: "发现更多优质网站",
 	[Key.friendsSearchPlaceholder]: "搜索友链名称或描述...",
 	[Key.friendsFilterAll]: "全部",
 	[Key.friendsNoResults]: "未找到匹配的友链",
@@ -58,7 +59,6 @@ export const zh_CN: Translation = {
 	[Key.license]: "许可协议",
 	[Key.anime]: "追番",
 	[Key.diary]: "日记",
-	[Key.gallery]: "相册",
 
 	// 番剧页面
 	[Key.animeTitle]: "我的追番记录",
@@ -73,12 +73,18 @@ export const zh_CN: Translation = {
 	[Key.animeStudio]: "制作",
 	[Key.animeEmpty]: "暂无追番数据",
 	[Key.animeEmptyBangumi]: "请检查 Bangumi 配置或网络连接",
+	[Key.animeEmptyBilibili]: "请检查 Bilibili 配置或网络连接",
 	[Key.animeEmptyLocal]: "请在 src/data/anime.ts 文件中添加番剧信息",
+	[Key.animeConfigBilibili]:
+		"请在 src/config.ts 文件中设置您的 Bilibili vmid",
+	[Key.animeConfigBangumi]:
+		"请在 src/config.ts 文件中设置您的 Bangumi userId",
 
 	// 短文页面
 	[Key.diarySubtitle]: "随时随地，分享生活",
-	[Key.diaryCount]: "条短文",
-	[Key.diaryReply]: "回复",
+	[Key.diaryNoResults]: "没有匹配的日记",
+	[Key.diaryCount]: "条日记",
+
 	[Key.diaryTips]: "只展示最近30条日记",
 	[Key.diaryMinutesAgo]: "分钟前",
 	[Key.diaryHoursAgo]: "小时前",
@@ -91,7 +97,28 @@ export const zh_CN: Translation = {
 	[Key.backToHome]: "返回首页",
 
 	// 音乐播放器
-	[Key.playlist]: "播放列表",
+	[Key.musicPlayer]: "音乐播放器",
+	[Key.musicPlayerShow]: "显示音乐播放器",
+	[Key.musicPlayerHide]: "隐藏播放器",
+	[Key.musicPlayerExpand]: "展开音乐播放器",
+	[Key.musicPlayerCollapse]: "收起播放器",
+	[Key.musicPlayerPause]: "暂停",
+	[Key.musicPlayerPlay]: "播放",
+	[Key.musicPlayerPrevious]: "上一首",
+	[Key.musicPlayerNext]: "下一首",
+	[Key.musicPlayerShuffle]: "随机播放",
+	[Key.musicPlayerRepeat]: "列表循环",
+	[Key.musicPlayerRepeatOne]: "单曲循环",
+	[Key.musicPlayerVolume]: "音量控制",
+	[Key.musicPlayerProgress]: "播放进度",
+	[Key.musicPlayerCover]: "封面",
+	[Key.musicPlayerPlaylist]: "播放列表",
+	[Key.musicPlayerLoading]: "加载中...",
+	[Key.musicPlayerErrorPlaylist]: "播放列表获取失败",
+	[Key.musicPlayerErrorSong]: "当前歌曲加载失败，尝试加载下一首",
+	[Key.musicPlayerErrorEmpty]: "播放列表中没有可用的歌曲",
+	[Key.unknownSong]: "未知歌曲",
+	[Key.unknownArtist]: "未知艺术家",
 
 	// 相册页面
 	[Key.albums]: "相册",
@@ -101,6 +128,8 @@ export const zh_CN: Translation = {
 	[Key.albumsBackToList]: "返回相册",
 	[Key.albumsPhotoCount]: "张照片",
 	[Key.albumsPhotosCount]: "张照片",
+	[Key.albumsFilterAll]: "全部",
+	[Key.albumsNoResults]: "没有匹配的相册",
 
 	// 设备页面
 	[Key.devices]: "我的设备",
@@ -119,7 +148,7 @@ export const zh_CN: Translation = {
 	[Key.projectLiveDemo]: "在线演示",
 	[Key.projectSourceCode]: "源代码",
 	[Key.projectDescription]: "项目描述",
-	[Key.projectStatus]: "状态",
+	[Key.projectStatus]: "项目状态",
 	[Key.projectStatusCompleted]: "已完成",
 	[Key.projectStatusInProgress]: "进行中",
 	[Key.projectStatusPlanned]: "计划中",
@@ -185,8 +214,9 @@ export const zh_CN: Translation = {
 
 	// 密码保护
 	[Key.passwordProtected]: "密码保护",
-	[Key.passwordProtectedTitle]: "此内容已被网站站长加密。",
-	[Key.passwordProtectedDescription]: "请输入密码以查看受加密的内容",
+	[Key.passwordProtectedTitle]: "此内容受密码保护",
+	[Key.passwordProtectedDescription]: "请输入密码以查看受保护的内容",
+	[Key.postEncrypted]: "已加密",
 	[Key.passwordPlaceholder]: "请输入密码",
 	[Key.passwordUnlock]: "解锁",
 	[Key.passwordUnlocking]: "解锁中...",
@@ -201,6 +231,7 @@ export const zh_CN: Translation = {
 	[Key.syntaxHighlightFailed]: "语法高亮失败:",
 	[Key.autoSyntaxHighlightFailed]: "自动语法高亮也失败:",
 	[Key.decryptionError]: "解密过程中发生错误:",
+	[Key.passwordHint]: "提示",
 
 	//最后编辑时间卡片
 	[Key.lastModifiedPrefix]: "距离上次编辑: ",
@@ -263,7 +294,7 @@ export const zh_CN: Translation = {
 	[Key.siteStatsCategoryCount]: "分类",
 	[Key.siteStatsTagCount]: "标签",
 	[Key.siteStatsTotalWords]: "总字数",
-	[Key.siteStatsRunningDays]: "运行时长",
+	[Key.siteStatsRunningDays]: "运行天数",
 	[Key.siteStatsLastUpdate]: "最后活动",
 	[Key.siteStatsDaysAgo]: "{days} 天前",
 	[Key.siteStatsDays]: "{days} 天",
@@ -300,7 +331,26 @@ export const zh_CN: Translation = {
 	[Key.shareOnSocialDescription]:
 		"如果这篇文章对你有帮助，欢迎分享给更多人！",
 
-	// GitHub 统计
-	[Key.githubStats]: "GitHub 贡献",
-	[Key.githubViewProfile]: "查看主页",
+	// 个人资料
+	[Key.profileStatsLoading]: "统计加载中...",
+	[Key.profileStatsPageViews]: "浏览量",
+	[Key.profileStatsVisits]: "访问次数",
+	[Key.profileStatsUnavailable]: "统计不可用",
+
+	// 页面访问量统计
+	[Key.pageViewsLoading]: "统计加载中...",
+	[Key.pageViewsUnavailable]: "统计不可用",
+
+	// 布局切换按钮
+	[Key.switchToGridMode]: "切换到网格模式",
+	[Key.switchToListMode]: "切换到列表模式",
+
+	// 相关文章与随机文章
+	[Key.relatedPosts]: "相关文章",
+	[Key.randomPosts]: "随机文章",
+	[Key.smartRecommend]: "智能推荐",
+	[Key.randomRecommend]: "随机推荐",
+
+	// 线路切换组件
+	[Key.lineSwitch]: "线路切换",
 };

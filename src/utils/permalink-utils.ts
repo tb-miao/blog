@@ -1,4 +1,5 @@
 import type { CollectionEntry } from "astro:content";
+
 import { permalinkConfig } from "../config";
 import { removeFileExtension } from "./url-utils";
 
@@ -76,18 +77,20 @@ export function generatePermalinkSlug(post: CollectionEntry<"posts">): string {
 	}
 
 	// 使用全局 permalink 格式模板
-	let format = permalinkConfig.format;
-
-	// 验证格式不包含斜杠
-	if (format.includes("/")) {
-		console.warn(
-			"Permalink format contains '/' which is not supported. Removing slashes.",
-		);
-		format = format.replace(/\//g, "-");
-	}
+	const format = permalinkConfig.format;
 
 	const published = post.data.published;
 	const postname = removeFileExtension(post.id);
+
+	let rawPostname = postname;
+	// Use original file name preserving case from filePath if available
+	if (post.filePath) {
+		const parts = post.filePath.split("/");
+		const filename = parts[parts.length - 1];
+		if (filename) {
+			rawPostname = removeFileExtension(filename);
+		}
+	}
 	const category = post.data.category || "uncategorized";
 
 	// 替换占位符
@@ -109,6 +112,7 @@ export function generatePermalinkSlug(post: CollectionEntry<"posts">): string {
 		)
 		.replace(/%post_id%/g, getPostNumericId(post.id).toString())
 		.replace(/%postname%/g, postname)
+		.replace(/%raw_postname%/g, rawPostname)
 		.replace(/%category%/g, category);
 
 	return slug;

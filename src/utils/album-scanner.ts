@@ -1,5 +1,6 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
+
 import type { AlbumGroup, Photo } from "../types/album";
 
 export async function scanAlbums(): Promise<AlbumGroup[]> {
@@ -68,13 +69,19 @@ async function processAlbumFolder(
 		photos = processExternalPhotos(info.photos || [], folderName);
 	} else {
 		// 本地模式：检查本地文件
-		const coverPath = path.join(folderPath, "cover.jpg");
-		if (!fs.existsSync(coverPath)) {
-			console.warn(`相册 ${folderName} 缺少 cover.jpg 文件`);
-			return null;
+		let coverPath = path.join(folderPath, "cover.webp");
+		const hasWebpCover = fs.existsSync(coverPath);
+		if (!hasWebpCover) {
+			coverPath = path.join(folderPath, "cover.jpg");
+			if (!fs.existsSync(coverPath)) {
+				console.warn(`相册 ${folderName} 缺少 cover 文件`);
+				return null;
+			}
 		}
 
-		cover = `/images/albums/${folderName}/cover.jpg`;
+		cover = hasWebpCover
+			? `/images/albums/${folderName}/cover.webp`
+			: `/images/albums/${folderName}/cover.jpg`;
 		photos = scanPhotos(folderPath, folderName);
 	}
 
@@ -93,8 +100,6 @@ async function processAlbumFolder(
 		date: info.date || new Date().toISOString().split("T")[0],
 		location: info.location || "",
 		tags: info.tags || [],
-		layout: info.layout || "grid",
-		columns: info.columns || 3,
 		photos,
 	};
 }
@@ -103,36 +108,52 @@ function scanPhotos(folderPath: string, albumId: string): Photo[] {
 	const photos: Photo[] = [];
 	const files = fs.readdirSync(folderPath);
 
-	// 过滤出图片文件
+	const imageExtensions = [
+		".jpg",
+		".jpeg",
+		".png",
+		".gif",
+		".webp",
+		".svg",
+		".avif",
+		".bmp",
+		".tiff",
+		".tif",
+	];
+
 	const imageFiles = files.filter((file) => {
 		const ext = path.extname(file).toLowerCase();
 		return (
-			[
-				".jpg",
-				".jpeg",
-				".png",
-				".gif",
-				".webp",
-				".svg",
-				".avif",
-				".bmp",
-				".tiff",
-				".tif",
-			].includes(ext) && file !== "cover.jpg"
+			imageExtensions.includes(ext) &&
+			file !== "cover.jpg" &&
+			file !== "cover.webp"
 		);
 	});
 
-	// 处理每张照片
+	const fileWebpMap = new Map<string, string>();
+	for (const file of imageFiles) {
+		const baseName = path.basename(file, path.extname(file));
+		const ext = path.extname(file).toLowerCase();
+		if (ext === ".jpg" || ext === ".jpeg" || ext === ".png") {
+			if (imageFiles.includes(baseName + ".webp")) {
+				fileWebpMap.set(file, baseName + ".webp");
+			}
+		}
+	}
+
 	imageFiles.forEach((file, index) => {
 		const filePath = path.join(folderPath, file);
 		const stats = fs.statSync(filePath);
 
-		// 解析文件名中的标签
 		const { baseName, tags } = parseFileName(file);
+
+		const src = fileWebpMap.has(file)
+			? `/images/albums/${albumId}/${fileWebpMap.get(file)}`
+			: `/images/albums/${albumId}/${file}`;
 
 		photos.push({
 			id: `${albumId}-photo-${index}`,
-			src: `/images/albums/${albumId}/${file}`,
+			src,
 			alt: baseName,
 			title: baseName,
 			tags: tags,

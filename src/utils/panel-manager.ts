@@ -11,7 +11,7 @@ type PanelId =
 	| "wallpaper-mode-panel";
 
 class PanelManager {
-	private activePanels: Set<PanelId> = new Set();
+	private activePanels = new Set<PanelId>();
 	private panelStack: PanelId[] = [];
 	private readonly duration = 100;
 
@@ -40,19 +40,19 @@ class PanelManager {
 			panel.style.transform = "scale(0.95) translateY(-10px)";
 			panel.style.pointerEvents = "none";
 
-			panel.offsetHeight; // 强制重排
-
-			panel.style.transition = `all ${this.duration}ms ease-out`;
-
 			requestAnimationFrame(() => {
-				panel.style.opacity = "1";
-				panel.style.transform = "scale(1) translateY(0)";
-				panel.style.pointerEvents = "auto";
+				panel.style.transition = `all ${this.duration}ms ease-out`;
 
-				setTimeout(() => {
-					panel.style.transition = "";
-					resolve();
-				}, this.duration);
+				requestAnimationFrame(() => {
+					panel.style.opacity = "1";
+					panel.style.transform = "scale(1) translateY(0)";
+					panel.style.pointerEvents = "auto";
+
+					setTimeout(() => {
+						panel.style.transition = "";
+						resolve();
+					}, this.duration);
+				});
 			});
 		});
 	}

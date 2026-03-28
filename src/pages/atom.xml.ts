@@ -1,13 +1,14 @@
-import { getImage } from "astro:assets";
 // import { getCollection } from "astro:content";
 import type { APIContext, ImageMetadata } from "astro";
+import { getImage } from "astro:assets";
 import MarkdownIt from "markdown-it";
 import { parse as htmlParser } from "node-html-parser";
 import sanitizeHtml from "sanitize-html";
+
 import { profileConfig, siteConfig } from "@/config";
 import { getSortedPosts } from "@/utils/content-utils";
-import { getPostUrl } from "@/utils/url-utils";
 import { initPostIdMap } from "@/utils/permalink-utils";
+import { getPostUrl } from "@/utils/url-utils";
 
 const markdownParser = new MarkdownIt();
 
@@ -51,7 +52,9 @@ export async function GET(context: APIContext) {
 
 		for (const img of images) {
 			const src = img.getAttribute("src");
-			if (!src) continue;
+			if (!src) {
+				continue;
+			}
 
 			// Handle content-relative images and convert them to built _astro paths
 			if (

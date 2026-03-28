@@ -8,13 +8,13 @@ category: 入站指引
 draft: false
 pinned: true
 ---
-## 更新记录
+# 更新记录
 
 <script>
   // 自动从 GitHub 拉取三个仓库的提交记录，并按仓库分组展示
   const repos = [
     { owner: 'tb-miao', repo: 'blog', name: '该博客' },
-    { owner: 'tb-miao', repo: 'status', name: 'AUNyaの网站监控' },
+    { owner: 'tb-miao', repo: 'Upbot-page', name: 'AUNyaの网站监控' },
   ];
 
   async function fetchCommits() {

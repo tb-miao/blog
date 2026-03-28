@@ -11,11 +11,12 @@ export interface Project {
 	status: "completed" | "in-progress" | "planned";
 	liveDemo?: string;
 	sourceCode?: string;
+	visitUrl?: string;
 	startDate: string;
 	endDate?: string;
 	featured?: boolean;
 	tags?: string[];
-	visitUrl?: string; // 添加前往项目链接字段
+	showImage?: boolean;
 }
 
 export const projectsData: Project[] = [

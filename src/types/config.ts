@@ -6,7 +6,7 @@ import type {
 	WALLPAPER_NONE,
 } from "../constants/constants";
 
-export type SiteConfig = {
+export interface SiteConfig {
 	title: string;
 	subtitle: string;
 	siteURL: string; // 站点URL，以斜杠结尾，例如：https://mizuki.mysqil.com/
@@ -73,12 +73,23 @@ export type SiteConfig = {
 	postListLayout: {
 		defaultMode: "list" | "grid"; // 默认布局模式：list=列表模式，grid=网格模式
 		allowSwitch: boolean; // 是否允许用户切换布局
+		categoryBar?: {
+			enable: boolean; // 是否在文章列表页显示分类导航条
+		};
 	};
 
 	// 顶栏标题配置
 	navbarTitle?: {
+		mode?: "text-icon" | "logo"; // 显示模式："text-icon" 显示图标+文本，"logo" 仅显示Logo
 		text: string; // 顶栏标题文本
 		icon?: string; // 顶栏标题图标路径
+		logo?: string; // 网站Logo图片路径
+	};
+
+	// 页面自动缩放配置
+	pageScaling?: {
+		enable: boolean; // 是否开启自动缩放
+		targetWidth?: number; // 目标宽度，低于此宽度时开始缩放
 	};
 
 	// 添加字体配置
@@ -103,9 +114,17 @@ export type SiteConfig = {
 		fetchOnDev?: boolean;
 	};
 
+	// 添加bilibili配置
+	bilibili?: {
+		vmid?: string; // Bilibili用户ID (vmid)
+		fetchOnDev?: boolean; // 是否在开发环境下获取 Bilibili 数据
+		coverMirror?: string; // 封面图片镜像源（可选，默认为空字符串）
+		useWebp?: boolean; // 是否使用WebP格式（默认 true）
+	};
+
 	// 添加番剧页面配置
 	anime?: {
-		mode?: "bangumi" | "local"; // 番剧页面模式
+		mode?: "bangumi" | "local" | "bilibili"; // 番剧页面模式
 	};
 
 	// 标签样式配置
@@ -162,22 +181,26 @@ export type SiteConfig = {
 		};
 	};
 	toc: {
-		enable: boolean;
-		mode: "float" | "sidebar"; // 目录显示模式："float" 悬浮按钮模式，"sidebar" 侧边栏模式
+		enable: boolean; // 总开关，false 时所有 TOC 都不显示
+		mobileTop: boolean; // 手机端顶部 TOC 按钮
+		desktopSidebar: boolean; // 电脑端右侧边栏 TOC
+		floating: boolean; // 悬浮 TOC 按钮
 		depth: 1 | 2 | 3;
 		useJapaneseBadge?: boolean; // 使用日语假名标记（あいうえお...）代替数字
 	};
 	showCoverInContent: boolean; // 控制文章封面在文章内容页显示的开关
 	generateOgImages: boolean;
 	favicon: Favicon[];
-	showLastModified: boolean; // 控制“上次编辑”卡片显示的开关
-};
+	showLastModified: boolean; // 控制"上次编辑"卡片显示的开关
+	pageProgressBar?: PageProgressBarConfig; // 页面顶部进度条配置
+	thirdPartyAnalytics?: ThirdPartyAnalyticsConfig; // 第三方统计配置
+}
 
-export type Favicon = {
+export interface Favicon {
 	src: string;
 	theme?: "light" | "dark";
 	sizes?: string;
-};
+}
 
 export enum LinkPreset {
 	Home = 0,
@@ -186,25 +209,25 @@ export enum LinkPreset {
 	Friends = 3,
 	Anime = 4,
 	Diary = 5,
-	Gallery = 6,
+	Albums = 6,
 	Projects = 7,
 	Skills = 8,
 	Timeline = 9,
 }
 
-export type NavBarLink = {
+export interface NavBarLink {
 	name: string;
 	url: string;
 	external?: boolean;
 	icon?: string; // 菜单项图标
 	children?: (NavBarLink | LinkPreset)[]; // 支持子菜单，可以是NavBarLink或LinkPreset
-};
+}
 
-export type NavBarConfig = {
+export interface NavBarConfig {
 	links: (NavBarLink | LinkPreset)[];
-};
+}
 
-export type ProfileConfig = {
+export interface ProfileConfig {
 	avatar?: string;
 	name: string;
 	bio?: string;
@@ -217,22 +240,16 @@ export type ProfileConfig = {
 		enable: boolean; // 是否启用打字机效果
 		speed?: number; // 打字速度（毫秒）
 	};
-	timeProgress?: {
-		enable: boolean; // 是否启用时间进度显示
-		showYearProgress?: boolean; // 显示年度进度
-		showDayProgress?: boolean; // 显示今日进度
-		updateInterval?: number; // 更新间隔（毫秒）
-	};
-};
+}
 
-export type LicenseConfig = {
+export interface LicenseConfig {
 	enable: boolean;
 	name: string;
 	url: string;
-};
+}
 
 // Permalink 配置
-export type PermalinkConfig = {
+export interface PermalinkConfig {
 	enable: boolean; // 是否启用全局 permalink 功能
 	/**
 	 * permalink 格式模板
@@ -255,20 +272,37 @@ export type PermalinkConfig = {
 	 * 注意：不支持斜杠 "/"，所有生成的链接都在根目录下
 	 */
 	format: string;
-};
+}
 
 // 评论配置
 
-export type CommentConfig = {
+export interface CommentConfig {
 	enable: boolean; // 是否启用评论功能
+	system?: "twikoo" | "giscus"; // 评论系统选择
 	twikoo?: TwikooConfig;
-};
+	giscus?: GiscusConfig;
+}
 
-type TwikooConfig = {
+export interface GiscusConfig {
+	repo: string;
+	repoId: string;
+	category: string;
+	categoryId: string;
+	mapping: string;
+	strict: string;
+	reactionsEnabled: string;
+	emitMetadata: string;
+	inputPosition: string;
+	theme: string;
+	lang: string;
+	loading: string;
+}
+
+interface TwikooConfig {
 	envId: string;
 	region?: string;
 	lang?: string;
-};
+}
 
 export type LIGHT_DARK_MODE = typeof LIGHT_MODE | typeof DARK_MODE;
 
@@ -277,7 +311,7 @@ export type WALLPAPER_MODE =
 	| typeof WALLPAPER_FULLSCREEN
 	| typeof WALLPAPER_NONE;
 
-export type BlogPostData = {
+export interface BlogPostData {
 	body: string;
 	title: string;
 	published: Date;
@@ -291,17 +325,17 @@ export type BlogPostData = {
 	prevSlug?: string;
 	nextTitle?: string;
 	nextSlug?: string;
-};
+}
 
-export type ExpressiveCodeConfig = {
+export interface ExpressiveCodeConfig {
 	theme: string;
 	hideDuringThemeTransition?: boolean; // 是否在主题切换时隐藏代码块
-};
+}
 
-export type AnnouncementConfig = {
+export interface AnnouncementConfig {
 	// enable属性已移除，现在通过sidebarLayoutConfig统一控制
 	title?: string; // 公告栏标题
-	content?: string; // 公告栏内容（可选，优先从 md 文件读取）
+	content: string; // 公告栏内容
 	icon?: string; // 公告栏图标
 	type?: "info" | "warning" | "success" | "error"; // 公告类型
 	closable?: boolean; // 是否可关闭
@@ -311,21 +345,23 @@ export type AnnouncementConfig = {
 		url: string; // 链接地址
 		external?: boolean; // 是否外部链接
 	};
-};
+}
 
-export type MusicPlayerConfig = {
+export interface MusicPlayerConfig {
 	enable: boolean; // 是否启用音乐播放器功能
+	showFloatingPlayer: boolean; // 是否显示悬浮播放器 UI
+	floatingEntryMode?: "default" | "fab"; // 悬浮入口模式：默认独立播放器或集成到 FAB 组
 	mode: "meting" | "local"; // 音乐播放器模式
 	meting_api: string; // Meting API 地址
 	id: string; // 歌单ID
 	server: string; // 音乐源服务器
 	type: string; // 音乐类型
-};
+}
 
-export type FooterConfig = {
+export interface FooterConfig {
 	enable: boolean; // 是否启用Footer HTML注入功能
 	customHtml?: string; // 自定义HTML内容，用于添加备案号等信息
-};
+}
 
 // 组件配置类型定义
 export type WidgetComponentType =
@@ -334,21 +370,18 @@ export type WidgetComponentType =
 	| "categories"
 	| "tags"
 	| "toc"
+	| "card-toc" // 卡片式目录组件
+	| "lineSwitch" // 线路切换组件
 	| "music-player"
+	| "music-sidebar"
 	| "pio" // 添加 pio 组件类型
 	| "site-stats" // 站点统计组件
-	| "github-stats" // GitHub 贡献统计组件
 	| "calendar" // 日历组件
-	| "network-check" // 网络检查组件
-	| "line-switch"
 	| "custom";
 
-export type WidgetComponentConfig = {
+export interface WidgetComponentConfig {
 	type: WidgetComponentType; // 组件类型
-	enable: boolean; // 是否启用该组件
-	order: number; // 显示顺序，数字越小越靠前
 	position: "top" | "sticky"; // 组件位置：顶部固定区域或粘性区域
-	sidebar?: "left" | "right"; // 组件所在侧边栏：左侧或右侧（仅当启用双侧边栏时有效）
 	class?: string; // 自定义CSS类名
 	style?: string; // 自定义内联样式
 	animationDelay?: number; // 动画延迟时间（毫秒）
@@ -357,13 +390,15 @@ export type WidgetComponentConfig = {
 		collapseThreshold?: number; // 折叠阈值
 	};
 	customProps?: Record<string, any>; // 自定义属性，用于扩展组件功能
-	username?: string; // GitHub 用户名，用于 github-stats 组件
-	repository?: string; // GitHub 仓库地址，格式：username/repo
-};
+}
 
-export type SidebarLayoutConfig = {
-	position: "unilateral" | "both"; // 侧边栏位置：单侧或双侧
-	components: WidgetComponentConfig[]; // 组件配置列表
+export interface SidebarLayoutConfig {
+	properties: WidgetComponentConfig[]; // 组件配置列表
+	components: {
+		left: WidgetComponentType[];
+		right: WidgetComponentType[];
+		drawer: WidgetComponentType[];
+	};
 	defaultAnimation: {
 		enable: boolean; // 是否启用默认动画
 		baseDelay: number; // 基础延迟时间（毫秒）
@@ -375,15 +410,10 @@ export type SidebarLayoutConfig = {
 			tablet: number; // 平板端断点（px）
 			desktop: number; // 桌面端断点（px）
 		};
-		layout: {
-			mobile: "hidden" | "bottom" | "drawer" | "sidebar"; // 移动端布局模式
-			tablet: "sidebar" | "bottom" | "drawer"; // 平板端布局模式
-			desktop: "sidebar"; // 桌面端布局模式
-		};
 	};
-};
+}
 
-export type SakuraConfig = {
+export interface SakuraConfig {
 	enable: boolean; // 是否启用樱花特效
 	sakuraNum: number; // 樱花数量，默认21
 	limitTimes: number; // 樱花越界限制次数，-1为无限循环
@@ -408,9 +438,9 @@ export type SakuraConfig = {
 		fadeSpeed: number; // 消失速度
 	};
 	zIndex: number; // 层级，确保樱花在合适的层级显示
-};
+}
 
-export type FullscreenWallpaperConfig = {
+export interface FullscreenWallpaperConfig {
 	src:
 		| string
 		| string[]
@@ -426,12 +456,12 @@ export type FullscreenWallpaperConfig = {
 	zIndex?: number; // 层级，确保壁纸在合适的层级显示
 	opacity?: number; // 壁纸透明度，0-1之间
 	blur?: number; // 背景模糊程度，单位px
-};
+}
 
 /**
  * Pio 看板娘配置
  */
-export type PioConfig = {
+export interface PioConfig {
 	enable: boolean; // 是否启用看板娘
 	models?: string[]; // 模型文件路径数组
 	position?: "left" | "right"; // 看板娘位置
@@ -446,17 +476,62 @@ export type PioConfig = {
 		skin?: [string, string]; // 换装提示 [切换前, 切换后]
 		close?: string; // 关闭提示
 		link?: string; // 关于链接
-		custom?: Array<{
+		custom?: {
 			selector: string; // CSS选择器
 			type: "read" | "link"; // 类型
 			text?: string; // 自定义文本
-		}>;
+		}[];
 	};
-};
+}
 
 /**
  * 分享组件配置
  */
-export type ShareConfig = {
+export interface ShareConfig {
 	enable: boolean; // 是否启用分享功能
+}
+
+/**
+ * 相关文章组件配置
+ */
+export interface RelatedPostsConfig {
+	enable: boolean; // 是否启用相关文章功能
+	maxCount: number; // 相关文章数量
+}
+
+/**
+ * 随机文章组件配置
+ */
+export interface RandomPostsConfig {
+	enable: boolean; // 是否启用随机文章功能
+	maxCount: number; // 随机文章数量
+}
+
+/**
+ * 页面顶部进度条配置
+ */
+export interface PageProgressBarConfig {
+	enable: boolean; // 是否启用页面顶部进度条
+	height?: number; // 进度条高度，默认 3px
+	duration?: number; // 动画时长，默认 8000ms
+}
+
+/**
+ * 第三方统计配置（可能影响 Lighthouse 评分）
+ */
+export interface ThirdPartyAnalyticsConfig {
+	enable: boolean; // 是否启用第三方统计（Microsoft Clarity），默认关闭
+	clarityId?: string; // Clarity 项目 ID
+}
+
+export type Line = {
+	nameEn: string;
+	nameZh: string;
+	url: string;
+	id: string;
+	icon: string;
+	isLocal: boolean;
+	size: number;
 };
+
+export type LineSwitchConfig = Line[];
