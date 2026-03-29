@@ -4,10 +4,11 @@
 
 
 
-- 使用mizuki@9.0版本
+- 使用 mizuki@`9.0` 版本
 - 主题配置文件在`src/config.ts`
 
 [原主题仓库地址](https://github.com/matsuzaka-yuki/mizuki)
+
 [中文文档](./README.zh.md)
 
 ## 命令

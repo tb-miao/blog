@@ -306,18 +306,18 @@ export const lineSwitchConfig: LineSwitchConfig = [
 		nameEn: " ", // 线路名称（英文）
 		nameZh: "本站默认", // 线路名称（中文）
 		url: "https://tbmiao.dpdns.org", // 线路URL
-		id: "cf-mr", // 线路ID
+		id: "default", // 线路ID
 		icon: "logos:cloudflare-icon", // 线路图标
 		isLocal: false, // 是否为本地线路
 		size: 27, // 图标大小
 	},
 		{
-		nameEn: " ", // 线路名称（英文）
+		nameEn: "Vercel", // 线路名称（英文）
 		nameZh: "Vercel", // 线路名称（中文）
 		url: "https://v.tbmiao.dpdns.org", // 线路URL
-		id: "vercel-jd", // 线路ID
+		id: "vercel", // 线路ID
 		icon: "/assets/line-switch/icons/vercel.svg", // 线路图标
-		isLocal: false, // 是否为本地线路
+		isLocal: true, // 是否为本地线路
 		size: 27, // 图标大小
 	},
 ]
@@ -346,11 +346,6 @@ export const navBarConfig: NavBarConfig = {
 					name: "项目",
 					url: "/projects/",
 					icon: "material-symbols:developer-board",
-				},
-				{
-					name: "监测",
-					url: "/services-status/",
-					icon: "material-symbols:monitor-heart",
 				},
 			],
 		},
