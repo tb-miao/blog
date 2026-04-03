@@ -1,5 +1,7 @@
 # 魔改版Astro Mizuki博客
 
+<img align='right' src='logo.png' width='200px' alt="Mizuki logo">
+
 ![](./public/images/astroblog-index/astroblog-index.png)
 
 

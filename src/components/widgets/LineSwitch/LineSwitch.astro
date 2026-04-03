@@ -208,41 +208,41 @@ const lines = lineSwitchConfig;
 </style>
 
 <script>
-    async function measurePing(url: string, isWarmup = false) {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 1500);
-        
-        try {
+    function measurePing(url: string): Promise<number> {
+        return new Promise((resolve) => {
             const target = new URL(url);
-            target.protocol = 'https:';
-            const testUrl = target.origin + '/';
-
+            const testUrl = target.origin + '/favicon.ico?t=' + Date.now();
+            
+            const img = new Image();
             const start = performance.now();
-            await fetch(testUrl, { 
-                method: 'HEAD', 
-                mode: 'no-cors',
-                // cache: 'reload' 强制浏览器跳过缓存向网络发包，但保持 URL 不变以命中 CDN 边缘
-                cache: 'reload', 
-                signal: controller.signal
-            });
-            return Math.round(performance.now() - start);
-        } catch (e) {
-            return -1;
-        } finally {
-            clearTimeout(timeoutId);
-        }
+            let resolved = false;
+            
+            const done = (success: boolean) => {
+                if (resolved) return;
+                resolved = true;
+                if (success) {
+                    resolve(Math.round(performance.now() - start));
+                } else {
+                    resolve(-1);
+                }
+            };
+            
+            img.onload = () => done(true);
+            img.onerror = () => done(true);
+            
+            setTimeout(() => done(false), 3000);
+            
+            img.src = testUrl;
+        });
     }
 
     async function checkLatency(url: string, id: string) {
-        // 1. 预热请求：建立连接，不计入结果（解决 70ms 握手问题）
-        await measurePing(url, true);
-
         const results: number[] = [];
-        // 2. 正式采样 10 次（连接已热，数值将接近 RTT）
-        for (let i = 0; i < 10; i++) {
+        
+        for (let i = 0; i < 3; i++) {
             const ms = await measurePing(url);
             if (ms > 0) results.push(ms);
-            await new Promise(r => setTimeout(r, 40));
+            await new Promise(r => setTimeout(r, 100));
         }
         
         if (results.length === 0) {
@@ -250,7 +250,6 @@ const lines = lineSwitchConfig;
             return;
         }
 
-        // 取最小值，这能最有效地代表物理链路的 RTT
         const finalLatency = Math.min(...results);
         updateLatencyUI(id, finalLatency);
     }
@@ -287,8 +286,8 @@ const lines = lineSwitchConfig;
         
         if (!toggleBtn || !content || !icon) return;
 
-        // 初始状态检查：如果域名是 tbmiao.dpdns.org 则收起
-        if (window.location.hostname === 'tbmiao.dpdns.org') {
+        // 初始状态检查：如果域名是 tbmiao.dpdns.org 和 本地模式 则收起
+        if (window.location.hostname === 'tbmiao.dpdns.org' || window.location.hostname === 'localhost:4321') {
             content.classList.add('collapsed');
             icon.classList.add('collapsed');
             content.style.maxHeight = '0px';

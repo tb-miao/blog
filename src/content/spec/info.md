@@ -1,4 +1,6 @@
 # 信息/提交记录
+- 查看历史提交记录：[SiteIndex](/posts/siteindex/)
+- 注：tb-miao和AUNya是同一个账号。
 ## 概览
 **当前提交：**
 <span>
