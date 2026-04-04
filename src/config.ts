@@ -439,12 +439,7 @@ export const announcementConfig: AnnouncementConfig = {
 	content: `
 ### 🎉🎉 欢迎来到我的博客喵！本站2周年啦！
 ---
-目前本站已升级到Mizuki 9.0版本，以下是正在迁移功能：
-1. 线路切换（完成）
-2. 最新提交（完成）
-3. 看看你的网（排队中）
-4. 通知系统（排队中）
-5. 等等...
+目前本站已升级到Mizuki 9.0版本，正在迁移部分功能。
 ---
 可以点击【[这里](https://github.com/tb-miao/blog/issues)】提交对网站的建议。
 `,
