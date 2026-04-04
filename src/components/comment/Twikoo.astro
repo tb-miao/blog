@@ -45,8 +45,10 @@ const config = {
 				twikooLoaded ||
 				document.getElementById("twikoo-script-loaded")
 			) {
+				console.log("[Twikoo] 脚本已加载");
 				return;
 			}
+			console.log("[Twikoo] 开始加载脚本:", TWIKOO_SCRIPT_URL);
 			return new Promise((resolve, reject) => {
 				const script = document.createElement("script");
 				script.id = "twikoo-script-loaded";
@@ -54,9 +56,13 @@ const config = {
 				script.async = true;
 				script.onload = () => {
 					twikooLoaded = true;
+					console.log("[Twikoo] 脚本加载成功");
 					resolve();
 				};
-				script.onerror = reject;
+				script.onerror = (error) => {
+					console.error("[Twikoo] 脚本加载失败:", error);
+					reject(error);
+				};
 				document.head.appendChild(script);
 			});
 		}
@@ -67,6 +73,7 @@ const config = {
 				return;
 			}
 
+			console.log("[Twikoo] 开始初始化");
 			try {
 				await loadTwikooScript();
 
@@ -75,9 +82,12 @@ const config = {
 					return;
 				}
 
+				console.log("[Twikoo] 开始初始化评论");
 				commentEl.innerHTML = "";
 				const dynamicConfig = createTwikooConfig();
+				console.log("[Twikoo] 初始化配置");
 				await twikoo.init(dynamicConfig);
+				console.log("[Twikoo] 初始化成功");
 			} catch (error) {
 				console.error("[Twikoo] 初始化失败:", error);
 			}
@@ -94,29 +104,37 @@ const config = {
 		}
 
 		function setupLazyLoad() {
-			// 清理旧的observer
-			if (observer) {
-				observer.disconnect();
-				observer = null;
-			}
+    	// 清理旧的observer
+    	if (observer) {
+       		observer.disconnect();
+        	observer = null;
+    	}
 
-			const container = document.getElementById(TWIKOO_CONTAINER_ID);
-			if (!container) {
-				return;
-			}
+    	const container = document.getElementById(TWIKOO_CONTAINER_ID);
+    	if (!container) {
+        	console.warn("[Twikoo] 评论容器不存在");
+        	return;
+    	}
 
-			observer = new IntersectionObserver(
-				(entries) => {
-					if (entries[0].isIntersecting && observer) {
-						observer.disconnect();
-						observer = null;
-						initTwikoo();
-					}
-				},
-				{ rootMargin: ROOT_MARGIN },
-			);
+    	observer = new IntersectionObserver(
+        	(entries) => {
+            	if (entries[0].isIntersecting && observer) {
+                	// 再次检查容器是否存在
+                	if (!document.getElementById(TWIKOO_CONTAINER_ID)) {
+                    	console.warn("[Twikoo] 评论容器已不存在，取消初始化");
+                    	observer.disconnect();
+                    	observer = null;
+                    	return;
+                	}
+                	observer.disconnect();
+                	observer = null;
+                	initTwikoo();
+            		}
+        		},
+        		{ rootMargin: ROOT_MARGIN },
+    		);
 
-			observer.observe(container);
+    		observer.observe(container);
 		}
 
 		function setupSwupHooks() {
