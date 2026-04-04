@@ -43,7 +43,7 @@ updated: 2026-04-03
             
             const commitsList = weeklyCommits.map(commit => {
                 const sha = commit.sha.slice(0, 7);
-                const message = commit.commit.message.split('\n')[0];
+                const message = commit.commit.message;
                 const author = commit.commit.author.name;
                 const date = new Date(commit.commit.author.date);
                 const dateStr = date.toLocaleString("zh-CN", {
@@ -60,12 +60,12 @@ updated: 2026-04-03
                 return `
                     <div style="margin-bottom: 16px; padding: 12px; border-left: 3px solid var(--primary); background: var(--card-bg); border-radius: 4px; box-shadow: 0 1px 3px rgba(124, 247, 252, 1);">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                            版本：<a href="${commitUrl}" target="_blank" style="color: var(--primary); font-weight: bold; text-decoration: none;">
+                            ## 📔版本：<a href="${commitUrl}" target="_blank" style="color: var(--primary); font-weight: bold; text-decoration: none;">
                                 ${sha}
                             </a>
                             <span style="color: var(--text-secondary); font-size: 0.85em;">${dateStr} (UTC+8)</span>
                         </div>
-                        <div style="margin-bottom: 6px; color: var(--text-primary);">${message}</div>
+                        <div style="margin-bottom: 6px; color: var(--text-primary); white-space: pre-wrap; word-break: break-word;">${message}</div>
                         <div style="color: var(--text-secondary); font-size: 0.85em;">
                             by <a href="https://github.com/tb-miao" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 500;">${author}</a>
                         </div>
