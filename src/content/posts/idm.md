@@ -113,7 +113,7 @@ https://www.internetdownloadmanager.com
 
 ![](/images/idm/1%20(2).png)
 
-# !!!!!
+# 注意
 
 本文的脚本已失效，作者已不再维护，现提供另外一种方法使用IDM，下面2个任选一个即可！
 
