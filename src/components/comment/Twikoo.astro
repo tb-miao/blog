@@ -24,6 +24,8 @@ const config = {
 
 		let observer = null;
 		let twikooLoaded = false;
+		let initialized = false;
+		let swupHandler = null;
 
 		function getCurrentPath() {
 			const pathname = window.location.pathname;
@@ -88,9 +90,6 @@ const config = {
 				observer.disconnect();
 				observer = null;
 			}
-			if (window.swup?.hooks) {
-				window.swup.hooks.off("content:replace", initTwikoo);
-			}
 		}
 
 		function setupLazyLoad() {
@@ -118,19 +117,26 @@ const config = {
 			observer.observe(container);
 		}
 
+		function handleSwupContentReplace() {
+			cleanup();
+			setTimeout(setupLazyLoad, 200);
+		}
+
 		function setupSwupHooks() {
+			if (swupHandler) {
+				return;
+			}
+
 			if (window.swup?.hooks) {
-				window.swup.hooks.on("content:replace", () => {
-					setTimeout(setupLazyLoad, 200);
-				});
+				swupHandler = handleSwupContentReplace;
+				window.swup.hooks.on("content:replace", swupHandler);
 			} else {
 				document.addEventListener(
 					"swup:enable",
 					() => {
-						if (window.swup?.hooks) {
-							window.swup.hooks.on("content:replace", () => {
-								setTimeout(setupLazyLoad, 200);
-							});
+						if (window.swup?.hooks && !swupHandler) {
+							swupHandler = handleSwupContentReplace;
+							window.swup.hooks.on("content:replace", swupHandler);
 						}
 					},
 					{ once: true },
@@ -138,21 +144,28 @@ const config = {
 			}
 		}
 
-		document.addEventListener("mizuki:page:loaded", () => {
-			setupLazyLoad();
-		});
+		function init() {
+			if (initialized) {
+				return;
+			}
+			initialized = true;
 
-		window.addEventListener("beforeunload", cleanup);
+			document.addEventListener("mizuki:page:loaded", setupLazyLoad);
 
-		if (document.readyState === "loading") {
-			document.addEventListener("DOMContentLoaded", () => {
+			window.addEventListener("beforeunload", cleanup);
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", () => {
+					setupLazyLoad();
+					setupSwupHooks();
+				});
+			} else {
 				setupLazyLoad();
 				setupSwupHooks();
-			});
-		} else {
-			setupLazyLoad();
-			setupSwupHooks();
+			}
 		}
+
+		init();
 	})();
 </script>
 
