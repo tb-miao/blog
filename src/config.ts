@@ -438,6 +438,7 @@ export const announcementConfig: AnnouncementConfig = {
 	title: "公告呀~", // 公告标题，填空使用i18n字符串Key.announcement
 	content: `
 ### 🎉🎉 欢迎来到我的博客喵！本站2周年啦！
+- 已更改账户名子，旧名字：AUNya。
 ---
 目前本站已升级到Mizuki 9.0版本，正在迁移部分功能。
 ---

@@ -24,8 +24,6 @@ const config = {
 
 		let observer = null;
 		let twikooLoaded = false;
-		let initialized = false;
-		let swupHandler = null;
 
 		function getCurrentPath() {
 			const pathname = window.location.pathname;
@@ -88,7 +86,10 @@ const config = {
 		function cleanup() {
 			if (observer) {
 				observer.disconnect();
-				observer = null;
+				observer = null || observer;
+			}
+			if (window.swup?.hooks) {
+				window.swup.hooks.off("content:replace", initTwikoo);
 			}
 		}
 
@@ -98,45 +99,33 @@ const config = {
 				return;
 			}
 
-			if (observer) {
-				observer.disconnect();
-				observer = null;
-			}
-
-			const currentObserver = new IntersectionObserver(
+			observer = new IntersectionObserver(
 				(entries) => {
 					if (entries[0].isIntersecting) {
-						currentObserver.disconnect();
+						observer.disconnect();
+						observer = null || observer;
 						initTwikoo();
 					}
 				},
 				{ rootMargin: ROOT_MARGIN },
 			);
 
-			observer = currentObserver;
 			observer.observe(container);
 		}
 
-		function handleSwupContentReplace() {
-			cleanup();
-			setTimeout(setupLazyLoad, 200);
-		}
-
 		function setupSwupHooks() {
-			if (swupHandler) {
-				return;
-			}
-
 			if (window.swup?.hooks) {
-				swupHandler = handleSwupContentReplace;
-				window.swup.hooks.on("content:replace", swupHandler);
+				window.swup.hooks.on("content:replace", () => {
+					setTimeout(setupLazyLoad, 200);
+				});
 			} else {
 				document.addEventListener(
 					"swup:enable",
 					() => {
-						if (window.swup?.hooks && !swupHandler) {
-							swupHandler = handleSwupContentReplace;
-							window.swup.hooks.on("content:replace", swupHandler);
+						if (window.swup?.hooks) {
+							window.swup.hooks.on("content:replace", () => {
+								setTimeout(setupLazyLoad, 200);
+							});
 						}
 					},
 					{ once: true },
@@ -144,28 +133,21 @@ const config = {
 			}
 		}
 
-		function init() {
-			if (initialized) {
-				return;
-			}
-			initialized = true;
+		document.addEventListener("mizuki:page:loaded", () => {
+			setupLazyLoad();
+		});
 
-			document.addEventListener("mizuki:page:loaded", setupLazyLoad);
+		window.addEventListener("beforeunload", cleanup);
 
-			window.addEventListener("beforeunload", cleanup);
-
-			if (document.readyState === "loading") {
-				document.addEventListener("DOMContentLoaded", () => {
-					setupLazyLoad();
-					setupSwupHooks();
-				});
-			} else {
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", () => {
 				setupLazyLoad();
 				setupSwupHooks();
-			}
+			});
+		} else {
+			setupLazyLoad();
+			setupSwupHooks();
 		}
-
-		init();
 	})();
 </script>
 
