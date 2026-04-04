@@ -214,8 +214,8 @@ importers:
         specifier: ^12.1.1
         version: 12.1.1(eslint@10.0.3(jiti@2.6.1))
       eslint-plugin-svelte:
-        specifier: ^3.15.2
-        version: 3.15.2(eslint@10.0.3(jiti@2.6.1))(svelte@5.55.1)
+        specifier: ^3.17.0
+        version: 3.17.0(eslint@10.0.3(jiti@2.6.1))(svelte@5.55.1)
       fontmin:
         specifier: ^1.1.1
         version: 1.1.1
@@ -3443,8 +3443,8 @@ packages:
     peerDependencies:
       eslint: '>=5.0.0'
 
-  eslint-plugin-svelte@3.15.2:
-    resolution: {integrity: sha512-k4Nsjs3bHujeEnnckoTM4mFYR1e8Mb9l2rTwNdmYiamA+Tjzn8X+2F+fuSP2w4VbXYhn2bmySyACQYdmUDW2Cg==}
+  eslint-plugin-svelte@3.17.0:
+    resolution: {integrity: sha512-sF6wgd5FLS2P8CCaOy2HdYYYEcZ6TwL251dLHUkNmtLnWECk1Dwc+j6VeulmmnFxr7Xs0WNtjweOA+bJ0PnaFw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: ^8.57.1 || ^9.0.0 || ^10.0.0
@@ -7172,10 +7172,6 @@ packages:
     resolution: {integrity: sha512-qhjK/bzSRZ6HtTvgeFvjNPJGWdZ0+x5NREV/9XZWFjIGezew2b4r5JPy66IfOhd5OA7KeFwk1JfmEbnTvev0cA==}
     hasBin: true
 
-  yaml@1.10.2:
-    resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
-    engines: {node: '>= 6'}
-
   yaml@1.10.3:
     resolution: {integrity: sha512-vIYeF1u3CjlhAFekPPAk2h/Kv4T3mAkMox5OymRiJQB0spDP10LHvt+K7G9Ny6NuuMAb25/6n1qyUjAcGNf/AA==}
     engines: {node: '>= 6'}
@@ -10874,7 +10870,7 @@ snapshots:
     dependencies:
       eslint: 10.0.3(jiti@2.6.1)
 
-  eslint-plugin-svelte@3.15.2(eslint@10.0.3(jiti@2.6.1))(svelte@5.55.1):
+  eslint-plugin-svelte@3.17.0(eslint@10.0.3(jiti@2.6.1))(svelte@5.55.1):
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@10.0.3(jiti@2.6.1))
       '@jridgewell/sourcemap-codec': 1.5.5
@@ -13317,7 +13313,7 @@ snapshots:
   postcss-load-config@3.1.4(postcss@8.5.8):
     dependencies:
       lilconfig: 2.1.0
-      yaml: 1.10.2
+      yaml: 1.10.3
     optionalDependencies:
       postcss: 8.5.8
 
@@ -15363,8 +15359,6 @@ snapshots:
       vscode-languageserver-types: 3.17.5
       vscode-uri: 3.1.0
       yaml: 2.7.1
-
-  yaml@1.10.2: {}
 
   yaml@1.10.3: {}
 
