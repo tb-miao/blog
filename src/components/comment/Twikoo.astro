@@ -86,7 +86,7 @@ const config = {
 		function cleanup() {
 			if (observer) {
 				observer.disconnect();
-				observer = null || observer;
+				observer = null;
 			}
 			if (window.swup?.hooks) {
 				window.swup.hooks.off("content:replace", initTwikoo);
@@ -103,7 +103,7 @@ const config = {
 				(entries) => {
 					if (entries[0].isIntersecting) {
 						observer.disconnect();
-						observer = null || observer;
+						observer = null;
 						initTwikoo();
 					}
 				},
