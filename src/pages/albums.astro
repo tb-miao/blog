@@ -28,9 +28,7 @@ const filterTabs = [
 	...allTags.map((tag) => ({
 		value: tag,
 		label: tag,
-		count: albumsData.filter(
-			(a) => a.tags && a.tags.includes(tag),
-		).length,
+		count: albumsData.filter((a) => a.tags && a.tags.includes(tag)).length,
 	})),
 ];
 
@@ -56,16 +54,16 @@ const subtitle = i18n(I18nKey.albumsSubtitle);
 		<div class="card-base z-10 px-6 sm:px-9 py-6 relative w-full">
 			<PageHeader title={title} subtitle={subtitle} />
 
-			{albumsData.length > 0 && allTags.length > 0 && (
-				<div class="mb-8">
-					<FilterTabs tabs={filterTabs} dataAttr="tags" />
-				</div>
-			)}
+			{
+				albumsData.length > 0 && allTags.length > 0 && (
+					<div class="mb-8">
+						<FilterTabs tabs={filterTabs} dataAttr="tags" />
+					</div>
+				)
+			}
 
 			<div id="albums-grid" class="grid gap-6 items-start">
-				{albumsData.map((album) => (
-					<AlbumCard album={album} />
-				))}
+				{albumsData.map((album) => <AlbumCard album={album} />)}
 			</div>
 
 			<div id="no-results" class="hidden text-center py-16">
@@ -80,24 +78,24 @@ const subtitle = i18n(I18nKey.albumsSubtitle);
 				</p>
 			</div>
 
-			{albumsData.length === 0 && (
-				<div class="text-center py-16">
-					<iconify-icon
-						icon="material-symbols:photo-library"
-						width="64"
-						height="64"
-						class="text-black/15 dark:text-white/15 mb-4"
-					></iconify-icon>
-					<h3
-						class="text-lg font-medium text-black/90 dark:text-white/90 mb-2"
-					>
-						{i18n(I18nKey.albumsEmpty)}
-					</h3>
-					<p class="text-black/60 dark:text-white/60">
-						{i18n(I18nKey.albumsEmptyDesc)}
-					</p>
-				</div>
-			)}
+			{
+				albumsData.length === 0 && (
+					<div class="text-center py-16">
+						<iconify-icon
+							icon="material-symbols:photo-library"
+							width="64"
+							height="64"
+							class="text-black/15 dark:text-white/15 mb-4"
+						/>
+						<h3 class="text-lg font-medium text-black/90 dark:text-white/90 mb-2">
+							{i18n(I18nKey.albumsEmpty)}
+						</h3>
+						<p class="text-black/60 dark:text-white/60">
+							{i18n(I18nKey.albumsEmptyDesc)}
+						</p>
+					</div>
+				)
+			}
 		</div>
 	</div>
 </MainGridLayout>

@@ -19,7 +19,9 @@ const relativeTime = formatRelativeTime(
 >
 	<div class="p-5">
 		<!-- Content -->
-		<p class="text-sm md:text-base text-black/90 dark:text-white/90 leading-relaxed mb-3">
+		<p
+			class="text-sm md:text-base text-black/90 dark:text-white/90 leading-relaxed mb-3"
+		>
 			{moment.content}
 		</p>
 
@@ -74,13 +76,14 @@ const relativeTime = formatRelativeTime(
 		<hr class="border-t border-black/5 dark:border-white/5 my-3" />
 
 		<!-- Footer -->
-		<div class="flex items-center justify-between text-xs text-black/50 dark:text-white/50 flex-wrap gap-2">
+		<div
+			class="flex items-center justify-between text-xs text-black/50 dark:text-white/50 flex-wrap gap-2"
+		>
 			<div class="flex items-center gap-1.5">
 				<iconify-icon
 					icon="material-symbols:schedule"
 					width="14"
-					height="14"
-				></iconify-icon>
+					height="14"></iconify-icon>
 				<time datetime={moment.date}>{relativeTime}</time>
 			</div>
 
@@ -92,7 +95,7 @@ const relativeTime = formatRelativeTime(
 								icon="material-symbols:location-on"
 								width="14"
 								height="14"
-							></iconify-icon>
+							/>
 							{moment.location}
 						</span>
 					)
@@ -109,7 +112,10 @@ const relativeTime = formatRelativeTime(
 	</div>
 
 	<!-- Hover gradient overlay -->
-	<div class="absolute inset-0 bg-gradient-to-br from-[var(--primary)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-xl"></div>
+	<div
+		class="absolute inset-0 bg-gradient-to-br from-[var(--primary)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-xl"
+	>
+	</div>
 </div>
 
 <style>
@@ -133,18 +139,42 @@ const relativeTime = formatRelativeTime(
 		}
 	}
 
-	.moment-card:nth-child(1) { animation-delay: 0.03s; }
-	.moment-card:nth-child(2) { animation-delay: 0.06s; }
-	.moment-card:nth-child(3) { animation-delay: 0.09s; }
-	.moment-card:nth-child(4) { animation-delay: 0.12s; }
-	.moment-card:nth-child(5) { animation-delay: 0.15s; }
-	.moment-card:nth-child(6) { animation-delay: 0.18s; }
-	.moment-card:nth-child(7) { animation-delay: 0.21s; }
-	.moment-card:nth-child(8) { animation-delay: 0.24s; }
-	.moment-card:nth-child(9) { animation-delay: 0.27s; }
-	.moment-card:nth-child(10) { animation-delay: 0.3s; }
-	.moment-card:nth-child(11) { animation-delay: 0.33s; }
-	.moment-card:nth-child(12) { animation-delay: 0.36s; }
+	.moment-card:nth-child(1) {
+		animation-delay: 0.03s;
+	}
+	.moment-card:nth-child(2) {
+		animation-delay: 0.06s;
+	}
+	.moment-card:nth-child(3) {
+		animation-delay: 0.09s;
+	}
+	.moment-card:nth-child(4) {
+		animation-delay: 0.12s;
+	}
+	.moment-card:nth-child(5) {
+		animation-delay: 0.15s;
+	}
+	.moment-card:nth-child(6) {
+		animation-delay: 0.18s;
+	}
+	.moment-card:nth-child(7) {
+		animation-delay: 0.21s;
+	}
+	.moment-card:nth-child(8) {
+		animation-delay: 0.24s;
+	}
+	.moment-card:nth-child(9) {
+		animation-delay: 0.27s;
+	}
+	.moment-card:nth-child(10) {
+		animation-delay: 0.3s;
+	}
+	.moment-card:nth-child(11) {
+		animation-delay: 0.33s;
+	}
+	.moment-card:nth-child(12) {
+		animation-delay: 0.36s;
+	}
 
 	/* 1 image: large, max-width constrained */
 	.diary-images-single {

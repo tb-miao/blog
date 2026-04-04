@@ -340,9 +340,6 @@ enum I18nKey {
 	randomPosts = "randomPosts",
 	smartRecommend = "smartRecommend",
 	randomRecommend = "randomRecommend",
-
-	// 线路切换组件
-	lineSwitch = "lineSwitch",
 }
 
 export default I18nKey;

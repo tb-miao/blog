@@ -22,9 +22,7 @@ export function formatRelativeTime(
 	const utc = now.getTime() + now.getTimezoneOffset() * 60 * 1000;
 	const localNow = utc + timeGap * 60 * 60 * 1000;
 	const date = new Date(dateString);
-	const diffInMinutes = Math.floor(
-		(localNow - date.getTime()) / (1000 * 60),
-	);
+	const diffInMinutes = Math.floor((localNow - date.getTime()) / (1000 * 60));
 
 	if (diffInMinutes < 60) {
 		return `${diffInMinutes}${minutesAgo}`;

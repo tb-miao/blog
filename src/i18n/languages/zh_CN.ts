@@ -350,7 +350,4 @@ export const zh_CN: Translation = {
 	[Key.randomPosts]: "随机文章",
 	[Key.smartRecommend]: "智能推荐",
 	[Key.randomRecommend]: "随机推荐",
-
-	// 线路切换组件
-	[Key.lineSwitch]: "线路切换",
 };

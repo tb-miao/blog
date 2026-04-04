@@ -28,8 +28,8 @@ import { i18n } from "../../../i18n/translation";
 			src={profileConfig.avatar || ""}
 			alt="Profile Image of the Author"
 			class="mx-auto lg:w-full h-full lg:mt-0"
-			widths={[96, 192, 384]}
-			sizes="(max-width: 1024px) 192px, 128px"
+			loading="eager"
+			fetchpriority="high"
 		/>
 	</a>
 	<div class="px-2">
@@ -184,6 +184,7 @@ import { i18n } from "../../../i18n/translation";
 		}
 	}
 </script>
+
 
 <!-- 获取 Commit 信息 via API -->
 <script>

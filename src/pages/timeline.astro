@@ -87,9 +87,7 @@ const subtitle = i18n(I18nKey.timelineSubtitle);
 			</div>
 
 			<div id="timeline-list" class="timeline-list">
-				{timelineData.map((item) => (
-					<TimelineCard item={item} />
-				))}
+				{timelineData.map((item) => <TimelineCard item={item} />)}
 			</div>
 
 			<div id="no-results" class="hidden text-center py-16">
@@ -113,7 +111,7 @@ const subtitle = i18n(I18nKey.timelineSubtitle);
 	}
 
 	.timeline-list::before {
-		content: '';
+		content: "";
 		position: absolute;
 		left: 9px;
 		top: 0;

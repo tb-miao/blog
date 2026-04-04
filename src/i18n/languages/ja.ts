@@ -366,7 +366,4 @@ export const ja: Translation = {
 	[Key.randomPosts]: "ランダム記事",
 	[Key.smartRecommend]: "スマート",
 	[Key.randomRecommend]: "ランダム",
-
-	// 线路切换组件
-	[Key.lineSwitch]: "線路切り替え",
-	};
+};

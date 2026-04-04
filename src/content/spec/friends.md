@@ -5,7 +5,7 @@
 
 ```yaml
 站点名称: AUNyaの小窝
-站点描述: 一个热爱二次元的小萌新~
+站点描述: 1つの熱愛の2次元の小さい萌の新しい~ /.こんにちはnya~です
 站点链接: https://tbmiao.dpdns.org/
 头像链接: https://avatars.githubusercontent.com/u/172878250?v=4
 

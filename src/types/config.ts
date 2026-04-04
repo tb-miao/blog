@@ -371,7 +371,6 @@ export type WidgetComponentType =
 	| "tags"
 	| "toc"
 	| "card-toc" // 卡片式目录组件
-	| "lineSwitch" // 线路切换组件
 	| "music-player"
 	| "music-sidebar"
 	| "pio" // 添加 pio 组件类型
@@ -523,15 +522,3 @@ export interface ThirdPartyAnalyticsConfig {
 	enable: boolean; // 是否启用第三方统计（Microsoft Clarity），默认关闭
 	clarityId?: string; // Clarity 项目 ID
 }
-
-export type Line = {
-	nameEn: string;
-	nameZh: string;
-	url: string;
-	id: string;
-	icon: string;
-	isLocal: boolean;
-	size: number;
-};
-
-export type LineSwitchConfig = Line[];

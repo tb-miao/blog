@@ -2,12 +2,10 @@
 title: 看看你的网制作教程
 published: 2026-01-28
 description: '看看你的网制作教程，源码来自困'
-image: ''
 tags: ["API"]
 category: '教程'
 draft: false 
 pinned: false
-alias: look-you-inst
 updated: 2026-01-28
 author: renleihaokun
 ---

@@ -141,6 +141,11 @@
 			return;
 		}
 
+		if (event.key === "ArrowLeft" || event.key === "ArrowDown") {
+			event.preventDefault();
+			musicPlayerStore.setVolume(state.volume - 0.05);
+			return;
+		}
 
 		if (event.key === "ArrowRight" || event.key === "ArrowUp") {
 			event.preventDefault();

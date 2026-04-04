@@ -2,15 +2,14 @@
 	interface Props {
 		show: boolean;
 		class?: string;
-		children: import("svelte").Snippet;
 	}
 
-	const { show, class: className = "", children }: Props = $props();
+	const { show, class: className = "" }: Props = $props();
 </script>
 
 <div class={`accordion-drawer ${className}`} class:open={show}>
 	<div class="accordion-inner">
-		{@render children()}
+		<slot />
 	</div>
 </div>
 

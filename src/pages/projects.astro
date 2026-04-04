@@ -91,13 +91,15 @@ const subtitle = i18n(I18nKey.projectsSubtitle);
 				<FilterTabs tabs={filterTabs} dataAttr="category" />
 			</div>
 
-			<div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-				{projectsData.map((project) => (
-					<ProjectCard
-						project={project}
-						maxTechStack={4}
-					/>
-				))}
+			<div
+				id="projects-grid"
+				class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start"
+			>
+				{
+					projectsData.map((project) => (
+						<ProjectCard project={project} maxTechStack={4} />
+					))
+				}
 			</div>
 
 			<div id="no-results" class="hidden text-center py-16">

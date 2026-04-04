@@ -15,7 +15,6 @@
 	ShareConfig,
 	SidebarLayoutConfig,
 	SiteConfig,
-	LineSwitchConfig,
 } from "./types/config";
 import { LinkPreset } from "./types/config";
 
@@ -26,9 +25,10 @@ const SITE_LANG = "zh_CN"; // 语言代码，例如：'en', 'zh_CN', 'ja' 等。
 const SITE_TIMEZONE = 8; //设置你的网站时区 from -12 to 12 default in UTC+8
 export const siteConfig: SiteConfig = {
 	title: "AUNyaの小窝",
-	subtitle: "AUNya的碎碎念念.",
+	subtitle: "NO demo",
 	siteURL: "https://tbmiao.dpdns.org/", // 请替换为你的站点URL，以斜杠结尾
 	siteStartDate: "2024-01-01", // 站点开始运行日期，用于站点统计组件计算运行天数
+	keywords: ["AUNya", "小窝", "碎碎念念", "日常分享", "生活记录", "个人空间", "个人博客", "个人网站", "aunya小窝"],
 
 	timeZone: SITE_TIMEZONE,
 
@@ -130,8 +130,6 @@ export const siteConfig: SiteConfig = {
 				"/assets/desktop-banner/2.webp",
 				"/assets/desktop-banner/3.webp",
 				"/assets/desktop-banner/4.webp",
-				"/assets/desktop-banner/5.webp",
-				"/assets/desktop-banner/6.webp",
 				"/assets/desktop-banner/8.png",
 			], // 桌面横幅图片
 			mobile: [
@@ -139,8 +137,6 @@ export const siteConfig: SiteConfig = {
 				"/assets/mobile-banner/2.webp",
 				"/assets/mobile-banner/3.webp",
 				"/assets/mobile-banner/4.webp",
-				"/assets/mobile-banner/5.webp",
-				"/assets/mobile-banner/6.webp",
 				"/assets/mobile-banner/1.png",
 				"/assets/mobile-banner/2.png",
 				"/assets/mobile-banner/3.png",
@@ -262,8 +258,6 @@ export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
 			"/assets/desktop-banner/2.webp",
 			"/assets/desktop-banner/3.webp",
 			"/assets/desktop-banner/4.webp",
-			"/assets/desktop-banner/5.webp",
-			"/assets/desktop-banner/6.webp",
 			"/assets/desktop-banner/8.png",
 		], // 桌面横幅图片
 		mobile: [
@@ -271,8 +265,6 @@ export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
 			"/assets/mobile-banner/2.webp",
 			"/assets/mobile-banner/3.webp",
 			"/assets/mobile-banner/4.webp",
-			"/assets/mobile-banner/5.webp",
-			"/assets/mobile-banner/6.webp",
 			"/assets/mobile-banner/1.png",
 			"/assets/mobile-banner/2.png",
 			"/assets/mobile-banner/3.png",
@@ -290,37 +282,6 @@ export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
 	opacity: 0.8, // 壁纸透明度
 	blur: 1, // 背景模糊程度
 };
-
-export const lineSwitchConfig: LineSwitchConfig = [
-	// 线路切换配置
-	//{
-	//	nameEn: " ", // 线路名称（英文）
-	//	nameZh: "本站默认", // 线路名称（中文）
-	//	url: "https://blog.haokun.me", // 线路URL
-	//	id: "default", // 线路ID
-	//	icon: "", // 线路图标
-	//	isLocal: false, // 是否为本地线路
-	//	size: 27, // 图标大小
-	//},
-	{
-		nameEn: " ", // 线路名称（英文）
-		nameZh: "本站默认", // 线路名称（中文）
-		url: "https://tbmiao.dpdns.org", // 线路URL
-		id: "default", // 线路ID
-		icon: "logos:cloudflare-icon", // 线路图标
-		isLocal: false, // 是否为本地线路
-		size: 27, // 图标大小
-	},
-		{
-		nameEn: "Vercel", // 线路名称（英文）
-		nameZh: "Vercel", // 线路名称（中文）
-		url: "https://v.tbmiao.dpdns.org", // 线路URL
-		id: "vercel", // 线路ID
-		icon: "/assets/line-switch/icons/vercel.svg", // 线路图标
-		isLocal: true, // 是否为本地线路
-		size: 27, // 图标大小
-	},
-]
 
 export const navBarConfig: NavBarConfig = {
 	links: [
@@ -450,7 +411,7 @@ export const commentConfig: CommentConfig = {
 	enable: true, // 启用评论功能。当设置为 false 时，评论组件将不会显示在文章区域。
 	system: "twikoo", // 评论系统选择: "twikoo" | "giscus"
 	twikoo: {
-		envId: "https://tw.tbmiao.dpdns.org/",
+		envId: "https://tw.tbmiao.dpdns.org",
 		lang: SITE_LANG,
 	},
 	giscus: {
@@ -592,13 +553,6 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			animationDelay: 200,
 		},
 		{
-			// 组件类型：线路切换组件
-			type: "lineSwitch",
-			position: "sticky",
-			class: "onload-animation",
-			animationDelay: 250,
-		},
-		{
 			// 组件类型：站点统计组件
 			type: "site-stats",
 			// 组件位置
@@ -622,7 +576,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 
 	// 侧栏组件布局配置
 	components: {
-		left: ["profile", "announcement", "tags", "card-toc", "lineSwitch"],
+		left: ["profile", "announcement", "tags", "card-toc"],
 		right: ["site-stats", "calendar", "categories", "music-sidebar"],
 		drawer: [
 			"profile",
@@ -704,7 +658,7 @@ export const pioConfig: import("./types/config").PioConfig = {
 		home: "Click here to go back to homepage!", // 首页提示
 		skin: ["Want to see my new outfit?", "The new outfit looks great~"], // 换装提示
 		close: "QWQ See you next time~", // 关闭提示
-		link: "https://github.com/matsuzaka-yuki/Mizuki", // 关于链接
+		link: "https://github.com/LyraVoid/Mizuki", // 关于链接
 	},
 };
 

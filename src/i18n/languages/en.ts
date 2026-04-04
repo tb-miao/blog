@@ -363,8 +363,4 @@ export const en: Translation = {
 	[Key.randomPosts]: "Random Posts",
 	[Key.smartRecommend]: "Smart",
 	[Key.randomRecommend]: "Random",
-
-
-	// 线路切换组件
-	[Key.lineSwitch]: "Line Switch",
 };

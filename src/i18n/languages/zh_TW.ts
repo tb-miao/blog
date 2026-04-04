@@ -352,6 +352,4 @@ export const zh_TW: Translation = {
 	[Key.randomPosts]: "隨機文章",
 	[Key.smartRecommend]: "智能推薦",
 	[Key.randomRecommend]: "隨機推薦",
-	// 线路切换组件
-	[Key.lineSwitch]: "線路切換",
-	};
+};

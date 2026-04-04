@@ -222,6 +222,7 @@ const { headings = [] } = Astro.props;
 </style>
 
 <script is:inline>
+		(() => {
 	if (!window.__floatingControlObservers) {
 		window.__floatingControlObservers = new Map();
 	}
@@ -278,9 +279,7 @@ const { headings = [] } = Astro.props;
 		);
 
 		if (visibleCount >= totalItems) {
-			document.documentElement.style.removeProperty(
-				"--fab-group-bottom",
-			);
+			document.documentElement.style.removeProperty("--fab-group-bottom");
 		} else {
 			const baseBottom = parseFloat(
 				getComputedStyle(document.documentElement).getPropertyValue(
@@ -436,4 +435,5 @@ const { headings = [] } = Astro.props;
 			}
 		});
 	}
+	})();
 </script>

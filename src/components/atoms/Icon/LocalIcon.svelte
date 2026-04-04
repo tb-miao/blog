@@ -28,7 +28,9 @@
 	let svgContent = "";
 
 	async function loadIcon() {
-		if (!packageName) {return;}
+		if (!packageName) {
+			return;
+		}
 
 		try {
 			const iconsData = await import(

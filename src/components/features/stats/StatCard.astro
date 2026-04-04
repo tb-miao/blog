@@ -46,20 +46,26 @@ const getSizeClasses = (size: string) => {
 const sizeClasses = getSizeClasses(size);
 ---
 
-<div class="stat-card group rounded-xl bg-[var(--primary)]/6 border border-[var(--primary)]/10 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden cursor-pointer">
+<div
+	class="stat-card group rounded-xl bg-[var(--primary)]/6 border border-[var(--primary)]/10 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden cursor-pointer"
+>
 	<div class={sizeClasses.container}>
 		<div class="flex items-start justify-between mb-3">
 			{
 				icon && (
-					<div class={`rounded-lg flex items-center justify-center bg-[var(--primary)]/12 text-[var(--primary)] ${sizeClasses.iconContainer}`}>
-						<iconify-icon icon={icon} class={sizeClasses.icon}></iconify-icon>
+					<div
+						class={`rounded-lg flex items-center justify-center bg-[var(--primary)]/12 text-[var(--primary)] ${sizeClasses.iconContainer}`}
+					>
+						<iconify-icon icon={icon} class={sizeClasses.icon} />
 					</div>
 				)
 			}
 
 			{
 				trend && (
-					<div class={`flex items-center gap-1 ${trend.isPositive ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
+					<div
+						class={`flex items-center gap-1 ${trend.isPositive ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}
+					>
 						<iconify-icon
 							icon={
 								trend.isPositive
@@ -67,7 +73,7 @@ const sizeClasses = getSizeClasses(size);
 									: "material-symbols:trending-down"
 							}
 							class="text-sm"
-						></iconify-icon>
+						/>
 						<span class="text-xs font-medium">
 							{trend.isPositive ? "+" : ""}
 							{trend.value}%
@@ -77,17 +83,23 @@ const sizeClasses = getSizeClasses(size);
 			}
 		</div>
 
-		<div class={`font-bold mb-1 text-[var(--primary)] ${sizeClasses.value}`}>
+		<div
+			class={`font-bold mb-1 text-[var(--primary)] ${sizeClasses.value}`}
+		>
 			{value}
 		</div>
 
-		<div class={`font-medium text-black/70 dark:text-white/70 mb-1 ${sizeClasses.title}`}>
+		<div
+			class={`font-medium text-black/70 dark:text-white/70 mb-1 ${sizeClasses.title}`}
+		>
 			{title}
 		</div>
 
 		{
 			subtitle && (
-				<div class={`text-black/50 dark:text-white/50 ${sizeClasses.subtitle}`}>
+				<div
+					class={`text-black/50 dark:text-white/50 ${sizeClasses.subtitle}`}
+				>
 					{subtitle}
 				</div>
 			)
@@ -95,7 +107,9 @@ const sizeClasses = getSizeClasses(size);
 
 		{
 			trend && trend.label && (
-				<div class={`text-black/40 dark:text-white/40 mt-1 ${sizeClasses.subtitle}`}>
+				<div
+					class={`text-black/40 dark:text-white/40 mt-1 ${sizeClasses.subtitle}`}
+				>
 					{trend.label}
 				</div>
 			)
@@ -115,7 +129,10 @@ const sizeClasses = getSizeClasses(size);
 		}
 	</div>
 
-	<div class="absolute inset-0 bg-[var(--primary)]/3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-xl"></div>
+	<div
+		class="absolute inset-0 bg-[var(--primary)]/3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-xl"
+	>
+	</div>
 </div>
 
 <style>
@@ -124,10 +141,18 @@ const sizeClasses = getSizeClasses(size);
 		opacity: 0;
 	}
 
-	.stat-card:nth-child(1) { animation-delay: 0.05s; }
-	.stat-card:nth-child(2) { animation-delay: 0.1s; }
-	.stat-card:nth-child(3) { animation-delay: 0.15s; }
-	.stat-card:nth-child(4) { animation-delay: 0.2s; }
+	.stat-card:nth-child(1) {
+		animation-delay: 0.05s;
+	}
+	.stat-card:nth-child(2) {
+		animation-delay: 0.1s;
+	}
+	.stat-card:nth-child(3) {
+		animation-delay: 0.15s;
+	}
+	.stat-card:nth-child(4) {
+		animation-delay: 0.2s;
+	}
 
 	@keyframes fadeInUp {
 		from {

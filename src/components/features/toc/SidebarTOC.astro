@@ -151,6 +151,7 @@ const { class: className } = Astro.props;
 			if (!this.sections.length) return;
 
 			for (let i = 0; i < this.sections.length; i++) {
+				if (!this.sections[i]) continue;
 				const rect = this.sections[i].getBoundingClientRect();
 				if (
 					isInRange(rect.top, 0, window.innerHeight) ||
