@@ -93,48 +93,52 @@ const config = {
 			}
 		}
 
+		/**
+		 * 清理函数：用于释放资源和取消事件监听
+		 * 在页面卸载前调用，防止内存泄漏
+		 */
 		function cleanup() {
+			// 断开 IntersectionObserver 观察器
 			if (observer) {
 				observer.disconnect();
 				observer = null;
 			}
+			// 移除 swup 的 content:replace 事件监听
 			if (window.swup?.hooks) {
 				window.swup.hooks.off("content:replace", initTwikoo);
 			}
 		}
-
+		/**
+		 * 设置懒加载：使用 IntersectionObserver 监听评论容器
+		 * 当容器进入视口时自动加载 Twikoo 评论脚本
+		 */
 		function setupLazyLoad() {
-    	// 清理旧的observer
-    	if (observer) {
-       		observer.disconnect();
-        	observer = null;
-    	}
+			// 获取评论容器元素
+			const container = document.getElementById(TWIKOO_CONTAINER_ID);
+			if (!container) {
+				console.warn("[Twikoo] 评论容器不存在");
+				return;
+			}
 
-    	const container = document.getElementById(TWIKOO_CONTAINER_ID);
-    	if (!container) {
-        	console.warn("[Twikoo] 评论容器不存在");
-        	return;
-    	}
+			// 创建 IntersectionObserver 监听容器是否进入视口
+			observer = new IntersectionObserver(
+				(entries) => {
+					if (entries[0].isIntersecting && observer) {
+						if (!document.getElementById(TWIKOO_CONTAINER_ID)) {
+							console.warn("[Twikoo] 评论容器已不存在，取消初始化");
+							observer.disconnect();
+							observer = null;
+							return;
+						}
+						observer.disconnect();
+						observer = null;
+						initTwikoo();
+					}
+				},
+				{ rootMargin: ROOT_MARGIN },
+			);
 
-    	observer = new IntersectionObserver(
-        	(entries) => {
-            	if (entries[0].isIntersecting && observer) {
-                	// 再次检查容器是否存在
-                	if (!document.getElementById(TWIKOO_CONTAINER_ID)) {
-                    	console.warn("[Twikoo] 评论容器已不存在，取消初始化");
-                    	observer.disconnect();
-                    	observer = null;
-                    	return;
-                	}
-                	observer.disconnect();
-                	observer = null;
-                	initTwikoo();
-            		}
-        		},
-        		{ rootMargin: ROOT_MARGIN },
-    		);
-
-    		observer.observe(container);
+			observer.observe(container);
 		}
 
 		function setupSwupHooks() {
@@ -161,14 +165,18 @@ const config = {
 			setupLazyLoad();
 		});
 
+		// 在页面卸载前执行清理，释放资源防止内存泄漏
 		window.addEventListener("beforeunload", cleanup);
 
+		// 根据文档加载状态设置初始化逻辑
 		if (document.readyState === "loading") {
+			// 文档仍在加载中，等待 DOMContentLoaded 事件
 			document.addEventListener("DOMContentLoaded", () => {
 				setupLazyLoad();
 				setupSwupHooks();
 			});
 		} else {
+			// 文档已加载完成，直接执行初始化
 			setupLazyLoad();
 			setupSwupHooks();
 		}
