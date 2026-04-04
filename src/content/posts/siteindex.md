@@ -63,7 +63,7 @@ updated: 2026-04-03
                             ## 📔版本：<a href="${commitUrl}" target="_blank" style="color: var(--primary); font-weight: bold; text-decoration: none;">
                                 ${sha}
                             </a>
-                            <span style="color: var(--text-secondary); font-size: 0.85em;">${dateStr} (UTC+8)</span>
+                            ⏰日期：<span style="color: var(--text-secondary); font-size: 0.85em;">${dateStr} (UTC+8)</span>
                         </div>
                         <div style="margin-bottom: 6px; color: var(--text-primary); white-space: pre-wrap; word-break: break-word;">${message}</div>
                         <div style="color: var(--text-secondary); font-size: 0.85em;">

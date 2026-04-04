@@ -101,7 +101,7 @@ const config = {
 
 			observer = new IntersectionObserver(
 				(entries) => {
-					if (entries[0].isIntersecting) {
+					if (entries[0].isIntersecting && observer) {
 						observer.disconnect();
 						observer = null;
 						initTwikoo();
