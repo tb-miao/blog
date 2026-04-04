@@ -24,11 +24,11 @@ import { LinkPreset } from "./types/config";
 const SITE_LANG = "zh_CN"; // 语言代码，例如：'en', 'zh_CN', 'ja' 等。
 const SITE_TIMEZONE = 8; //设置你的网站时区 from -12 to 12 default in UTC+8
 export const siteConfig: SiteConfig = {
-	title: "AUNyaの小窝",
+	title: "Nachcekoの小窝",
 	subtitle: "NO demo",
 	siteURL: "https://tbmiao.dpdns.org/", // 请替换为你的站点URL，以斜杠结尾
 	siteStartDate: "2024-01-01", // 站点开始运行日期，用于站点统计组件计算运行天数
-	keywords: ["AUNya", "小窝", "碎碎念念", "日常分享", "生活记录", "个人空间", "个人博客", "个人网站", "aunya小窝"],
+	keywords: ["Nachceko", "小窝", "碎碎念念", "日常分享", "生活记录", "个人空间", "个人博客", "个人网站", "Nachceko小窝","aunya小窝","aunya"],
 
 	timeZone: SITE_TIMEZONE,
 
@@ -56,7 +56,7 @@ export const siteConfig: SiteConfig = {
 		// 显示模式："text-icon" 显示图标+文本，"logo" 仅显示Logo
 		mode: "text-icon",
 		// 顶栏标题文本
-		text: "AUNya",
+		text: "Nachceko",
 		// 顶栏标题图标路径，默认使用 public/assets/home/home.webp
 		icon: "assets/home/home.ico",
 		// 网站Logo图片路径
@@ -170,7 +170,7 @@ export const siteConfig: SiteConfig = {
 
 		homeText: {
 			enable: true, // 在主页显示自定义文本
-			title: "AUNyaの小窝", // 主页横幅主标题
+			title: "Nachcekoの小窝", // 主页横幅主标题
 
 			subtitle: [
 				"特別なことはないけど、君がいると十分です",
@@ -340,7 +340,7 @@ export const navBarConfig: NavBarConfig = {
 
 export const profileConfig: ProfileConfig = {
 	avatar: "https://avatars.githubusercontent.com/u/172878250?v=4", // 相对于 /src 目录。如果以 '/' 开头，则相对于 /public 目录
-	name: "AUNya",
+	name: "Nachceko",
 	bio: "1つの熱愛の2次元の小さい萌の新しい~ /.こんにちはnya~です",
 	typewriter: {
 		enable: true, // 启用个人简介打字机效果
