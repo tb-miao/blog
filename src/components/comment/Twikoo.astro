@@ -94,6 +94,12 @@ const config = {
 		}
 
 		function setupLazyLoad() {
+			// 清理旧的observer
+			if (observer) {
+				observer.disconnect();
+				observer = null;
+			}
+
 			const container = document.getElementById(TWIKOO_CONTAINER_ID);
 			if (!container) {
 				return;
