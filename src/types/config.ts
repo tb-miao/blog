@@ -194,6 +194,11 @@ export interface SiteConfig {
 	showLastModified: boolean; // 控制"上次编辑"卡片显示的开关
 	pageProgressBar?: PageProgressBarConfig; // 页面顶部进度条配置
 	thirdPartyAnalytics?: ThirdPartyAnalyticsConfig; // 第三方统计配置
+	performanceMonitor?: {
+		enable: boolean; // 是否启用性能监控
+		showLoadTime: boolean; // 是否显示加载时间
+		showMemoryUsage: boolean; // 是否显示内存占用
+	};
 }
 
 export interface Favicon {
@@ -376,6 +381,7 @@ export type WidgetComponentType =
 	| "pio" // 添加 pio 组件类型
 	| "site-stats" // 站点统计组件
 	| "calendar" // 日历组件
+	| "lineSwitch" // 线路切换组件
 	| "custom";
 
 export interface WidgetComponentConfig {
@@ -522,3 +528,18 @@ export interface ThirdPartyAnalyticsConfig {
 	enable: boolean; // 是否启用第三方统计（Microsoft Clarity），默认关闭
 	clarityId?: string; // Clarity 项目 ID
 }
+
+/**
+ * 线路配置
+ */
+export type Line = {
+	nameEn: string;
+	nameZh: string;
+	url: string;
+	id: string;
+	icon: string;
+	isLocal: boolean;
+	size: number;
+};
+
+export type LineSwitchConfig = Line[];

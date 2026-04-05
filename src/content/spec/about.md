@@ -21,9 +21,13 @@
 
 ## 🛠️ 关于本站
 
-该网站使用 **Astro** 框架，并采用了 [Mizuki](https://github.com/matsuzaka-yuki/mizuki) 主题。
+- 该网站使用 **Astro** 框架，并采用了 [Mizuki](https://github.com/LyraVoid/Mizuki) 主题。
+- **内容协议**: [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)  
+    - ✅ **允许**: 转载/修改（需署名+相同协议）
+    - ⚠️ **禁止**: 商业用途
 
-::github{repo="matsuzaka-yuki/Mizuki"}
+
+::github{repo="LyraVoid/Mizuki"}
 
 ::github{repo="tb-miao/blog"}
 

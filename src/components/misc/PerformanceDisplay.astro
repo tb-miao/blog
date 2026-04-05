@@ -2,6 +2,12 @@
 import { siteConfig } from "@/config";
 
 const navbarTransparentMode = siteConfig.banner?.navbar?.transparentMode || "semi";
+const performanceConfig = siteConfig.performanceMonitor || { enable: false, showLoadTime: false, showMemoryUsage: false };
+const { enable, showLoadTime, showMemoryUsage } = performanceConfig;
+
+if (!enable) {
+    return null;
+}
 ---
 <div id="performance-display" class="fixed top-20 left-4 z-[100] performance-card" data-transparent-mode={navbarTransparentMode}>
     <div class="performance-header">
@@ -9,25 +15,34 @@ const navbarTransparentMode = siteConfig.banner?.navbar?.transparentMode || "sem
         <span class="performance-title">性能监控</span>
     </div>
     <div class="performance-content">
-        <div class="performance-item">
-            <div class="item-icon">⏱️</div>
-            <div class="item-info">
-                <span class="item-label">加载时间</span>
-                <span class="item-value" id="load-time-value">计算中...</span>
+        {showLoadTime && (
+            <div class="performance-item">
+                <div class="item-icon">⏱️</div>
+                <div class="item-info">
+                    <span class="item-label">加载时间</span>
+                    <span class="item-value" id="load-time-value">计算中...</span>
+                </div>
             </div>
-        </div>
-        <div class="performance-item">
-            <div class="item-icon">💾</div>
-            <div class="item-info">
-                <span class="item-label">内存占用</span>
-                <span class="item-value" id="memory-value">计算中...</span>
+        )}
+        {showMemoryUsage && (
+            <div class="performance-item">
+                <div class="item-icon">💾</div>
+                <div class="item-info">
+                    <span class="item-label">内存占用</span>
+                    <span class="item-value" id="memory-value">计算中...</span>
+                </div>
             </div>
-        </div>
+        )}
     </div>
 </div>
 
 <script>
+    import { siteConfig } from "@/config";
+    const performanceConfig = siteConfig.performanceMonitor || { enable: false, showLoadTime: false, showMemoryUsage: false };
+    const { showLoadTime, showMemoryUsage } = performanceConfig;
+
     function calculateLoadTime() {
+        if (!showLoadTime) return;
         const loadTime = performance.now();
         const loadTimeElement = document.getElementById('load-time-value');
         if (loadTimeElement) {
@@ -39,6 +54,7 @@ const navbarTransparentMode = siteConfig.banner?.navbar?.transparentMode || "sem
     let scrollHandler: (() => void) | undefined;
 
     function calculateMemoryUsage() {
+        if (!showMemoryUsage) return;
         const memoryElement = document.getElementById('memory-value');
         
         if ('memory' in performance) {
@@ -119,7 +135,22 @@ const navbarTransparentMode = siteConfig.banner?.navbar?.transparentMode || "sem
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
-            calculateLoadTime();
+            if (showLoadTime) calculateLoadTime();
+            if (showMemoryUsage) {
+                calculateMemoryUsage();
+                memoryInterval = setInterval(calculateMemoryUsage, 5000);
+                visibilityChangeHandler = () => {
+                    if (!document.hidden) {
+                        calculateMemoryUsage();
+                    }
+                };
+                document.addEventListener('visibilitychange', visibilityChangeHandler);
+            }
+            initPerformanceScrollDetection();
+        });
+    } else {
+        if (showLoadTime) calculateLoadTime();
+        if (showMemoryUsage) {
             calculateMemoryUsage();
             memoryInterval = setInterval(calculateMemoryUsage, 5000);
             visibilityChangeHandler = () => {
@@ -128,18 +159,7 @@ const navbarTransparentMode = siteConfig.banner?.navbar?.transparentMode || "sem
                 }
             };
             document.addEventListener('visibilitychange', visibilityChangeHandler);
-            initPerformanceScrollDetection();
-        });
-    } else {
-        calculateLoadTime();
-        calculateMemoryUsage();
-        memoryInterval = setInterval(calculateMemoryUsage, 5000);
-        visibilityChangeHandler = () => {
-            if (!document.hidden) {
-                calculateMemoryUsage();
-            }
-        };
-        document.addEventListener('visibilitychange', visibilityChangeHandler);
+        }
         initPerformanceScrollDetection();
     }
 
