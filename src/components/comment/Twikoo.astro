@@ -1,5 +1,6 @@
 ---
 import { commentConfig } from "@/config";
+import { url } from "@/utils/url-utils";
 
 interface Props {
 	path: string;
@@ -12,168 +13,78 @@ const config = {
 };
 ---
 
-<div id="twikoo-container" class="twikoo-container">
-	<div id="tcomment"></div>
-</div>
-
+<div id="tcomment"></div>
+<!-- 使用自编译的 Twikoo 文件，避免点赞等按钮导致页面触发滚动回顶部 https://github.com/twikoojs/twikoo/issues/721 -->
+<script is:inline src={url("/assets/js/twikoo.nocss.js")}></script>
+<link rel="stylesheet" href={url("/assets/css/twikoo.css")} />
+<link rel="stylesheet" href={url("/assets/css/twikoo-custom.css")} />
 <script is:inline define:vars={{ config }}>
-	(function () {
-		const TWIKOO_CONTAINER_ID = "twikoo-container";
-		const SCROLL_PROTECTION_URL = "/scroll-protection.js";
-		const TWIKOO_SCRIPT_URL = "/assets/js/twikoo.all.min.js";
-		const ROOT_MARGIN = "200px";
+  // 获取当前页面路径
+  function getCurrentPath() {
+    const pathname = window.location.pathname;
+    return pathname.endsWith("/") && pathname.length > 1
+      ? pathname.slice(0, -1)
+      : pathname;
+  }
 
-		let observer = null;
-		let twikooLoaded = false;
+  // 动态创建配置对象
+  function createTwikooConfig() {
+    return {
+      ...config,
+      path: getCurrentPath(),
+      el: "#tcomment",
+    };
+  }
 
-		function getCurrentPath() {
-			const pathname = window.location.pathname;
-			return pathname.endsWith("/") && pathname.length > 1
-				? pathname.slice(0, -1)
-				: pathname;
-		}
+  // 初始化 Twikoo
+  function initTwikoo() {
+    if (typeof twikoo !== "undefined") {
+      const commentEl = document.getElementById("tcomment");
+      if (commentEl) {
+        commentEl.innerHTML = "";
 
-		function createTwikooConfig() {
-			return {
-				...config,
-				path: getCurrentPath(),
-				el: "#tcomment",
-			};
-		}
+        const dynamicConfig = createTwikooConfig();
+        console.log("[Twikoo] 初始化配置:", dynamicConfig);
 
-		async function loadScrollProtection() {
-			return new Promise((resolve, reject) => {
-				if (document.getElementById("scroll-protection-loaded")) {
-					resolve();
-					return;
-				}
-				const script = document.createElement("script");
-				script.src = SCROLL_PROTECTION_URL;
-				script.onload = () => {
-					const marker = document.createElement("div");
-					marker.id = "scroll-protection-loaded";
-					document.body.appendChild(marker);
-					resolve();
-				};
-				script.onerror = reject;
-				document.head.appendChild(script);
-			});
-		}
+        twikoo
+          .init(dynamicConfig)
+          .then(() => {
+            console.log("[Twikoo] 初始化完成");
+          })
+          .catch((error) => {
+            console.error("[Twikoo] 初始化失败:", error);
+          });
+      }
+    } else {
+      // 如果 Twikoo 未加载，稍后重试
+      setTimeout(initTwikoo, 500);
+    }
+  }
 
-		async function loadTwikooScript() {
-			if (
-				twikooLoaded ||
-				document.getElementById("twikoo-script-loaded")
-			) {
-				return;
-			}
-			await loadScrollProtection();
-			return new Promise((resolve, reject) => {
-				const script = document.createElement("script");
-				script.id = "twikoo-script-loaded";
-				script.src = TWIKOO_SCRIPT_URL;
-				script.async = true;
-				script.onload = () => {
-					twikooLoaded = true;
-					resolve();
-				};
-				script.onerror = reject;
-				document.head.appendChild(script);
-			});
-		}
+  // 页面加载时初始化
+  document.addEventListener("DOMContentLoaded", initTwikoo);
 
-		async function initTwikoo() {
-			const commentEl = document.getElementById("tcomment");
-			if (!commentEl) {
-				return;
-			}
+  // Swup 页面切换后重新初始化
+  if (window.swup && window.swup.hooks) {
+    window.swup.hooks.on("content:replace", function () {
+      setTimeout(initTwikoo, 200);
+    });
+  } else {
+    document.addEventListener("swup:enable", function () {
+      if (window.swup && window.swup.hooks) {
+        window.swup.hooks.on("content:replace", function () {
+          setTimeout(initTwikoo, 200);
+        });
+      }
+    });
+  }
 
-			try {
-				await loadTwikooScript();
-
-				if (typeof twikoo === "undefined") {
-					console.warn("[Twikoo] 脚本加载失败");
-					return;
-				}
-
-				commentEl.innerHTML = "";
-				const dynamicConfig = createTwikooConfig();
-				await twikoo.init(dynamicConfig);
-			} catch (error) {
-				console.error("[Twikoo] 初始化失败:", error);
-			}
-		}
-
-		function cleanup() {
-			if (observer) {
-				observer.disconnect();
-				observer = null;
-			}
-			if (window.swup?.hooks) {
-				window.swup.hooks.off("content:replace", initTwikoo);
-			}
-		}
-
-		function setupLazyLoad() {
-			const container = document.getElementById(TWIKOO_CONTAINER_ID);
-			if (!container) {
-				return;
-			}
-
-			observer = new IntersectionObserver(
-				(entries) => {
-					if (entries[0].isIntersecting) {
-						observer.disconnect();
-						observer = null;
-						initTwikoo();
-					}
-				},
-				{ rootMargin: ROOT_MARGIN },
-			);
-
-			observer.observe(container);
-		}
-
-		function setupSwupHooks() {
-			if (window.swup?.hooks) {
-				window.swup.hooks.on("content:replace", () => {
-					setTimeout(setupLazyLoad, 200);
-				});
-			} else {
-				document.addEventListener(
-					"swup:enable",
-					() => {
-						if (window.swup?.hooks) {
-							window.swup.hooks.on("content:replace", () => {
-								setTimeout(setupLazyLoad, 200);
-							});
-						}
-					},
-					{ once: true },
-				);
-			}
-		}
-
-		document.addEventListener("mizuki:page:loaded", () => {
-			setupLazyLoad();
-		});
-
-		window.addEventListener("beforeunload", cleanup);
-
-		if (document.readyState === "loading") {
-			document.addEventListener("DOMContentLoaded", () => {
-				setupLazyLoad();
-				setupSwupHooks();
-			});
-		} else {
-			setupLazyLoad();
-			setupSwupHooks();
-		}
-	})();
+  // 自定义事件监听
+  document.addEventListener("firefly:page:loaded", function () {
+    const commentEl = document.getElementById("tcomment");
+    if (commentEl) {
+      console.log("[Twikoo] 通过自定义事件重新初始化");
+      initTwikoo();
+    }
+  });
 </script>
-
-<style>
-	.twikoo-container {
-		min-height: 200px;
-	}
-</style>
