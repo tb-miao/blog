@@ -15,7 +15,7 @@ const config = {
 
 <div id="tcomment"></div>
 <!-- 使用自编译的 Twikoo 文件，避免点赞等按钮导致页面触发滚动回顶部 https://github.com/twikoojs/twikoo/issues/721 -->
-<script is:inline src={url("/assets/js/twikoo.nocss.js")}></script>
+<script is:inline src={url("/assets/js/twikoo.all.min.js")}></script>
 <link rel="stylesheet" href={url("/assets/css/twikoo.css")} />
 <link rel="stylesheet" href={url("/assets/css/twikoo-custom.css")} />
 <script is:inline define:vars={{ config }}>
@@ -63,6 +63,9 @@ const config = {
 
   // 页面加载时初始化
   document.addEventListener("DOMContentLoaded", initTwikoo);
+
+  // 页面加载完后初始化
+  setTimeout(initTwikoo, 200);
 
   // Swup 页面切换后重新初始化
   if (window.swup && window.swup.hooks) {
