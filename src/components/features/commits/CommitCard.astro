@@ -12,12 +12,14 @@ const GITHUB_REPO = "blog";
 
 const formatDate = (dateString: string) => {
 	const date = new Date(dateString);
+	// 确保使用 UTC 时区，与 GitHub API 返回的时间一致
 	return date.toLocaleString("zh-CN", {
 		year: "numeric",
 		month: "short",
 		day: "numeric",
 		hour: "2-digit",
-		minute: "2-digit"
+		minute: "2-digit",
+		timeZone: "UTC"
 	});
 };
 
@@ -117,7 +119,7 @@ const renderMarkdown = (text: string) => {
 			{item.files && item.files.length > 0 && (
 				<div class="mt-3 pt-3 border-t border-pink-100 dark:border-purple-800/50">
 					<div class="flex flex-wrap gap-2">
-						{item.files.map((file, index) => (
+						{item.files.map((file) => (
 							<div class="flex items-center gap-1.5 text-xs text-pink-600 dark:text-purple-400 bg-pink-50 dark:bg-purple-800/20 px-2.5 py-1.5 rounded-full">
 								<Icon name="material-symbols:description" class="w-3 h-3 flex-shrink-0" />
 								<span class="truncate max-w-[220px]">{file}</span>

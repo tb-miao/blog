@@ -12,7 +12,6 @@ if (!siteConfig.featurePages.commits) {
 }
 
 const title = i18n(I18nKey.commits);
-const subtitle = "网站更新记录，目前最多显示10条记录，更新记录的版本不是Mizuki版本是本站的版本。";
 
 // 异步获取 commit 数据
 let sortedCommits = commitData;
@@ -25,6 +24,31 @@ try {
 } catch (error) {
 	console.error("获取 commit 数据失败:", error);
 	// 失败时使用静态数据
+}
+
+// 解析最新 commit 的 tags
+const parseTagsFromMessage = (message: string) => {
+	const tagsMatch = message.match(/tags:\s*\[(.*?)\]/);
+	if (tagsMatch && tagsMatch[1]) {
+		// 提取 tags 数组内容并去除引号和空格
+		return tagsMatch[1]
+			.split(",")
+			.map(tag => tag.trim().replace(/^["']|['"]$/g, ""))
+			.filter(tag => tag.length > 0);
+	}
+	return [];
+};
+
+// 获取最新 commit 的 tags
+const latestCommit = sortedCommits[0];
+const latestTags = latestCommit ? parseTagsFromMessage(latestCommit.message) : [];
+
+// 构建 subtitle
+let subtitle = "网站更新记录，目前最多显示10条记录（更新记录的版本不是Mizuki版本，是本站的版本！！）";
+if (latestTags.length > 0) {
+	subtitle += `\n最新标签: ${latestTags.join(", ")}`;
+} else {
+	subtitle += "\n最新标签: 空值";
 }
 ---
 
