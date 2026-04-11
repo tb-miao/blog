@@ -8,11 +8,11 @@ const GITHUB_REPO = "blog";
 const logWithTimestamp = (message: string, level: 'log' | 'error' = 'log') => {
 	const now = new Date();
 	const timestamp = now.toLocaleString('zh-CN', {
-
 		hour: '2-digit',
 		minute: '2-digit',
 		second: '2-digit',
-		hour12: false
+		hour12: false,
+		timeZone: 'Asia/Shanghai'
 	});
 	
 	// 定义颜色代码

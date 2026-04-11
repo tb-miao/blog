@@ -12,14 +12,14 @@ const GITHUB_REPO = "blog";
 
 const formatDate = (dateString: string) => {
 	const date = new Date(dateString);
-	// 确保使用 UTC 时区，与 GitHub API 返回的时间一致
+	// 使用 UTC+8 时区（上海时区）
 	return date.toLocaleString("zh-CN", {
 		year: "numeric",
 		month: "short",
 		day: "numeric",
 		hour: "2-digit",
 		minute: "2-digit",
-		timeZone: "UTC"
+		timeZone: "Asia/Shanghai"
 	});
 };
 
