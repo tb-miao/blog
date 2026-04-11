@@ -46,9 +46,9 @@ const latestTags = latestCommit ? parseTagsFromMessage(latestCommit.message) : [
 // 构建 subtitle
 let subtitle = "网站更新记录，目前最多显示10条记录（更新记录的版本不是Mizuki版本，是本站的版本！！）";
 if (latestTags.length > 0) {
-	subtitle += `\n最新标签: ${latestTags.join(", ")}`;
+	subtitle += `\n最新版本: ${latestTags.join(", ")}`;
 } else {
-	subtitle += "\n最新标签: 空值";
+	subtitle += "\n最新版本: 空值（是不是忘记了？awa）";
 }
 ---
 
