@@ -252,6 +252,7 @@ export const siteConfig: SiteConfig = {
 		enable: true, // 是否启用性能监控
 		showLoadTime: true, // 是否显示加载时间
 		showMemoryUsage: true, // 是否显示内存占用
+		showOnMobile: false, // 是否在移动端显示（默认不显示）
 	},
 
 	thirdPartyAnalytics: {

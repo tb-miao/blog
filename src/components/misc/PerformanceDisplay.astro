@@ -2,14 +2,14 @@
 import { siteConfig } from "@/config";
 
 const navbarTransparentMode = siteConfig.banner?.navbar?.transparentMode || "semi";
-const performanceConfig = siteConfig.performanceMonitor || { enable: false, showLoadTime: false, showMemoryUsage: false };
-const { enable, showLoadTime, showMemoryUsage } = performanceConfig;
+const performanceConfig = siteConfig.performanceMonitor || { enable: false, showLoadTime: false, showMemoryUsage: false, showOnMobile: false };
+const { enable, showLoadTime, showMemoryUsage, showOnMobile } = performanceConfig;
 
 if (!enable) {
     return null;
 }
 ---
-<div id="performance-display" class="fixed top-20 left-4 z-[100] performance-card" data-transparent-mode={navbarTransparentMode}>
+<div id="performance-display" class={`fixed top-20 left-4 z-[100] performance-card ${!showOnMobile ? 'hidden-mobile' : ''}`} data-transparent-mode={navbarTransparentMode}>
     <div class="performance-header">
         <span class="performance-icon">⚡</span>
         <span class="performance-title">性能监控</span>
@@ -384,8 +384,14 @@ if (!enable) {
         }
     }
 
+    .hidden-mobile {
+        @media (max-width: 768px) {
+            display: none;
+        }
+    }
+
     @media (max-width: 768px) {
-        .performance-card {
+        .performance-card:not(.hidden-mobile) {
             top: 70px;
             left: 8px;
             padding: 8px 10px;

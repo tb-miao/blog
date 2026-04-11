@@ -199,6 +199,7 @@ export interface SiteConfig {
 		enable: boolean; // 是否启用性能监控
 		showLoadTime: boolean; // 是否显示加载时间
 		showMemoryUsage: boolean; // 是否显示内存占用
+		showOnMobile: boolean; // 是否在移动端显示（默认不显示）
 	};
 }
 
