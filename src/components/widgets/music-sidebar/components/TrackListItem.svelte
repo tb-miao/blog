@@ -149,15 +149,4 @@
 	:global(.dark) .item-title.active {
 		color: var(--primary);
 	}
-
-	.now-playing {
-		color: var(--primary);
-		fill: currentColor;
-		font-size: 1rem;
-		flex-shrink: 0;
-	}
-
-	:global(.dark) .now-playing {
-		color: var(--primary);
-	}
 </style>

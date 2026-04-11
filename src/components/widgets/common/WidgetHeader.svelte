@@ -1,12 +1,14 @@
 <script lang="ts">
 	import Icon from "@iconify/svelte";
+	import type { Snippet } from "svelte";
 
 	interface Props {
 		name: string;
 		icon?: string;
 		class?: string;
+		children?: Snippet;
 	}
-	const { name, icon, class: className = "" }: Props = $props();
+	const { name, icon, class: className = "", children }: Props = $props();
 </script>
 
 <div class="widget-header {className}">
@@ -14,7 +16,7 @@
 		<Icon {icon} class="widget-header-icon" />
 	{/if}
 	<span class="widget-header-title">{name}</span>
-	<slot />
+	{@render children?.()}
 </div>
 
 <style>

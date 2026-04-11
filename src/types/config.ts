@@ -381,7 +381,6 @@ export type WidgetComponentType =
 	| "pio" // 添加 pio 组件类型
 	| "site-stats" // 站点统计组件
 	| "calendar" // 日历组件
-	| "lineSwitch" // 线路切换组件
 	| "custom";
 
 export interface WidgetComponentConfig {
@@ -528,18 +527,3 @@ export interface ThirdPartyAnalyticsConfig {
 	enable: boolean; // 是否启用第三方统计（Microsoft Clarity），默认关闭
 	clarityId?: string; // Clarity 项目 ID
 }
-
-/**
- * 线路配置
- */
-export type Line = {
-	nameEn: string;
-	nameZh: string;
-	url: string;
-	id: string;
-	icon: string;
-	isLocal: boolean;
-	size: number;
-};
-
-export type LineSwitchConfig = Line[];

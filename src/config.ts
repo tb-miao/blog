@@ -11,7 +11,6 @@
 	ProfileConfig,
 	RandomPostsConfig,
 	RelatedPostsConfig,
-	LineSwitchConfig,
 	SakuraConfig,
 	ShareConfig,
 	SidebarLayoutConfig,
@@ -258,7 +257,6 @@ export const siteConfig: SiteConfig = {
 		enable: false, // 是否启用第三方统计（Microsoft Clarity），默认关闭，启用可能影响 Lighthouse 评分
 		clarityId: "", // Clarity 项目 ID
 	},
-
 };
 export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
 	src: {
@@ -448,9 +446,8 @@ export const announcementConfig: AnnouncementConfig = {
 	content: `
 ### 🎉🎉 欢迎来到我的博客喵！本站2周年啦！
 ---
-目前本站已升级到Mizuki 9.0版本，正在迁移部分功能（90%）
-- 已成功迁移LineSwitch组件。
-- 已添加“性能监控”组件。
+目前本站已升级到Mizuki 9.0版本，正在迁移部分功能（95%）
+- 已删除LineSwitch组件。
 ---
 可以点击【[这里](https://github.com/tb-miao/blog/issues)】提交对网站的建议。
 `,
@@ -470,7 +467,7 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	mode: "meting", // 音乐播放器模式，可选 "local" 或 "meting"
 	meting_api:
 		"https://meting.mysqil.com/api?server=:server&type=:type&id=:id&auth=:auth&r=:r", // Meting API 地址
-	id: "14164869977", // 歌单ID
+	id: "17889819684", // 歌单ID
 	server: "netease", // 音乐源服务器。有的meting的api源支持更多平台,一般来说,netease=网易云音乐, tencent=QQ音乐, kugou=酷狗音乐, xiami=虾米音乐, baidu=百度音乐
 	type: "playlist", // 播单类型
 };
@@ -559,13 +556,6 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			animationDelay: 200,
 		},
 		{
-			// 组件类型：线路切换组件
-			type: "lineSwitch",
-			position: "sticky",
-			class: "onload-animation",
-			animationDelay: 250,
-		},
-		{
 			// 组件类型：站点统计组件
 			type: "site-stats",
 			// 组件位置
@@ -589,13 +579,12 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 
 	// 侧栏组件布局配置
 	components: {
-		left: ["profile", "announcement", "tags", "card-toc", "lineSwitch"],
+		left: ["profile", "announcement", "tags", "card-toc"],
 		right: ["site-stats", "calendar", "categories", "music-sidebar"],
 		drawer: [
 			"profile",
 			"announcement",
 			"music-sidebar",
-			"lineSwitch",
 			"categories",
 			"tags",
 		],
@@ -687,38 +676,6 @@ export const randomPostsConfig: RandomPostsConfig = {
 	enable: true,
 	maxCount: 5,
 };
-
-export const lineSwitchConfig: LineSwitchConfig = [
-	// 线路切换配置
-	//{
-	//	nameEn: " ", // 线路名称（英文）
-	//	nameZh: "本站默认", // 线路名称（中文）
-	//	url: "https://blog.haokun.me", // 线路URL
-	//	id: "default", // 线路ID
-	//	icon: "", // 线路图标
-	//	isLocal: false, // 是否为本地线路
-	//	size: 27, // 图标大小
-	//},
-	{
-		nameEn: " ", // 线路名称（英文）
-		nameZh: "本站默认", // 线路名称（中文）
-		url: "https://tbmiao.dpdns.org", // 线路URL
-		id: "default", // 线路ID
-		icon: "logos:cloudflare-icon", // 线路图标
-		isLocal: false, // 是否为本地线路
-		size: 27, // 图标大小
-	},
-		{
-		nameEn: "Vercel", // 线路名称（英文）
-		nameZh: "Vercel", // 线路名称（中文）
-		url: "https://v.tbmiao.dpdns.org", // 线路URL
-		id: "vercel", // 线路ID
-		icon: "/assets/line-switch/icons/vercel.svg", // 线路图标
-		isLocal: true, // 是否为本地线路
-		size: 27, // 图标大小
-	},
-]
-
 
 // 导出所有配置的统一接口
 export const widgetConfigs = {

@@ -1,4 +1,6 @@
 ---
+import { Icon } from "astro-icon/components";
+
 import I18nKey from "../../../i18n/i18nKey";
 import { i18n } from "../../../i18n/translation";
 import type { ProjectCardProps } from "./types";
@@ -48,11 +50,9 @@ const getStatusText = (status: string) => {
 				<div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 				{project.featured && (
 					<div class="absolute top-3 right-3">
-						<iconify-icon
-							icon="material-symbols:star-rounded"
-							width="20"
-							height="20"
-							class="text-[var(--primary)] drop-shadow-sm"
+						<Icon
+							name="material-symbols:star-rounded"
+							class="text-[var(--primary)] text-xl drop-shadow-sm"
 							style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));"
 						/>
 					</div>
@@ -108,10 +108,9 @@ const getStatusText = (status: string) => {
 							rel="noopener noreferrer"
 							class="btn-regular flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
 						>
-							<iconify-icon
-								icon="material-symbols:open-in-new"
-								width="16"
-								height="16"
+							<Icon
+								name="material-symbols:open-in-new"
+								class="text-base w-4 h-4"
 							/>
 							{i18n(I18nKey.projectsVisit)}
 						</a>
@@ -124,11 +123,7 @@ const getStatusText = (status: string) => {
 							class="btn-regular flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
 							style={hasVisitUrl ? "" : "flex: 1;"}
 						>
-							<iconify-icon
-								icon="mdi:github"
-								width="16"
-								height="16"
-							/>
+							<Icon name="mdi:github" class="text-base w-4 h-4" />
 							{!hasVisitUrl && "GitHub"}
 						</a>
 					)}

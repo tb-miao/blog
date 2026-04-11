@@ -1,12 +1,13 @@
-# 🌸 魔改版Astro Mizuki博客
+# 🌸 魔改版Astro Mizuki博客 
 <img align='right' src='logo.png' width='200px' alt="Mizuki logo">
 
 一个现代化、功能丰富的静态博客模板，基于 [Astro](https://astro.build) 构建，具有先进的功能和精美的设计。
 
-[![Node.js >= 20](https://img.shields.io/badge/node.js-%3E%3D20-brightgreen)](https://nodejs.org/)
+
+[![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen)](https://nodejs.org/)
 [![pnpm >= 9](https://img.shields.io/badge/pnpm-%3E%3D9-blue)](https://pnpm.io/)
-[![Astro](https://img.shields.io/badge/Astro-5.15.3-orange)](https://astro.build/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue)](https://www.typescriptlang.org/)
+[![Astro](https://img.shields.io/badge/Astro-6.1.2-orange)](https://astro.build/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-blue)](https://www.typescriptlang.org/)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?logo=apache)](https://opensource.org/licenses/Apache-2.0)
 
 [**🖥️ 在线演示**](https://mizuki.mysqil.com/) | [**📝 用户文档**](https://docs.mizuki.mysqil.com/)
@@ -15,11 +16,10 @@
 
 [原仓库地址](https://github.com/LyraVoid/Mizuki)
 
-- 使用 mizuki@`9.0` 版本
+- 使用Git推送仓库前请先运行`pnpm check`。
+- 使用 mizuki@`9.0` 版本。
 
 ![Mizuki Preview](./README.webp)
-
-
 
 <table>
   <tr>
@@ -64,6 +64,7 @@ draft: false
 pinned: false
 encrypted: false  # 是否加密文章
 password:  # 设置文章密码，留空则不设置密码
+passwordHint:  # 密码提示，留空则不设置提示
 alias:  # 文章别名，留空则使用文件名
 updated:  # 文章更新时间
 ---

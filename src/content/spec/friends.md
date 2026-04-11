@@ -12,4 +12,4 @@
 ```
 
 ## ✉️申请友链
-- [提交issues](https://github.com/tb-miao/blog/issues/new?template=%E6%88%91%E8%A6%81%E6%8F%90%E4%BA%A4%E5%8F%8B%E9%93%BE.md)
+[提交issues](https://github.com/tb-miao/blog/issues/new?template=%E6%88%91%E8%A6%81%E6%8F%90%E4%BA%A4%E5%8F%8B%E9%93%BE.md)或在下方`评论`。

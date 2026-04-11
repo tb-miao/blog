@@ -11,6 +11,7 @@ const config = announcementConfig;
 const md = new MarkdownIt({ html: true, linkify: true, typographer: true });
 const renderedContent = md.render(config.content);
 
+
 interface Props {
 	class?: string;
 	style?: string;

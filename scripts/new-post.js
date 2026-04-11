@@ -51,7 +51,12 @@ tags: []
 category: ''
 draft: false 
 pinned: false
+
 ---
+password:"123456"  ---已设置密码
+passwordHint:"123456" ----密码提示
+alias: "ustat-tongji"  ---别名
+updated: ---文章更新时间
 `;
 
 fs.writeFileSync(path.join(targetDir, fileName), content);

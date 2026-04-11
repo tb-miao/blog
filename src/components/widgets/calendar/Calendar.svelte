@@ -2,6 +2,15 @@
 	import Icon from "@iconify/svelte";
 	import { onMount } from "svelte";
 
+	let dateCheckInterval: ReturnType<typeof setInterval> | null = null;
+
+	function updateTodayDate() {
+		const now = new Date();
+		todayYear = now.getFullYear();
+		todayMonth = now.getMonth();
+		todayDate = now.getDate();
+	}
+
 	import CalendarGrid from "./components/CalendarGrid.svelte";
 	import MonthPicker from "./components/MonthPicker.svelte";
 	import YearPicker from "./components/YearPicker.svelte";
@@ -43,11 +52,10 @@
 	let selectedDateKey: string | null = $state(null);
 	let currentView: "day" | "month" | "year" = $state("day");
 
-	// Computed
-	const today = new Date();
-	const todayYear = today.getFullYear();
-	const todayMonth = today.getMonth();
-	const todayDate = today.getDate();
+	// Today's date (reactive, updates at midnight)
+	let todayYear = $state(new Date().getFullYear());
+	let todayMonth = $state(new Date().getMonth());
+	let todayDate = $state(new Date().getDate());
 
 	const isBackToTodayVisible = $derived(
 		currentYear !== todayYear ||
@@ -202,6 +210,24 @@
 
 	onMount(() => {
 		fetchCalendarData();
+
+		// Check for date change every minute
+		dateCheckInterval = setInterval(() => {
+			const now = new Date();
+			if (
+				now.getFullYear() !== todayYear ||
+				now.getMonth() !== todayMonth ||
+				now.getDate() !== todayDate
+			) {
+				updateTodayDate();
+			}
+		}, 60000);
+
+		return () => {
+			if (dateCheckInterval) {
+				clearInterval(dateCheckInterval);
+			}
+		};
 	});
 </script>
 
@@ -227,32 +253,43 @@
 	</div>
 
 	<div class="flex items-center gap-1 shrink-0 ml-2">
+		{#if isBackToTodayVisible}
+			<button
+				type="button"
+				class="p-1.5 rounded-md hover:bg-[var(--btn-plain-bg-hover)] text-[var(--primary)] transition-all"
+				onclick={handleBackToToday}
+				aria-label="Back to today"
+			>
+				<Icon
+					icon="material-symbols:restart-alt-rounded"
+					class="text-xl"
+				/>
+			</button>
+		{/if}
 		<button
 			type="button"
-			class="p-1.5 rounded-md hover:bg-[var(--btn-plain-bg-hover)] text-[var(--primary)] transition-all
-				{isBackToTodayVisible ? '' : 'invisible'}"
-			onclick={handleBackToToday}
-			aria-label="Back to today"
-		>
-			<Icon name="material-symbols:restart-alt-rounded" class="text-xl" />
-		</button>
-		<button
-			type="button"
-			class="p-1.5 rounded-md hover:bg-[var(--btn-plain-bg-hover)] text-neutral-600 dark:text-neutral-400 hover:text-[var(--primary)] transition-colors text-xl font-extrabold
-				{currentView === 'day' ? '' : 'invisible'}"
+			class="p-1.5 rounded-md hover:bg-[var(--btn-plain-bg-hover)] text-neutral-600 dark:text-neutral-400 hover:text-[var(--primary)] transition-colors {currentView ===
+			'day'
+				? ''
+				: 'invisible'}"
 			onclick={handlePrevMonth}
 			aria-label="Previous month"
 		>
-			＜
+			<Icon icon="material-symbols:arrow-back-ios-new" class="text-lg" />
 		</button>
 		<button
 			type="button"
-			class="p-1.5 rounded-md hover:bg-[var(--btn-plain-bg-hover)] text-neutral-600 dark:text-neutral-400 hover:text-[var(--primary)] transition-colors text-xl font-extrabold
-				{currentView === 'day' ? '' : 'invisible'}"
+			class="p-1.5 rounded-md hover:bg-[var(--btn-plain-bg-hover)] text-neutral-600 dark:text-neutral-400 hover:text-[var(--primary)] transition-colors {currentView ===
+			'day'
+				? ''
+				: 'invisible'}"
 			onclick={handleNextMonth}
 			aria-label="Next month"
 		>
-			＞
+			<Icon
+				icon="material-symbols:arrow-back-ios-new"
+				class="text-lg rotate-180"
+			/>
 		</button>
 	</div>
 </div>

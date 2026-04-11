@@ -1,17 +1,21 @@
 <script lang="ts">
+	import type { Snippet } from "svelte";
+
 	import type { TagChipProps } from "./types";
 
-	interface Props extends TagChipProps {}
-	const { href, label, class: className = "" }: Props = $props();
+	interface Props extends TagChipProps {
+		children?: Snippet;
+	}
+	const { href, label, class: className = "", children }: Props = $props();
 </script>
 
 {#if href}
 	<a {href} aria-label={label} class="tag-chip {className}">
-		<slot />
+		{@render children?.()}
 	</a>
 {:else}
 	<span class="tag-chip {className}">
-		<slot />
+		{@render children?.()}
 	</span>
 {/if}
 

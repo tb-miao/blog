@@ -1,5 +1,6 @@
 ---
 import type { StatCardProps } from "./types";
+import { Icon } from "astro-icon/components";
 
 const {
 	title,
@@ -56,7 +57,7 @@ const sizeClasses = getSizeClasses(size);
 					<div
 						class={`rounded-lg flex items-center justify-center bg-[var(--primary)]/12 text-[var(--primary)] ${sizeClasses.iconContainer}`}
 					>
-						<iconify-icon icon={icon} class={sizeClasses.icon} />
+						<Icon name={icon} class={sizeClasses.icon} />
 					</div>
 				)
 			}
@@ -66,8 +67,8 @@ const sizeClasses = getSizeClasses(size);
 					<div
 						class={`flex items-center gap-1 ${trend.isPositive ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}
 					>
-						<iconify-icon
-							icon={
+						<Icon
+							name={
 								trend.isPositive
 									? "material-symbols:trending-up"
 									: "material-symbols:trending-down"

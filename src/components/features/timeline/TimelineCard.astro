@@ -1,4 +1,6 @@
 ---
+import { Icon } from "astro-icon/components";
+
 import I18nKey from "../../../i18n/i18nKey";
 import { i18n } from "../../../i18n/translation";
 import type { TimelineCardProps } from "./types";
@@ -88,8 +90,7 @@ const hasLinks = item.links && item.links.length > 0;
 	data-type={item.type}
 >
 	<div class="timeline-node" style={`background-color: ${nodeColor};`}>
-		<iconify-icon icon={icon} width="10" height="10" style="color: white;"
-		></iconify-icon>
+		<Icon name={icon} class="w-2.5 h-2.5" style="color: white;" />
 	</div>
 
 	<div
@@ -100,12 +101,11 @@ const hasLinks = item.links && item.links.length > 0;
 				<div
 					class="w-10 h-10 flex-shrink-0 rounded-lg flex items-center justify-center bg-[var(--btn-regular-bg)]"
 				>
-					<iconify-icon
-						icon={icon}
-						width="20"
-						height="20"
+					<Icon
+						name={icon}
+						class="text-lg"
 						style={`color: ${item.color || "var(--primary)"};`}
-					></iconify-icon>
+					/>
 				</div>
 
 				<div class="flex-1 min-w-0">
@@ -117,11 +117,9 @@ const hasLinks = item.links && item.links.length > 0;
 						</h3>
 						{
 							item.featured && (
-								<iconify-icon
-									icon="material-symbols:star-rounded"
-									width="16"
-									height="16"
-									class="text-[var(--primary)] flex-shrink-0"
+								<Icon
+									name="material-symbols:star-rounded"
+									class="text-base w-4 h-4 text-[var(--primary)] flex-shrink-0"
 								/>
 							)
 						}
@@ -179,11 +177,9 @@ const hasLinks = item.links && item.links.length > 0;
 						<ul class="space-y-1.5">
 							{item.achievements.map((achievement) => (
 								<li class="text-sm text-black/70 dark:text-white/70 flex items-start gap-2">
-									<iconify-icon
-										icon="material-symbols:check-circle"
-										width="16"
-										height="16"
-										class="text-green-500 flex-shrink-0 mt-0.5"
+									<Icon
+										name="material-symbols:check-circle"
+										class="text-base w-4 h-4 text-green-500 flex-shrink-0 mt-0.5"
 									/>
 									<span>{achievement}</span>
 								</li>
@@ -197,26 +193,25 @@ const hasLinks = item.links && item.links.length > 0;
 				class="flex items-center gap-4 text-xs text-black/50 dark:text-white/50 mb-1 pt-3 border-t border-black/5 dark:border-white/5"
 			>
 				<span class="flex items-center gap-1">
-					<iconify-icon
-						icon="material-symbols:calendar-month-outline"
-						width="14"
-						height="14"></iconify-icon>
+					<Icon
+						name="material-symbols:calendar-month-outline"
+						class="text-xs w-3.5 h-3.5"
+					/>
 					{dateRange}
 				</span>
 				<span class="flex items-center gap-1">
-					<iconify-icon
-						icon="material-symbols:schedule-outline"
-						width="14"
-						height="14"></iconify-icon>
+					<Icon
+						name="material-symbols:schedule-outline"
+						class="text-xs w-3.5 h-3.5"
+					/>
 					{duration}
 				</span>
 				{
 					item.location && (
 						<span class="flex items-center gap-1">
-							<iconify-icon
-								icon="material-symbols:location-on-outline"
-								width="14"
-								height="14"
+							<Icon
+								name="material-symbols:location-on-outline"
+								class="text-xs w-3.5 h-3.5"
 							/>
 							{item.location}
 						</span>
@@ -234,10 +229,9 @@ const hasLinks = item.links && item.links.length > 0;
 								rel="noopener noreferrer"
 								class="btn-regular flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium"
 							>
-								<iconify-icon
-									icon={getLinkIcon(link.type)}
-									width="14"
-									height="14"
+								<Icon
+									name={getLinkIcon(link.type)}
+									class="text-xs w-3.5 h-3.5"
 								/>
 								{link.name}
 							</a>

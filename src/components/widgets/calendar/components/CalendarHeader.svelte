@@ -53,32 +53,43 @@
 	</div>
 
 	<div class="flex items-center gap-1 shrink-0 ml-2">
+		{#if isBackToTodayVisible}
+			<button
+				type="button"
+				class="p-1.5 rounded-md hover:bg-[var(--btn-plain-bg-hover)] text-[var(--primary)] transition-all"
+				onclick={onBackToToday}
+				aria-label="Back to today"
+			>
+				<Icon
+					icon="material-symbols:restart-alt-rounded"
+					class="text-xl"
+				/>
+			</button>
+		{/if}
 		<button
 			type="button"
-			class="p-1.5 rounded-md hover:bg-[var(--btn-plain-bg-hover)] text-[var(--primary)] transition-all
-				{isBackToTodayVisible ? '' : 'invisible'}"
-			onclick={onBackToToday}
-			aria-label="Back to today"
-		>
-			<Icon name="material-symbols:restart-alt-rounded" class="text-xl" />
-		</button>
-		<button
-			type="button"
-			class="p-1.5 rounded-md hover:bg-[var(--btn-plain-bg-hover)] text-neutral-600 dark:text-neutral-400 hover:text-[var(--primary)] transition-colors text-xl font-extrabold
-				{currentView === 'day' ? '' : 'invisible'}"
+			class="p-1.5 rounded-md hover:bg-[var(--btn-plain-bg-hover)] text-neutral-600 dark:text-neutral-400 hover:text-[var(--primary)] transition-colors {currentView ===
+			'day'
+				? ''
+				: 'invisible'}"
 			onclick={onPrevMonth}
 			aria-label="Previous month"
 		>
-			＜
+			<Icon icon="material-symbols:arrow-back-ios-new" class="text-lg" />
 		</button>
 		<button
 			type="button"
-			class="p-1.5 rounded-md hover:bg-[var(--btn-plain-bg-hover)] text-neutral-600 dark:text-neutral-400 hover:text-[var(--primary)] transition-colors text-xl font-extrabold
-				{currentView === 'day' ? '' : 'invisible'}"
+			class="p-1.5 rounded-md hover:bg-[var(--btn-plain-bg-hover)] text-neutral-600 dark:text-neutral-400 hover:text-[var(--primary)] transition-colors {currentView ===
+			'day'
+				? ''
+				: 'invisible'}"
 			onclick={onNextMonth}
 			aria-label="Next month"
 		>
-			＞
+			<Icon
+				icon="material-symbols:arrow-back-ios-new"
+				class="text-lg rotate-180"
+			/>
 		</button>
 	</div>
 </div>

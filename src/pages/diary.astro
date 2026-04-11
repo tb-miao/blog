@@ -2,6 +2,7 @@
 import { FilterTabs } from "@components/atoms/filter-tabs";
 import { MomentCard } from "@components/features/diary";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { Icon } from "astro-icon/components";
 
 import { siteConfig } from "../config";
 import { getAllTags, getDiaryList } from "../data/diary";
@@ -112,12 +113,10 @@ const subtitle = i18n(I18nKey.diarySubtitle);
 				</div>
 
 				<div id="no-results" class="hidden text-center py-16">
-					<iconify-icon
-						icon="material-symbols:edit-note"
-						width="64"
-						height="64"
-						class="text-black/15 dark:text-white/15 mb-4"
-					></iconify-icon>
+					<Icon
+						name="material-symbols:edit-note"
+						class="text-6xl text-black/15 dark:text-white/15 mb-4"
+					/>
 					<p class="text-black/40 dark:text-white/40 text-lg">
 						{i18n(I18nKey.diaryNoResults)}
 					</p>
@@ -126,11 +125,9 @@ const subtitle = i18n(I18nKey.diarySubtitle);
 				{
 					moments.length === 0 && (
 						<div class="text-center py-16">
-							<iconify-icon
-								icon="material-symbols:edit-note"
-								width="64"
-								height="64"
-								class="text-black/15 dark:text-white/15 mb-4"
+							<Icon
+								name="material-symbols:edit-note"
+								class="text-6xl text-black/15 dark:text-white/15 mb-4"
 							/>
 							<h3 class="text-lg font-medium text-black/90 dark:text-white/90 mb-2">
 								{i18n(I18nKey.diaryNoResults)}

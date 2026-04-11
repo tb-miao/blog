@@ -157,6 +157,14 @@ export const friendsData: FriendItem[] = [
 		tags: ["Blog"],
 	},
 	{
+		id: 19,
+		title: "Uapis",
+		imgurl: "https://uapis.cn/favicon.svg",
+		desc: "免费、稳定、快速的公共 Api",
+		siteurl: "https://uapis.cn/",
+		tags: ["Api"],
+	},
+	{
 		id: 999,
 		title: "困",
 		imgurl: "https://avatars.githubusercontent.com/u/119118549?v=4",

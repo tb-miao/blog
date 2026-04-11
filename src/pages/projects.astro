@@ -3,6 +3,7 @@ import { FilterTabs } from "@components/atoms/filter-tabs";
 import { PageHeader } from "@components/features/page-header";
 import { ProjectCard } from "@components/features/projects";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { Icon } from "astro-icon/components";
 
 import { siteConfig } from "../config";
 import { UNCATEGORIZED } from "../constants/constants";
@@ -103,12 +104,10 @@ const subtitle = i18n(I18nKey.projectsSubtitle);
 			</div>
 
 			<div id="no-results" class="hidden text-center py-16">
-				<iconify-icon
-					icon="material-symbols:search-off-rounded"
-					width="64"
-					height="64"
-					class="text-black/15 dark:text-white/15 mb-4"
-				></iconify-icon>
+				<Icon
+					name="material-symbols:search-off-rounded"
+					class="text-6xl text-black/15 dark:text-white/15 mb-4"
+				/>
 				<p class="text-black/40 dark:text-white/40 text-lg">
 					No matching projects
 				</p>

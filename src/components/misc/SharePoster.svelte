@@ -395,7 +395,7 @@
 
 <button
 	class="btn-regular px-6 py-3 rounded-lg inline-flex items-center gap-2"
-	on:click={generatePoster}
+	onclick={generatePoster}
 	aria-label="Generate Share Poster"
 >
 	<span>{i18n(I18nKey.shareArticle)}</span>
@@ -406,12 +406,26 @@
 		use:portal
 		class="fixed inset-0 z-[9999] flex items-center justify-center p-4 transition-opacity"
 		style="background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px);"
-		on:click={closeModal}
+		onclick={closeModal}
+		role="button"
+		tabindex="0"
+		onkeydown={(e) => {
+			if (e.key === "Enter" || e.key === " ") {
+				closeModal();
+			}
+		}}
 	>
 		<div
 			class="rounded-2xl max-w-sm w-full max-h-[90vh] overflow-y-auto flex flex-col shadow-2xl transform transition-all"
 			style="background-color: var(--float-panel-bg);"
-			on:click|stopPropagation
+			onclick={(e) => {
+				e.stopPropagation();
+			}}
+			onkeydown={(e) => {
+				e.stopPropagation();
+			}}
+			role="dialog"
+			tabindex="0"
 		>
 			<div
 				class="p-6 flex justify-center min-h-[200px] items-center"
@@ -445,13 +459,13 @@
 				<button
 					class="py-3 rounded-xl font-medium active:scale-[0.98] transition-all flex items-center justify-center gap-2"
 					style="background-color: var(--btn-card-bg-hover); color: var(--btn-content);"
-					on:mouseenter={(e) =>
+					onmouseenter={(e) =>
 						(e.currentTarget.style.backgroundColor =
 							"var(--btn-card-bg-active)")}
-					on:mouseleave={(e) =>
+					onmouseleave={(e) =>
 						(e.currentTarget.style.backgroundColor =
 							"var(--btn-card-bg-hover)")}
-					on:click={copyLink}
+					onclick={copyLink}
 				>
 					{#if copied}
 						<Icon
@@ -472,7 +486,7 @@
 				<button
 					class="py-3 rounded-xl font-medium active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
 					style="background-color: {themeColor}; color: white;"
-					on:click={downloadPoster}
+					onclick={downloadPoster}
 					disabled={!posterImage}
 				>
 					<Icon

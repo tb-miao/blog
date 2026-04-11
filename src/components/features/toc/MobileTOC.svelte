@@ -229,7 +229,7 @@
 </script>
 
 <button
-	on:click={togglePanel}
+	onclick={togglePanel}
 	aria-label="Table of Contents"
 	id="mobile-toc-switch"
 	class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90 lg:!hidden theme-switch-btn"
@@ -248,7 +248,7 @@
 				: i18n(I18nKey.tableOfContents)}
 		</h3>
 		<button
-			on:click={togglePanel}
+			onclick={togglePanel}
 			aria-label="Close TOC"
 			class="btn-plain rounded-lg h-8 w-8 active:scale-90 theme-switch-btn"
 		>
@@ -269,7 +269,7 @@
 			<div class="post-content">
 				{#each postItems as post}
 					<button
-						on:click={() => navigateToPost(post.url)}
+						onclick={() => navigateToPost(post.url)}
 						class="post-item"
 					>
 						<div class="post-title">
@@ -293,7 +293,7 @@
 		<div class="toc-content">
 			{#each tocItems as item}
 				<button
-					on:click={() => scrollToHeading(item.id)}
+					onclick={() => scrollToHeading(item.id)}
 					class="toc-item level-{item.level}"
 					class:active={activeId === item.id}
 					style="padding-left: {activeId === item.id

@@ -5,6 +5,7 @@ dist/
 .astro/
 demo
 plans
+
 # dependencies
 node_modules/
 

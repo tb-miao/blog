@@ -1,4 +1,6 @@
 ---
+import { Icon } from "astro-icon/components";
+
 import { formatRelativeTime } from "../../../utils/timeFormat";
 import type { MomentCardProps } from "./types";
 
@@ -80,10 +82,10 @@ const relativeTime = formatRelativeTime(
 			class="flex items-center justify-between text-xs text-black/50 dark:text-white/50 flex-wrap gap-2"
 		>
 			<div class="flex items-center gap-1.5">
-				<iconify-icon
-					icon="material-symbols:schedule"
-					width="14"
-					height="14"></iconify-icon>
+				<Icon
+					name="material-symbols:schedule"
+					class="text-xs w-3.5 h-3.5"
+				/>
 				<time datetime={moment.date}>{relativeTime}</time>
 			</div>
 
@@ -91,10 +93,9 @@ const relativeTime = formatRelativeTime(
 				{
 					moment.location && (
 						<span class="flex items-center gap-1">
-							<iconify-icon
-								icon="material-symbols:location-on"
-								width="14"
-								height="14"
+							<Icon
+								name="material-symbols:location-on"
+								class="text-xs w-3.5 h-3.5"
 							/>
 							{moment.location}
 						</span>
