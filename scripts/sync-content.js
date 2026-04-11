@@ -10,6 +10,7 @@ const rootDir = path.resolve(__dirname, "..");
 
 loadEnv();
 console.log("已加载 .env 配置文件\n");
+console.log("Tip：在提交仓库之前，请运行 pnpm check 以检查代码质量\n");
 
 // 从环境变量读取配置
 const ENABLE_CONTENT_SYNC = process.env.ENABLE_CONTENT_SYNC !== "false"; // 默认启用

@@ -12,7 +12,7 @@ if (!siteConfig.featurePages.commits) {
 }
 
 const title = i18n(I18nKey.commits);
-const subtitle = i18n(I18nKey.commitsSubtitle);
+const subtitle = "网站更新记录，目前最多显示10条记录，更新记录的版本不是Mizuki版本是本站的版本。";
 
 // 异步获取 commit 数据
 let sortedCommits = commitData;
@@ -55,8 +55,8 @@ try {
 				</div>
 
 				<div id="commits-list" class="space-y-6">
-					{sortedCommits.map((commit) => (
-						<CommitCard item={commit} />
+					{sortedCommits.map((commit, index) => (
+						<CommitCard item={commit} isLatest={index === 0} />
 					))}
 				</div>
 
@@ -81,6 +81,7 @@ try {
 		border-radius: 20px;
 		box-shadow: 0 4px 12px rgba(236, 72, 153, 0.08);
 		background-image: linear-gradient(135deg, rgba(255, 240, 245, 0.5), rgba(255, 255, 255, 0.8));
+		font-family: 'ZenMaruGothic-Medium', '萝莉体 第二版', sans-serif;
 	}
 
 	@media (prefers-color-scheme: dark) {

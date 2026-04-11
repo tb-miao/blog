@@ -18,6 +18,8 @@
 
 - 使用Git推送仓库前请先运行`pnpm check`。
 - 使用 mizuki@`9.0` 版本。
+- Git commits：
+- `tags:[]` 语法用于添加标签，例如 `tags:[v1.2.0]` 会显示标签 `v1.2.0`。
 
 ![Mizuki Preview](./README.webp)
 

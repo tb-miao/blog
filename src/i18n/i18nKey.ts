@@ -210,7 +210,6 @@ enum I18nKey {
 
 	// 提交记录页面
 	commits = "commits",
-	commitsSubtitle = "commitsSubtitle",
 
 	// 密码保护
 	passwordProtected = "passwordProtected",

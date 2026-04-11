@@ -317,7 +317,7 @@ export const navBarConfig: NavBarConfig = {
 					icon: "material-symbols:developer-board",
 				},
 				{
-					name: "提交记录",
+					name: "更新记录",
 					url: "/commits/",
 					icon: "material-symbols:history",
 				},
@@ -452,8 +452,10 @@ export const announcementConfig: AnnouncementConfig = {
 	content: `
 ### 🎉🎉 欢迎来到我的博客喵！本站2周年啦！
 ---
-目前本站已升级到Mizuki 9.0版本，正在迁移部分功能（95%）
-- 已删除LineSwitch组件。
+目前本站已升级到Mizuki 9.0版本。
+1. 已完成所有功能迁移。
+2. 已添加更新记录页面。
+- 后续除发生了重大事件，不会升级Mizuki版本。
 ---
 可以点击【[这里](https://github.com/tb-miao/blog/issues)】提交对网站的建议。
 `,

@@ -267,9 +267,9 @@ export const en: Translation = {
 	[Key.timelineStartDate]: "Start Date",
 	[Key.timelineDuration]: "Duration",
 
-	// 提交記錄頁面
+	// 更新记录页面
 	[Key.commits]: "Commits",
-	[Key.commitsSubtitle]: "Code Commits History",
+
 
 	// Password Protection
 	[Key.passwordProtected]: "Password Protected",
