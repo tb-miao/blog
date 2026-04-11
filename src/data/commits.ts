@@ -1,0 +1,188 @@
+import type { CommitItem } from "../components/features/commits/types";
+
+// GitHub 仓库信息
+const GITHUB_OWNER = "tb-miao";
+const GITHUB_REPO = "blog";
+
+// 静态数据作为 fallback
+const fallbackCommitData: CommitItem[] = [
+	{
+		id: "1",
+		hash: "a1b2c3d4e5f6",
+		message: "feat: add commits page with GitHub-style design",
+		author: "John Doe",
+		date: "2026-04-10T14:30:00Z",
+		avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=JohnDoe",
+		changes: {
+			additions: 120,
+			deletions: 15
+		},
+		files: ["src/pages/commits.astro", "src/components/features/commits/CommitCard.astro", "src/data/commits.ts"],
+		branch: "main",
+		tags: ["v1.2.0"]
+	},
+	{
+		id: "2",
+		hash: "f6e5d4c3b2a1",
+		message: "fix: resolve responsive design issues on commits page",
+		author: "Jane Smith",
+		date: "2026-04-09T09:15:00Z",
+		avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=JaneSmith",
+		changes: {
+			additions: 35,
+			deletions: 20
+		},
+		files: ["src/components/features/commits/CommitCard.astro"]
+	},
+	{
+		id: "3",
+		hash: "b9c8d7e6f5a4",
+		message: "chore: update commit data with more sample entries",
+		author: "John Doe",
+		date: "2026-04-08T16:45:00Z",
+		avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=JohnDoe",
+		changes: {
+			additions: 45,
+			deletions: 5
+		},
+		files: ["src/data/commits.ts"],
+		branch: "main"
+	}
+];
+
+// 从 GitHub API 获取 commit 数据
+export async function fetchCommits(): Promise<CommitItem[]> {
+	// 检查是否在开发环境中
+	const isDevelopment = import.meta.env.DEV;
+	
+	// 在开发环境中，直接使用静态数据，避免 TLS 证书验证问题
+	if (isDevelopment) {
+		console.log("在开发环境中，使用静态 commit 数据");
+		return fallbackCommitData;
+	}
+	
+	try {
+		// 构建 GitHub API URL
+		const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/commits`;
+		
+		console.log(`正在从 GitHub API 获取 commit 数据: ${apiUrl}`);
+		
+		// 发送请求，添加超时设置
+		const controller = new AbortController();
+		const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒超时
+		
+		try {
+			const response = await fetch(apiUrl, {
+				signal: controller.signal,
+				headers: {
+					"Accept": "application/vnd.github.v3+json"
+				}
+			});
+			
+			clearTimeout(timeoutId);
+			
+			if (!response.ok) {
+				console.error(`GitHub API 响应失败: ${response.status} ${response.statusText}`);
+				throw new Error(`GitHub API 响应失败: ${response.status} ${response.statusText}`);
+			}
+			
+			// 解析响应数据
+			const githubCommits = await response.json();
+			
+			if (!Array.isArray(githubCommits)) {
+				console.error("GitHub API 返回的数据不是数组");
+				throw new Error("GitHub API 返回的数据不是数组");
+			}
+			
+			console.log(`成功获取 ${githubCommits.length} 条 commit 数据`);
+			
+			// 限制获取的 commit 数量，避免过多请求
+			const limitedCommits = githubCommits.slice(0, 10);
+			
+			// 转换为 CommitItem 格式
+			const commits: CommitItem[] = await Promise.all(
+				limitedCommits.map(async (commit: any) => {
+					try {
+						// 获取详细的 commit 信息以获取文件变更
+						const detailResponse = await fetch(commit.url, {
+							signal: controller.signal,
+							headers: {
+								"Accept": "application/vnd.github.v3+json"
+							}
+						});
+						
+						if (!detailResponse.ok) {
+							console.error(`获取 commit 详情失败: ${detailResponse.status} ${detailResponse.statusText}`);
+							// 失败时使用默认值
+							return {
+								id: commit.sha,
+								hash: commit.sha,
+								message: commit.commit.message,
+								author: commit.commit.author.name,
+								date: commit.commit.author.date,
+								avatar: commit.author?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${commit.commit.author.name}`,
+								changes: {
+									additions: 0,
+									deletions: 0
+								},
+								files: [],
+								branch: "main"
+							};
+						}
+						
+						const detailData = await detailResponse.json();
+						
+						return {
+							id: commit.sha,
+							hash: commit.sha,
+							message: commit.commit.message,
+							author: commit.commit.author.name,
+							date: commit.commit.author.date,
+							avatar: commit.author?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${commit.commit.author.name}`,
+							changes: {
+								additions: detailData.stats?.additions || 0,
+								deletions: detailData.stats?.deletions || 0
+							},
+							files: detailData.files?.map((file: any) => file.filename) || [],
+							branch: "main"
+						};
+					} catch (error) {
+						console.error(`处理 commit 数据时出错:`, error);
+						// 失败时使用默认值
+						return {
+							id: commit.sha,
+							hash: commit.sha,
+							message: commit.commit.message,
+							author: commit.commit.author.name,
+							date: commit.commit.author.date,
+							avatar: commit.author?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${commit.commit.author.name}`,
+							changes: {
+								additions: 0,
+								deletions: 0
+							},
+							files: [],
+							branch: "main"
+						};
+					}
+				})
+			);
+			
+			return commits;
+		} catch (error) {
+			clearTimeout(timeoutId);
+			throw error;
+		}
+	} catch (error) {
+		console.error("获取 GitHub commit 数据失败:", error);
+		// 失败时使用静态数据
+		return fallbackCommitData;
+	}
+}
+
+// 导出一个函数以获取 commit 数据
+export async function getCommitData(): Promise<CommitItem[]> {
+	return await fetchCommits();
+}
+
+// 为了保持兼容性，仍然导出静态数据
+export const commitData: CommitItem[] = fallbackCommitData;

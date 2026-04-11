@@ -49,6 +49,7 @@ export const siteConfig: SiteConfig = {
 		timeline: false, // 时间线页面开关
 		albums: false, // 相册页面开关
 		devices: false, // 设备页面开关
+		commits: true, // 提交记录页面开关
 	},
 
 	// 顶栏标题配置
@@ -314,6 +315,11 @@ export const navBarConfig: NavBarConfig = {
 					name: "项目",
 					url: "/projects/",
 					icon: "material-symbols:developer-board",
+				},
+				{
+					name: "提交记录",
+					url: "/commits/",
+					icon: "material-symbols:history",
 				},
 			],
 		},

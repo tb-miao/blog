@@ -251,6 +251,10 @@ export const zh_TW: Translation = {
 	[Key.timelineStartDate]: "開始日期",
 	[Key.timelineDuration]: "持續時間",
 
+	// 提交記錄頁面
+	[Key.commits]: "提交記錄",
+	[Key.commitsSubtitle]: "代碼提交歷史記錄",
+
 	// 其他
 	[Key.noData]: "暫無資料",
 

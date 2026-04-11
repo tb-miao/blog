@@ -5,7 +5,7 @@ description: "入站指引，日志在这里。"
 image: "https://t.alcy.cc/pc"
 tags: ["入站指引"]
 category: 入站指引
-draft: false
+draft: true
 pinned: true
 updated: 2026-04-03
 ---

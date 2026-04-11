@@ -1,0 +1,115 @@
+---
+import { Icon } from "astro-icon/components";
+import Image from "@components/atoms/Image";
+import type { CommitCardProps } from "./types";
+
+const { item } = Astro.props as CommitCardProps;
+
+const formatDate = (dateString: string) => {
+	const date = new Date(dateString);
+	return date.toLocaleString("zh-CN", {
+		year: "numeric",
+		month: "short",
+		day: "numeric",
+		hour: "2-digit",
+		minute: "2-digit"
+	});
+};
+
+const getAuthorInitials = (author: string) => {
+	return author.split(" ")
+		.map(name => name[0])
+		.join("")
+		.toUpperCase()
+		.slice(0, 2);
+};
+---
+
+<div class="commit-card border border-pink-100 dark:border-purple-700 rounded-2xl p-5 hover:bg-pink-50 dark:hover:bg-purple-900/20 transition-all duration-300">
+	<div class="flex items-start gap-5">
+		<div class="flex-shrink-0">
+			<div class="w-14 h-14 rounded-full flex items-center justify-center overflow-hidden bg-gradient-to-br from-pink-100 to-purple-100 dark:from-purple-800/50 dark:to-pink-800/50 border-2 border-pink-200 dark:border-purple-600 shadow-sm">
+				{item.avatar ? (
+					<Image 
+						src={item.avatar} 
+						alt={item.author} 
+						class="w-full h-full object-cover"
+					/>
+				) : (
+					<span class="text-sm font-medium text-pink-600 dark:text-pink-300">
+						{getAuthorInitials(item.author)}
+					</span>
+				)}
+			</div>
+		</div>
+		<div class="flex-1 min-w-0">
+			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+				<div>
+					<h3 class="text-base font-medium text-pink-700 dark:text-pink-300 mb-1.5 leading-relaxed">
+						{item.message}
+					</h3>
+					<div class="flex flex-wrap items-center gap-2 text-sm text-pink-500 dark:text-purple-400">
+						<span class="font-mono text-xs bg-pink-100 dark:bg-purple-800/30 px-2 py-0.5 rounded-full">{item.hash.slice(0, 7)}</span>
+						<span>by {item.author}</span>
+						<span>•</span>
+						<span>{formatDate(item.date)}</span>
+						{item.branch && (
+							<span class="flex items-center gap-1 ml-2 px-2 py-0.5 bg-pink-100 dark:bg-purple-800/30 rounded-full">
+								<Icon name="material-symbols:merge-type" class="w-3 h-3" />
+								<span class="text-xs font-medium">{item.branch}</span>
+							</span>
+						)}
+						{item.tags && item.tags.length > 0 && (
+							<span class="flex items-center gap-1 ml-2 px-2 py-0.5 bg-pink-100 dark:bg-purple-800/30 rounded-full">
+								<Icon name="material-symbols:label" class="w-3 h-3" />
+								<span class="text-xs font-medium">{item.tags.join(", ")}</span>
+							</span>
+						)}
+					</div>
+				</div>
+				<div class="flex items-center gap-4 text-xs font-medium">
+					<span class="text-green-500 dark:text-green-400 flex items-center gap-1">
+						<Icon name="material-symbols:add" class="w-3 h-3" />
+						{item.changes.additions}
+					</span>
+					<span class="text-red-500 dark:text-red-400 flex items-center gap-1">
+						<Icon name="material-symbols:remove" class="w-3 h-3" />
+						{item.changes.deletions}
+					</span>
+				</div>
+			</div>
+			{item.files && item.files.length > 0 && (
+				<div class="mt-3 pt-3 border-t border-pink-100 dark:border-purple-800/50">
+					<div class="flex flex-wrap gap-2">
+						{item.files.map((file, index) => (
+							<div class="flex items-center gap-1.5 text-xs text-pink-600 dark:text-purple-400 bg-pink-50 dark:bg-purple-800/20 px-2.5 py-1.5 rounded-full">
+								<Icon name="material-symbols:description" class="w-3 h-3 flex-shrink-0" />
+								<span class="truncate max-w-[220px]">{file}</span>
+							</div>
+						))}
+					</div>
+				</div>
+			)}
+		</div>
+	</div>
+</div>
+
+<style>
+	.commit-card {
+		transition: all 0.3s ease;
+		border-radius: 16px;
+	}
+
+	.commit-card:hover {
+		transform: translateY(-3px) scale(1.01);
+		box-shadow: 0 6px 16px rgba(236, 72, 153, 0.12);
+		border-color: rgba(236, 72, 153, 0.25);
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.commit-card:hover {
+			box-shadow: 0 6px 16px rgba(168, 85, 247, 0.2);
+			border-color: rgba(168, 85, 247, 0.35);
+		}
+	}
+</style>

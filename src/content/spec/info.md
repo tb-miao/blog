@@ -1,6 +1,5 @@
 # 信息/提交记录
-- [查看最近一周提交记录](/posts/siteindex/)
-- 注：tb-miao和Nachceko是同一个账号。
+- [查看历史记录](/commits/)
 ## 概览
 **当前提交：**
 <span>

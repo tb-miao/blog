@@ -187,7 +187,7 @@ enum I18nKey {
 	skillsByCategory = "skillsByCategory",
 	noData = "noData",
 
-	// Timeline page
+	// 时间线页面
 	timeline = "timeline",
 	timelineSubtitle = "timelineSubtitle",
 	timelineEducation = "timelineEducation",
@@ -207,6 +207,10 @@ enum I18nKey {
 	timelineAchievements = "timelineAchievements",
 	timelineStartDate = "timelineStartDate",
 	timelineDuration = "timelineDuration",
+
+	// 提交记录页面
+	commits = "commits",
+	commitsSubtitle = "commitsSubtitle",
 
 	// 密码保护
 	passwordProtected = "passwordProtected",

@@ -212,6 +212,11 @@ export const zh_CN: Translation = {
 	[Key.timelineStartDate]: "开始日期",
 	[Key.timelineDuration]: "持续时间",
 
+	// 提交记录页面
+	[Key.commits]: "提交记录",
+	[Key.commitsSubtitle]: "代码提交历史记录",
+
+
 	// 密码保护
 	[Key.passwordProtected]: "密码保护",
 	[Key.passwordProtectedTitle]: "此内容受密码保护",

@@ -269,6 +269,10 @@ export const ja: Translation = {
 	[Key.timelineStartDate]: "開始日",
 	[Key.timelineDuration]: "期間",
 
+	// 提交記錄ページ
+	[Key.commits]: "提交記錄",
+	[Key.commitsSubtitle]: "コード提交歷史記錄",
+
 	// パスワード保護
 	[Key.passwordProtected]: "パスワードで保護されています",
 	[Key.passwordProtectedTitle]:

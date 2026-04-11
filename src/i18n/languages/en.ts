@@ -267,6 +267,10 @@ export const en: Translation = {
 	[Key.timelineStartDate]: "Start Date",
 	[Key.timelineDuration]: "Duration",
 
+	// 提交記錄頁面
+	[Key.commits]: "Commits",
+	[Key.commitsSubtitle]: "Code Commits History",
+
 	// Password Protection
 	[Key.passwordProtected]: "Password Protected",
 	[Key.passwordProtectedTitle]: "This content is password protected",

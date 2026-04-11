@@ -1,0 +1,94 @@
+---
+import { CommitCard } from "@components/features/commits";
+import { PageHeader } from "@components/features/page-header";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { siteConfig } from "../config";
+import { getCommitData, commitData } from "../data/commits";
+import I18nKey from "../i18n/i18nKey";
+import { i18n } from "../i18n/translation";
+
+if (!siteConfig.featurePages.commits) {
+	return Astro.redirect("/404/");
+}
+
+const title = i18n(I18nKey.commits);
+const subtitle = i18n(I18nKey.commitsSubtitle);
+
+// 异步获取 commit 数据
+let sortedCommits = commitData;
+try {
+	const commits = await getCommitData();
+	// 按日期排序，最新的在前
+	sortedCommits = [...commits].sort((a, b) => {
+		return new Date(b.date).getTime() - new Date(a.date).getTime();
+	});
+} catch (error) {
+	console.error("获取 commit 数据失败:", error);
+	// 失败时使用静态数据
+}
+---
+
+<MainGridLayout title={title} description={subtitle}>
+	<script>
+		import("../scripts/right-sidebar-layout.js");
+		import { loadIconify } from "../utils/icon-loader";
+
+		loadIconify().catch((error) => {
+			console.error("Failed to load Iconify:", error);
+		});
+	</script>
+
+	<div
+		class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32"
+	>
+		<div class="card-base z-10 px-6 sm:px-9 py-8 relative w-full">
+			<PageHeader title={title} subtitle={subtitle} />
+
+			<div class="mt-8">
+				<div class="flex items-center justify-between mb-8">
+					<h2 class="text-lg font-medium text-pink-700 dark:text-pink-300">
+						最近提交
+					</h2>
+					<span class="text-sm text-pink-500 dark:text-purple-400">
+						共 {sortedCommits.length} 条记录
+					</span>
+				</div>
+
+				<div id="commits-list" class="space-y-6">
+					{sortedCommits.map((commit) => (
+						<CommitCard item={commit} />
+					))}
+				</div>
+
+				<div id="no-results" class="hidden text-center py-20">
+					<p class="text-pink-400 dark:text-purple-500 text-lg">
+						No matching commits
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</MainGridLayout>
+
+<style>
+	#search-input {
+		min-width: 200px;
+	}
+
+	.card-base {
+		background: white;
+		border: 1px solid rgba(236, 72, 153, 0.15);
+		border-radius: 20px;
+		box-shadow: 0 4px 12px rgba(236, 72, 153, 0.08);
+		background-image: linear-gradient(135deg, rgba(255, 240, 245, 0.5), rgba(255, 255, 255, 0.8));
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.card-base {
+			background: rgba(30, 20, 40, 0.9);
+			border-color: rgba(168, 85, 247, 0.2);
+			box-shadow: 0 4px 12px rgba(168, 85, 247, 0.12);
+			background-image: linear-gradient(135deg, rgba(50, 30, 60, 0.8), rgba(30, 20, 40, 0.9));
+		}
+	}
+</style>
