@@ -84,10 +84,23 @@ const fallbackCommitData: CommitItem[] = [
 // 从 GitHub API 获取 commit 数据
 export async function fetchCommits(): Promise<CommitItem[]> {
 	// 检查是否在开发环境中
-	const isDevelopment = import.meta.env.DEV;
+	let isDevelopment = false;
+	
+	try {
+		isDevelopment = import.meta.env.DEV;
+		logWithTimestamp(`[Commits]环境判断: import.meta.env.DEV = ${isDevelopment}`);
+	} catch (error) {
+		logWithTimestamp(`[Commits]环境判断出错: ${error}`, 'error');
+		// 如果环境变量获取失败，默认使用开发环境模式
+		isDevelopment = true;
+	}
+	
+	// 额外检查：如果是本地开发环境，直接使用静态数据
+	const isLocalDevelopment = isDevelopment || process.env.NODE_ENV === 'development';
+	logWithTimestamp(`[Commits]最终环境判断: isLocalDevelopment = ${isLocalDevelopment}`);
 	
 	// 在开发环境中，直接使用静态数据，避免 TLS 证书验证问题
-	if (isDevelopment) {
+	if (isLocalDevelopment) {
 		logWithTimestamp("[Commits]在开发环境中，使用静态 commit 数据");
 		return fallbackCommitData;
 	}
