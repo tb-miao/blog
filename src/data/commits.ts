@@ -148,10 +148,10 @@ export async function fetchCommits(): Promise<CommitItem[]> {
 							return {
 								id: commit.sha,
 								hash: commit.sha,
-								message: commit.commit.message,
-								author: commit.commit.author.name,
-								date: commit.commit.author.date,
-								avatar: commit.author?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${commit.commit.author.name}`,
+								message: commit.commit?.message || "(无提交信息)",
+								author: commit.commit?.author?.name || "Unknown",
+								date: commit.commit?.author?.date || new Date().toISOString(),
+								avatar: commit.author?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${commit.commit?.author?.name || "Unknown"}`,
 								changes: {
 									additions: 0,
 									deletions: 0
@@ -164,36 +164,36 @@ export async function fetchCommits(): Promise<CommitItem[]> {
 						const detailData = await detailResponse.json();
 						
 						return {
-							id: commit.sha,
-							hash: commit.sha,
-							message: commit.commit.message,
-							author: commit.commit.author.name,
-							date: commit.commit.author.date,
-							avatar: commit.author?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${commit.commit.author.name}`,
-							changes: {
-								additions: detailData.stats?.additions || 0,
-								deletions: detailData.stats?.deletions || 0
-							},
-							files: detailData.files?.map((file: any) => file.filename) || [],
-							branch: "main"
-						};
+								id: commit.sha,
+								hash: commit.sha,
+								message: commit.commit?.message || "(无提交信息)",
+								author: commit.commit?.author?.name || "Unknown",
+								date: commit.commit?.author?.date || new Date().toISOString(),
+								avatar: commit.author?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${commit.commit?.author?.name || "Unknown"}`,
+								changes: {
+									additions: detailData.stats?.additions || 0,
+									deletions: detailData.stats?.deletions || 0
+								},
+								files: detailData.files?.map((file: any) => file.filename) || [],
+								branch: "main"
+							};
 					} catch (error) {
 						logWithTimestamp(`[Commits Error]处理 commit 数据时出错: ${error}`, 'error');
 						// 失败时使用默认值
 						return {
-							id: commit.sha,
-							hash: commit.sha,
-							message: commit.commit.message,
-							author: commit.commit.author.name,
-							date: commit.commit.author.date,
-							avatar: commit.author?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${commit.commit.author.name}`,
-							changes: {
-								additions: 0,
-								deletions: 0
-							},
-							files: [],
-							branch: "main"
-						};
+								id: commit.sha,
+								hash: commit.sha,
+								message: commit.commit?.message || "(无提交信息)",
+								author: commit.commit?.author?.name || "Unknown",
+								date: commit.commit?.author?.date || new Date().toISOString(),
+								avatar: commit.author?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${commit.commit?.author?.name || "Unknown"}`,
+								changes: {
+									additions: 0,
+									deletions: 0
+								},
+								files: [],
+								branch: "main"
+							};
 					}
 				})
 			);

@@ -44,7 +44,20 @@ const parseTagsFromMessage = (message: string | undefined | null) => {
 
 // 获取最新 commit 的 tags
 const latestCommit = sortedCommits[0];
-const latestTags = latestCommit ? parseTagsFromMessage(latestCommit.message) : [];
+
+// 简化 latestTags 的计算过程
+let latestTags: string[] = [];
+if (latestCommit) {
+	// 确保即使在开发环境中也能正确获取 tags
+	if (latestCommit.tags && latestCommit.tags.length > 0) {
+		latestTags = latestCommit.tags;
+	} else {
+		latestTags = parseTagsFromMessage(latestCommit.message);
+	}
+}
+
+// 手动设置 latestTags 为静态数据中的 tags，用于测试
+// latestTags = sortedCommits[0]?.tags || [];
 
 // 构建 subtitle
 let subtitle = "网站更新记录,最多显示10条记录";
