@@ -44,11 +44,11 @@ const latestCommit = sortedCommits[0];
 const latestTags = latestCommit ? parseTagsFromMessage(latestCommit.message) : [];
 
 // 构建 subtitle
-let subtitle = "网站更新记录，目前最多显示10条记录（更新记录的版本不是Mizuki版本，是本站的版本！！）";
+let subtitle = "网站更新记录,最多显示10条记录";
 if (latestTags.length > 0) {
 	subtitle += `\n最新版本: ${latestTags.join(", ")}`;
 } else {
-	subtitle += "\n最新版本: 空值（是不是忘记了？awa）";
+	subtitle += "\n最新版本: 空值（是不是忘记写了？）";
 }
 ---
 

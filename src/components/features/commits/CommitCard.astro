@@ -6,13 +6,11 @@ import MarkdownIt from "markdown-it";
 
 const { item, isLatest = false } = Astro.props as CommitCardProps & { isLatest?: boolean };
 
-// GitHub 仓库信息
 const GITHUB_OWNER = "tb-miao";
 const GITHUB_REPO = "blog";
 
 const formatDate = (dateString: string) => {
 	const date = new Date(dateString);
-	// 使用 UTC+8 时区（上海时区）
 	return date.toLocaleString("zh-CN", {
 		year: "numeric",
 		month: "short",
@@ -31,11 +29,9 @@ const getAuthorInitials = (author: string) => {
 		.slice(0, 2);
 };
 
-// 解析 commit message 中的 tags:[] 语法
 const parseTagsFromMessage = (message: string) => {
 	const tagsMatch = message.match(/tags:\s*\[(.*?)\]/);
 	if (tagsMatch && tagsMatch[1]) {
-		// 提取 tags 数组内容并去除引号和空格
 		return tagsMatch[1]
 			.split(",")
 			.map(tag => tag.trim().replace(/^["']|['"]$/g, ""))
@@ -44,111 +40,158 @@ const parseTagsFromMessage = (message: string) => {
 	return [];
 };
 
-// 使用 markdown-it 渲染 markdown 内容
 const md = new MarkdownIt({ html: true, linkify: true, typographer: true });
 const renderMarkdown = (text: string) => {
-	// 移除 tags:[] 语法，避免在渲染时显示
 	const cleanedText = text.replace(/tags:\s*\[(.*?)\]/, '');
 	return md.render(cleanedText);
 };
 ---
 
-<div class="commit-card border border-pink-100 dark:border-purple-700 rounded-2xl p-5 hover:bg-pink-50 dark:hover:bg-purple-900/20 transition-all duration-300">
-	<div class="flex items-start gap-5">
-		<div class="flex-shrink-0">
-			<div class="w-14 h-14 rounded-full flex items-center justify-center overflow-hidden bg-gradient-to-br from-pink-100 to-purple-100 dark:from-purple-800/50 dark:to-pink-800/50 border-2 border-pink-200 dark:border-purple-600 shadow-sm">
-				{item.avatar ? (
-					<Image 
-						src={item.avatar} 
-						alt={item.author} 
-						class="w-full h-full object-cover"
-					/>
-				) : (
-					<span class="text-sm font-medium text-pink-600 dark:text-pink-300">
-						{getAuthorInitials(item.author)}
-					</span>
-				)}
-			</div>
-		</div>
-		<div class="flex-1 min-w-0">
-			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-				<div>
-					<h3 class="text-base font-medium text-pink-700 dark:text-pink-300 mb-1.5 leading-relaxed" set:html={renderMarkdown(item.message)}></h3>
-					<div class="flex flex-wrap items-center gap-2 text-sm text-pink-500 dark:text-purple-400">
-						<div class="flex items-center gap-1.5">
-							{isLatest && (
-								<span class="inline-flex items-center justify-center px-2 py-0.5 bg-pink-500 text-white text-xs font-medium rounded-full animate-pulse">
-									NEW
-								</span>
-							)}
-							<a href={`https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/commit/${item.hash}`} target="_blank" rel="noopener noreferrer" class="font-mono text-xs bg-pink-100 dark:bg-purple-800/30 px-2 py-0.5 rounded-full hover:bg-pink-200 dark:hover:bg-purple-700/50 transition-colors duration-200">
-								{item.hash.slice(0, 7)}
-							</a>
+<div
+	class="commit-card group relative bg-transparent rounded-xl border border-black/10 dark:border-white/10 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+>
+	<div class="p-5">
+		<div class="flex items-start gap-4">
+			<div class="flex-shrink-0">
+				<div class="w-12 h-12 rounded-xl overflow-hidden ring-2 ring-transparent group-hover:ring-[var(--primary)]/30 transition-all duration-300">
+					{item.avatar ? (
+						<Image
+							src={item.avatar}
+							alt={item.author}
+							class="w-full h-full object-cover"
+						/>
+					) : (
+						<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-[var(--primary)]/20 to-[var(--primary)]/10">
+							<span class="text-sm font-semibold text-[var(--primary)]">
+								{getAuthorInitials(item.author)}
+							</span>
 						</div>
-						<span>by {item.author}</span>
-						<span>•</span>
-						<span>{formatDate(item.date)}</span>
-						{item.branch && (
-									<span class="flex items-center gap-1 ml-2 px-2 py-0.5 bg-pink-100 dark:bg-purple-800/30 rounded-full">
-										<Icon name="material-symbols:merge-type" class="w-3 h-3" />
-										<span class="text-xs font-medium">{item.branch}</span>
-									</span>
-								)}
-								{(() => {
-									const tags = parseTagsFromMessage(item.message);
-									return (
-										<span class="flex items-center gap-1 ml-2 px-2 py-0.5 bg-pink-100 dark:bg-purple-800/30 rounded-full">
-											<Icon name="material-symbols:label" class="w-3 h-3" />
-											<span class="text-xs font-medium">{tags.length > 0 ? tags.join(", ") : "空值"}</span>
-										</span>
-									);
-								})()}
-					</div>
-				</div>
-				<div class="flex items-center gap-4 text-xs font-medium">
-					<span class="text-green-500 dark:text-green-400 flex items-center gap-1">
-						<Icon name="material-symbols:add" class="w-3 h-3" />
-						{item.changes.additions}
-					</span>
-					<span class="text-red-500 dark:text-red-400 flex items-center gap-1">
-						<Icon name="material-symbols:remove" class="w-3 h-3" />
-						{item.changes.deletions}
-					</span>
+					)}
 				</div>
 			</div>
-			{item.files && item.files.length > 0 && (
-				<div class="mt-3 pt-3 border-t border-pink-100 dark:border-purple-800/50">
-					<div class="flex flex-wrap gap-2">
-						{item.files.map((file) => (
-							<div class="flex items-center gap-1.5 text-xs text-pink-600 dark:text-purple-400 bg-pink-50 dark:bg-purple-800/20 px-2.5 py-1.5 rounded-full">
-								<Icon name="material-symbols:description" class="w-3 h-3 flex-shrink-0" />
-								<span class="truncate max-w-[220px]">{file}</span>
-							</div>
-						))}
+
+			<div class="flex-1 min-w-0">
+				<div class="flex flex-col gap-3">
+					<div class="flex items-start justify-between gap-3">
+						<h3
+							class="text-base font-medium text-black/90 dark:text-white/90 leading-relaxed group-hover:text-[var(--primary)] transition-colors duration-200"
+							set:html={renderMarkdown(item.message)}
+						/>
+						{isLatest && (
+							<span class="shrink-0 inline-flex items-center px-2 py-0.5 bg-[var(--primary)] text-white text-xs font-medium rounded-full animate-pulse">
+								NEW
+							</span>
+						)}
+					</div>
+
+					<div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-black/50 dark:text-white/50">
+						<a
+							href={`https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/commit/${item.hash}`}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="font-mono text-xs px-2 py-0.5 rounded-md bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)]/20 transition-colors duration-200"
+						>
+							{item.hash.slice(0, 7)}
+						</a>
+
+						<span class="flex items-center gap-1.5">
+							<Icon name="material-symbols:person-outline" class="w-3.5 h-3.5" />
+							<span>{item.author}</span>
+						</span>
+
+						<span class="flex items-center gap-1.5">
+							<Icon name="material-symbols:schedule" class="w-3.5 h-3.5" />
+							<span>{formatDate(item.date)}</span>
+						</span>
+
+						{item.branch && (
+							<span class="flex items-center gap-1 px-2 py-0.5 rounded-md bg-[var(--btn-regular-bg)] text-black/70 dark:text-white/70">
+								<Icon name="material-symbols:merge-type" class="w-3.5 h-3.5" />
+								<span class="text-xs font-medium">{item.branch}</span>
+							</span>
+						)}
+
+						{(() => {
+							const tags = parseTagsFromMessage(item.message);
+							return (
+								<span class="flex items-center gap-1 px-2 py-0.5 rounded-md bg-[var(--btn-regular-bg)] text-black/70 dark:text-white/70">
+									<Icon name="material-symbols:label-outline" class="w-3.5 h-3.5" />
+									<span class="text-xs font-medium">{tags.length > 0 ? tags.join(", ") : "空值"}</span>
+								</span>
+							);
+						})()}
+					</div>
+
+					<div class="flex items-center gap-4 text-xs font-medium">
+						<span class="flex items-center gap-1 text-green-600 dark:text-green-400">
+							<Icon name="material-symbols:add-rounded" class="w-4 h-4" />
+							<span class="tabular-nums">{item.changes.additions}</span>
+						</span>
+						<span class="flex items-center gap-1 text-red-500 dark:text-red-400">
+							<Icon name="material-symbols:remove-rounded" class="w-4 h-4" />
+							<span class="tabular-nums">{item.changes.deletions}</span>
+						</span>
 					</div>
 				</div>
-			)}
+			</div>
 		</div>
+
+		{item.files && item.files.length > 0 && (
+			<div class="mt-4 pt-4 border-t border-black/5 dark:border-white/5">
+				<div class="flex flex-wrap gap-2">
+					{item.files.map((file) => (
+						<span class="inline-flex items-center gap-1.5 text-xs text-black/60 dark:text-white/60 bg-[var(--btn-regular-bg)] px-2.5 py-1.5 rounded-md hover:bg-[var(--btn-regular-bg-hover)] transition-colors duration-200">
+							<Icon name="material-symbols:description-outline" class="w-3.5 h-3.5 flex-shrink-0" />
+							<span class="truncate max-w-[200px]">{file}</span>
+						</span>
+					))}
+				</div>
+			</div>
+		)}
+	</div>
+
+	<div
+		class="absolute inset-0 bg-gradient-to-br from-[var(--primary)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-xl"
+	>
 	</div>
 </div>
 
 <style>
 	.commit-card {
-		transition: all 0.3s ease;
-		border-radius: 16px;
-		font-family: 'ZenMaruGothic-Medium', '萝莉体 第二版', sans-serif;
+		animation: fadeInUp 0.5s ease-out forwards;
+		opacity: 0;
 	}
 
-	.commit-card:hover {
-		transform: translateY(-3px);
-		box-shadow: 0 6px 16px rgba(236, 72, 153, 0.12);
-		border-color: rgba(236, 72, 153, 0.25);
-	}
-
-	@media (prefers-color-scheme: dark) {
-		.commit-card:hover {
-			box-shadow: 0 6px 16px rgba(168, 85, 247, 0.2);
-			border-color: rgba(168, 85, 247, 0.35);
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
 		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.commit-card:nth-child(1) { animation-delay: 0.05s; }
+	.commit-card:nth-child(2) { animation-delay: 0.1s; }
+	.commit-card:nth-child(3) { animation-delay: 0.15s; }
+	.commit-card:nth-child(4) { animation-delay: 0.2s; }
+	.commit-card:nth-child(5) { animation-delay: 0.25s; }
+	.commit-card:nth-child(6) { animation-delay: 0.3s; }
+	.commit-card:nth-child(7) { animation-delay: 0.35s; }
+	.commit-card:nth-child(8) { animation-delay: 0.4s; }
+
+	.commit-card :global(h3 p) {
+		margin: 0;
+	}
+
+	.commit-card :global(h3 code) {
+		background-color: var(--primary);
+		color: white;
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.25rem;
+		font-size: 0.75rem;
+		font-weight: 500;
 	}
 </style>
