@@ -29,19 +29,25 @@ const getAuthorInitials = (author: string) => {
 		.slice(0, 2);
 };
 
-const parseTagsFromMessage = (message: string) => {
+const parseTagsFromMessage = (message: string | undefined | null) => {
+	if (!message) {
+		return [];
+	}
 	const tagsMatch = message.match(/tags:\s*\[(.*?)\]/);
 	if (tagsMatch && tagsMatch[1]) {
 		return tagsMatch[1]
 			.split(",")
-			.map(tag => tag.trim().replace(/^["']|['"]$/g, ""))
+			.map(tag => tag.trim().replace(/^["']|["']$/g, ""))
 			.filter(tag => tag.length > 0);
 	}
 	return [];
 };
 
 const md = new MarkdownIt({ html: true, linkify: true, typographer: true });
-const renderMarkdown = (text: string) => {
+const renderMarkdown = (text: string | undefined | null) => {
+	if (!text) {
+		return '';
+	}
 	const cleanedText = text.replace(/tags:\s*\[(.*?)\]/, '');
 	return md.render(cleanedText);
 };

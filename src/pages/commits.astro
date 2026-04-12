@@ -27,13 +27,16 @@ try {
 }
 
 // 解析最新 commit 的 tags
-const parseTagsFromMessage = (message: string) => {
+const parseTagsFromMessage = (message: string | undefined | null) => {
+	if (!message) {
+		return [];
+	}
 	const tagsMatch = message.match(/tags:\s*\[(.*?)\]/);
 	if (tagsMatch && tagsMatch[1]) {
 		// 提取 tags 数组内容并去除引号和空格
 		return tagsMatch[1]
 			.split(",")
-			.map(tag => tag.trim().replace(/^["']|['"]$/g, ""))
+			.map(tag => tag.trim().replace(/^["']|["']$/g, ""))
 			.filter(tag => tag.length > 0);
 	}
 	return [];
