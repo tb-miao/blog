@@ -34,7 +34,7 @@ export const projectsData: Project[] = [
 		endDate: "2026-01-27",
 		featured: true,
 		tags: ["react","vue","typescript"],
-		visitUrl: "https://github.com/tb-miao/Upbot-page",
+		visitUrl: "https://status.tbmiao.dpdns.org",
 	},
 		{
 		id: "Windows-time-synchronization",

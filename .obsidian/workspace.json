@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "67fcbc6e591b6fb0",
+        "id": "8a24c201a2116da4",
         "type": "tabs",
         "children": [
           {
-            "id": "094c549240ac8e43",
+            "id": "e1b3a19bc6b7814f",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -176,7 +176,7 @@
       "bases:新建数据库": false
     }
   },
-  "active": "9726a3f92efbe48f",
+  "active": "e1b3a19bc6b7814f",
   "lastOpenFiles": [
     "README.md",
     "README.zh.md",
