@@ -1,6 +1,7 @@
 export interface CommitItem {
 	id: string;
 	hash: string;
+	parentHashes?: string[];
 	message: string;
 	author: string;
 	date: string;
@@ -16,4 +17,9 @@ export interface CommitItem {
 
 export interface CommitCardProps {
 	item: CommitItem;
+	isLatest?: boolean;
+	isFirst?: boolean;
+	isLast?: boolean;
+	hasChild?: boolean;
+	branchLevel?: number;
 }

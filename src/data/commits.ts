@@ -27,11 +27,10 @@ const logWithTimestamp = (message: string, level: 'log' | 'error' = 'log') => {
 	// 根据消息内容添加颜色
 	let coloredMessage = message;
 	if (message.includes('[Commits]')) {
-		coloredMessage = message.replace('[Commits]', `${colors.green}[Commits]${colors.pink}`);
+		coloredMessage = `${colors.green}[Commits]${colors.reset}${colors.pink}${message.replace('[Commits]', '')}${colors.reset}`;
 	} else if (message.includes('[Commits Error]')) {
-		coloredMessage = message.replace('[Commits Error]', `${colors.red}[Commits Error]${colors.reset}`);
+		coloredMessage = `${colors.red}[Commits Error]${colors.reset}${colors.pink}${message.replace('[Commits Error]', '')}${colors.reset}`;
 	}
-	
 	console[level](`${timestamp} ${coloredMessage}`);
 };
 
@@ -40,6 +39,7 @@ const fallbackCommitData: CommitItem[] = [
 	{
 		id: "1",
 		hash: "a1b2c3d4e5f6",
+		parentHashes: ["f6e5d4c3b2a1"],
 		message: "feat: add commits page with GitHub-style design",
 		author: "John Doe",
 		date: "2026-04-10T14:30:00Z",
@@ -55,6 +55,7 @@ const fallbackCommitData: CommitItem[] = [
 	{
 		id: "2",
 		hash: "f6e5d4c3b2a1",
+		parentHashes: ["b9c8d7e6f5a4"],
 		message: "fix: resolve responsive design issues on commits page",
 		author: "Jane Smith",
 		date: "2026-04-09T09:15:00Z",
@@ -68,6 +69,7 @@ const fallbackCommitData: CommitItem[] = [
 	{
 		id: "3",
 		hash: "b9c8d7e6f5a4",
+		parentHashes: [],
 		message: "chore: update commit data with more sample entries",
 		author: "John Doe",
 		date: "2026-04-08T16:45:00Z",
@@ -158,20 +160,21 @@ export async function fetchCommits(): Promise<CommitItem[]> {
 						if (!detailResponse.ok) {
 							logWithTimestamp(`[Commits Error]获取 commit 详情失败: ${detailResponse.status} ${detailResponse.statusText}`, 'error');
 							// 失败时使用默认值
-							return {
-								id: commit.sha,
-								hash: commit.sha,
-								message: commit.commit?.message || "(无提交信息)",
-								author: commit.commit?.author?.name || "Unknown",
-								date: commit.commit?.author?.date || new Date().toISOString(),
-								avatar: commit.author?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${commit.commit?.author?.name || "Unknown"}`,
-								changes: {
-									additions: 0,
-									deletions: 0
-								},
-								files: [],
-								branch: "main"
-							};
+						return {
+							id: commit.sha,
+							hash: commit.sha,
+							parentHashes: commit.parents?.map((p: any) => p.sha) || [],
+							message: commit.commit?.message || "(无提交信息)",
+							author: commit.commit?.author?.name || "Unknown",
+							date: commit.commit?.author?.date || new Date().toISOString(),
+							avatar: commit.author?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${commit.commit?.author?.name || "Unknown"}`,
+							changes: {
+								additions: 0,
+								deletions: 0
+							},
+							files: [],
+							branch: "main"
+						};
 						}
 						
 						const detailData = await detailResponse.json();
@@ -179,6 +182,7 @@ export async function fetchCommits(): Promise<CommitItem[]> {
 						return {
 								id: commit.sha,
 								hash: commit.sha,
+								parentHashes: commit.parents?.map((p: any) => p.sha) || [],
 								message: commit.commit?.message || "(无提交信息)",
 								author: commit.commit?.author?.name || "Unknown",
 								date: commit.commit?.author?.date || new Date().toISOString(),
@@ -196,6 +200,7 @@ export async function fetchCommits(): Promise<CommitItem[]> {
 						return {
 								id: commit.sha,
 								hash: commit.sha,
+								parentHashes: commit.parents?.map((p: any) => p.sha) || [],
 								message: commit.commit?.message || "(无提交信息)",
 								author: commit.commit?.author?.name || "Unknown",
 								date: commit.commit?.author?.date || new Date().toISOString(),

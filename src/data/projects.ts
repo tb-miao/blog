@@ -28,7 +28,7 @@ export const projectsData: Project[] = [
 		category: "web",
 		techStack: ["react","vue","typescript"],
 		status: "completed",
-		liveDemo: "https://github.com/tb-miao/Upbot-page",
+		liveDemo: "http://status.tbmiao.dpdns.org/",
 		sourceCode: "https://github.com/tb-miao/Upbot-page",
 		startDate: "2026-01-01",
 		endDate: "2026-01-27",

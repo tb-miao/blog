@@ -60,7 +60,7 @@ if (latestCommit) {
 // latestTags = sortedCommits[0]?.tags || [];
 
 // 构建 subtitle
-let subtitle = "网站更新记录,最多显示10条记录";
+let subtitle = "网站更新记录。";
 if (latestTags.length > 0) {
 	subtitle += `\n最新版本: ${latestTags.join(", ")}`;
 } else {
@@ -81,7 +81,7 @@ if (latestTags.length > 0) {
 	<div
 		class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32"
 	>
-		<div class="card-base z-10 px-6 sm:px-9 py-8 relative w-full">
+		<div class="card-base z-10 px-4 sm:px-9 py-8 relative w-full">
 			<PageHeader title={title} subtitle={subtitle} />
 
 			<div class="mt-8">
@@ -89,16 +89,45 @@ if (latestTags.length > 0) {
 					<h2 class="text-lg font-medium text-pink-700 dark:text-pink-300">
 						最近提交
 					</h2>
-					<span class="text-sm text-pink-500 dark:text-purple-400">
-						共 {sortedCommits.length} 条记录
-					</span>
+					<div class="flex items-center gap-3">
+						<span id="last-updated" class="text-xs text-pink-400 dark:text-purple-400"></span>
+						<button 
+							id="refresh-btn"
+							class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-pink-600 dark:text-pink-300 bg-pink-100 dark:bg-purple-900/30 rounded-full hover:bg-pink-200 dark:hover:bg-purple-800/50 transition-all duration-200 active:scale-95"
+							title="刷新提交记录"
+						>
+							<svg id="refresh-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+							</svg>
+							刷新
+						</button>
+						<span class="text-sm text-pink-500 dark:text-purple-400">
+							共 <span id="commit-count">{sortedCommits.length}</span> 条记录
+						</span>
+					</div>
 				</div>
 
-				<div id="commits-list" class="space-y-6">
-					{sortedCommits.map((commit, index) => (
-						<CommitCard item={commit} isLatest={index === 0} />
-					))}
-				</div>
+				<div id="commits-list" class="space-y-0">
+					{sortedCommits.map((commit, index) => {
+						const isFirst = index === 0;
+						const isLast = index === sortedCommits.length - 1;
+						// 检查是否有子提交（即是否有其他提交的 parentHashes 包含当前 hash）
+						const hasChild = sortedCommits.some((c, i) => 
+							i > index && c.parentHashes?.includes(commit.hash)
+						);
+						
+						return (
+							<CommitCard 
+								item={commit} 
+								isLatest={index === 0}
+								isFirst={isFirst}
+								isLast={isLast}
+								hasChild={hasChild}
+								branchLevel={0}
+							/>
+							);
+						})}
+					</div>
 
 				<div id="no-results" class="hidden text-center py-20">
 					<p class="text-pink-400 dark:text-purple-500 text-lg">
@@ -108,6 +137,96 @@ if (latestTags.length > 0) {
 			</div>
 		</div>
 	</div>
+	
+	<script is:inline>
+		// 实时更新功能
+		(function() {
+			let autoRefreshInterval;
+			const REFRESH_INTERVAL = 5 * 60 * 1000; // 5分钟自动刷新
+			
+			function updateLastUpdated(timestamp) {
+				const date = timestamp ? new Date(timestamp) : new Date();
+				const timeStr = date.toLocaleString('zh-CN');
+				const el = document.getElementById('last-updated');
+				if (el) {
+					el.textContent = `更新于 ${timeStr}`;
+				}
+			}
+			
+			async function refreshCommits() {
+				const refreshBtn = document.getElementById('refresh-btn');
+				const refreshIcon = document.getElementById('refresh-icon');
+				
+				if (refreshBtn && refreshIcon) {
+					refreshBtn.disabled = true;
+					refreshIcon.classList.add('animate-spin');
+				}
+				
+				try {
+					// 使用 fetch 获取最新数据
+					const response = await fetch('/api/commits.json?t=' + Date.now());
+					if (response.ok) {
+						const data = await response.json();
+						if (data.commits && Array.isArray(data.commits)) {
+							// 触发自定义事件，让页面重新渲染
+							window.dispatchEvent(new CustomEvent('commitsUpdated', { 
+								detail: { commits: data.commits } 
+							}));
+							
+							// 更新计数
+							const countEl = document.getElementById('commit-count');
+							if (countEl) {
+								countEl.textContent = data.commits.length;
+							}
+							
+							// 可选：显示更新提示
+							if (data.updatedAt) {
+								console.log('提交记录已更新:', new Date(data.updatedAt).toLocaleString('zh-CN'));
+								updateLastUpdated(data.updatedAt);
+							} else {
+								updateLastUpdated();
+							}
+						}
+					}
+				} catch (error) {
+					console.error('刷新提交记录失败:', error);
+					updateLastUpdated();
+				} finally {
+					if (refreshBtn && refreshIcon) {
+						refreshBtn.disabled = false;
+						refreshIcon.classList.remove('animate-spin');
+					}
+				}
+			}
+			
+			// 初始化
+			updateLastUpdated();
+			
+			// 页面加载时立即刷新数据
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', refreshCommits);
+			} else {
+				// DOM 已加载，立即执行
+				refreshCommits();
+			}
+			
+			// 绑定刷新按钮
+			const refreshBtn = document.getElementById('refresh-btn');
+			if (refreshBtn) {
+				refreshBtn.addEventListener('click', refreshCommits);
+			}
+			
+			// 设置自动刷新定时器
+			autoRefreshInterval = setInterval(refreshCommits, REFRESH_INTERVAL);
+			
+			// 页面卸载时清除定时器
+			window.addEventListener('beforeunload', () => {
+				if (autoRefreshInterval) {
+					clearInterval(autoRefreshInterval);
+				}
+			});
+		})();
+	</script>
 </MainGridLayout>
 
 <style>
