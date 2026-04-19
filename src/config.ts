@@ -132,6 +132,9 @@ export const siteConfig: SiteConfig = {
 				"/assets/desktop-banner/3.webp",
 				"/assets/desktop-banner/4.webp",
 				"/assets/desktop-banner/8.png",
+				"/assets/desktop-banner/9.jpg",
+				"/assets/desktop-banner/10.jpg",
+				"/assets/desktop-banner/11.jpg",
 			], // 桌面横幅图片
 			mobile: [
 				"/assets/mobile-banner/1.webp",
@@ -250,7 +253,7 @@ export const siteConfig: SiteConfig = {
 	// 性能监控配置
 	performanceMonitor: {
 		enable: true, // 是否启用性能监控
-		showLoadTime: true, // 是否显示加载时间
+		showLoadTime: false, // 是否显示加载时间
 		showMemoryUsage: true, // 是否显示内存占用
 		showOnMobile: false, // 是否在移动端显示（默认不显示）
 	},
@@ -268,6 +271,9 @@ export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
 			"/assets/desktop-banner/3.webp",
 			"/assets/desktop-banner/4.webp",
 			"/assets/desktop-banner/8.png",
+			"/assets/desktop-banner/9.jpg",
+			"/assets/desktop-banner/10.jpg",
+			"/assets/desktop-banner/11.jpg",
 		], // 桌面横幅图片
 		mobile: [
 			"/assets/mobile-banner/1.webp",
@@ -322,6 +328,11 @@ export const navBarConfig: NavBarConfig = {
 					url: "/commits/",
 					icon: "material-symbols:history",
 				},
+				{
+					name: "隐私&用户协议",
+					url: "/privacy/",
+					icon: "material-symbols:privacy",
+				}
 			],
 		},
 		{
@@ -452,6 +463,9 @@ export const announcementConfig: AnnouncementConfig = {
 	title: "公告呀~", // 公告标题，填空使用i18n字符串Key.announcement
 	content: `
 ### 🎉🎉 欢迎来到我的博客喵！本站2周年啦！
+---
+1. 创建了”隐私政策和用户协议“页面，保证网站安全。
+---
 可以点击【[这里](https://github.com/tb-miao/blog/issues)】提交对网站的建议。
 `,
 	closable: false, // 允许用户关闭公告

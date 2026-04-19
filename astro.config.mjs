@@ -49,7 +49,7 @@ export default defineConfig({
 			animationClass: "transition-swup-",
 			containers: ["main"],
 			smoothScrolling: false, // 禁用平滑滚动以提升性能，避免与锚点导航冲突
-			cache: true,
+			cache: process.env.NODE_ENV === "production",
 			preload: false, // 禁用预加载以提升性能
 			accessibility: true,
 			updateHead: process.env.NODE_ENV === "production",
@@ -204,6 +204,13 @@ export default defineConfig({
 					"src/components/control/ThemeSwitch.svelte",
 					"src/components/features/settings/DisplaySettings.svelte",
 					"src/scripts/swup-manager.ts",
+				],
+			},
+			// 监听 content 目录（含 spec 子目录）下的 .md 文件变化，触发 HMR 更新
+			watch: {
+				ignored: [
+					"!**/src/content/**/*.md",
+					"!**/src/content/spec/**/*.md",
 				],
 			},
 		},

@@ -8,9 +8,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "..");
 
-loadEnv();
-console.log("已加载 .env 配置文件\n");
-
 
 console.log("     ███╗   ███╗██╗███████╗██╗   ██╗██╗  ██╗██╗  ");
 console.log("     ████╗ ████║██║╚══███╔╝██║   ██║██║ ██╔╝██║  ");
@@ -20,6 +17,14 @@ console.log("     ██║ ╚═╝ ██║██║███████╗
 console.log("     ╚═╝     ╚═╝╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ");
 
 console.log("Tip：在提交仓库之前，请运行 pnpm check 以检查代码质量\n");
+
+await new Promise(resolve => setTimeout(resolve, 3000));
+
+
+loadEnv();
+console.log("已加载 .env 配置文件\n");
+
+
 
 // 从环境变量读取配置
 const ENABLE_CONTENT_SYNC = process.env.ENABLE_CONTENT_SYNC !== "false"; // 默认启用

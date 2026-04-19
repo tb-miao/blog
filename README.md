@@ -21,6 +21,11 @@
 - Git commits：
 - `tags:[]` 语法用于添加标签，例如 `tags:[v1.2.0]` 会显示标签 `v1.2.0`。
 
+## Trae AI 推荐：
+1. 前端样式：Kimi-K2.5
+
+---
+
 ![Mizuki Preview](./README.webp)
 
 <table>
@@ -35,10 +40,6 @@
     <td><img alt="" src="docs/image/6.webp"></td>
   <tr>
 </table>
-
-## Trae AI 推荐：
-1. 前端样式：Kimi-K2.5
-
 
 ## ⚡ 命令
 
