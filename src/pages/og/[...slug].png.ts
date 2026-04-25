@@ -1,16 +1,16 @@
-import * as fs from "node:fs";
-
-import type { APIContext, GetStaticPaths } from "astro";
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
+import * as fs from "node:fs";
+import type { APIContext, GetStaticPaths } from "astro";
 import satori from "satori";
 import sharp from "sharp";
-
 import { removeFileExtension } from "@/utils/url-utils";
 
-import { profileConfig, siteConfig } from "../../config";
+import { profileConfig } from "../../config/profileConfig";
+import { siteConfig } from "../../config/siteConfig";
 
 type Weight = 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
+
 type FontStyle = "normal" | "italic";
 interface FontOptions {
 	data: Buffer | ArrayBuffer;
@@ -42,17 +42,12 @@ export const getStaticPaths: GetStaticPaths = async () => {
 let fontCache: { regular: Buffer | null; bold: Buffer | null } | null = null;
 
 async function fetchNotoSansSCFonts() {
-	if (fontCache) {
-		return fontCache;
-	}
-
+	if (fontCache) return fontCache;
 	try {
 		const cssResp = await fetch(
 			"https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap",
 		);
-		if (!cssResp.ok) {
-			throw new Error("Failed to fetch Google Fonts CSS");
-		}
+		if (!cssResp.ok) throw new Error("Failed to fetch Google Fonts CSS");
 		const cssText = await cssResp.text();
 
 		const getUrlForWeight = (weight: number) => {
@@ -61,9 +56,7 @@ async function fetchNotoSansSCFonts() {
 				"g",
 			);
 			const match = cssText.match(blockRe);
-			if (!match || match.length === 0) {
-				return null;
-			}
+			if (!match || match.length === 0) return null;
 			const urlMatch = match[0].match(/url\((https:[^)]+)\)/);
 			return urlMatch ? urlMatch[1] : null;
 		};
@@ -76,7 +69,7 @@ async function fetchNotoSansSCFonts() {
 				"Could not find font urls in Google Fonts CSS; falling back to no fonts.",
 			);
 			fontCache = { regular: null, bold: null };
-			return fontCache;
+			return { regular: null, bold: null };
 		}
 
 		const [rResp, bResp] = await Promise.all([
@@ -88,18 +81,17 @@ async function fetchNotoSansSCFonts() {
 				"Failed to download font files from Google; falling back to no fonts.",
 			);
 			fontCache = { regular: null, bold: null };
-			return fontCache;
+			return { regular: null, bold: null };
 		}
 
 		const rBuf = Buffer.from(await rResp.arrayBuffer());
 		const bBuf = Buffer.from(await bResp.arrayBuffer());
-
 		fontCache = { regular: rBuf, bold: bBuf };
 		return fontCache;
 	} catch (err) {
 		console.warn("Error fetching fonts:", err);
 		fontCache = { regular: null, bold: null };
-		return fontCache;
+		return { regular: null, bold: null };
 	}
 }
 
@@ -109,14 +101,25 @@ export async function GET({
 	const { post } = props;
 
 	// Try to fetch fonts from Google Fonts (woff2) at runtime.
-	const { regular: fontRegular, bold: fontBold } =
-		await fetchNotoSansSCFonts();
+	const { regular: fontRegular, bold: fontBold } = await fetchNotoSansSCFonts();
 
 	// Avatar + icon: still read from disk (small assets)
-	const avatarBuffer = fs.readFileSync(`./src/${profileConfig.avatar}`);
-	const avatarBase64 = `data:image/png;base64,${avatarBuffer.toString("base64")}`;
+	let avatarBase64: string;
 
-	let iconPath = "./public/favicon/favicon.ico";
+	// 检查头像是否为 URL
+	if (profileConfig.avatar?.startsWith("http")) {
+		// 如果是 URL，直接使用
+		avatarBase64 = profileConfig.avatar;
+	} else {
+		// 如果是本地路径，从 public 目录读取
+		const avatarPath = profileConfig.avatar?.startsWith("/")
+			? `./public${profileConfig.avatar}`
+			: `./src/${profileConfig.avatar}`;
+		const avatarBuffer = fs.readFileSync(avatarPath);
+		avatarBase64 = `data:image/png;base64,${avatarBuffer.toString("base64")}`;
+	}
+
+	let iconPath = "./public/favicon/favicon-dark-192.png";
 	if (siteConfig.favicon.length > 0) {
 		iconPath = `./public${siteConfig.favicon[0].src}`;
 	}
@@ -211,8 +214,7 @@ export async function GET({
 												style: {
 													width: "10px",
 													height: "68px",
-													backgroundColor:
-														primaryColor,
+													backgroundColor: primaryColor,
 													borderRadius: "6px",
 													marginTop: "14px",
 												},
@@ -306,10 +308,7 @@ export async function GET({
 							{
 								type: "div",
 								props: {
-									style: {
-										fontSize: "28px",
-										color: subtleTextColor,
-									},
+									style: { fontSize: "28px", color: subtleTextColor },
 									children: pubDate,
 								},
 							},

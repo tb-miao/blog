@@ -10,19 +10,17 @@ import { h } from "hastscript";
  * @returns {import('mdast').Parent} The created GitHub Card component.
  */
 export function GithubCardComponent(properties, children) {
-	if (Array.isArray(children) && children.length !== 0) {
+	if (Array.isArray(children) && children.length !== 0)
 		return h("div", { class: "hidden" }, [
 			'Invalid directive. ("github" directive must be leaf type "::github{repo="owner/repo"}")',
 		]);
-	}
 
-	if (!properties.repo || !properties.repo.includes("/")) {
+	if (!properties.repo?.includes("/"))
 		return h(
 			"div",
 			{ class: "hidden" },
 			'Invalid repository. ("repo" attributte must be in the format "owner/repo")',
 		);
-	}
 
 	const repo = properties.repo;
 	const cardUuid = `GC${Math.random().toString(36).slice(-6)}`; // Collisions are not important
@@ -54,11 +52,7 @@ export function GithubCardComponent(properties, children) {
 
 	const nStars = h(`div#${cardUuid}-stars`, { class: "gc-stars" }, "00K");
 	const nForks = h(`div#${cardUuid}-forks`, { class: "gc-forks" }, "0K");
-	const nLicense = h(
-		`div#${cardUuid}-license`,
-		{ class: "gc-license" },
-		"0K",
-	);
+	const nLicense = h(`div#${cardUuid}-license`, { class: "gc-license" }, "0K");
 
 	const nScript = h(
 		`script#${cardUuid}-script`,
@@ -70,7 +64,7 @@ export function GithubCardComponent(properties, children) {
         document.getElementById('${cardUuid}-forks').innerText = Intl.NumberFormat('en-us', { notation: "compact", maximumFractionDigits: 1 }).format(data.forks).replaceAll("\u202f", '');
         document.getElementById('${cardUuid}-stars').innerText = Intl.NumberFormat('en-us', { notation: "compact", maximumFractionDigits: 1 }).format(data.stargazers_count).replaceAll("\u202f", '');
         const avatarEl = document.getElementById('${cardUuid}-avatar');
-        avatarEl.style.backgroundImage = 'url(' + data.owner.avatar_url + ')';
+        avatarEl.style.backgroundImage = 'url(' + data.owner.avatar_url + '&s=32' + ')';
         avatarEl.style.backgroundColor = 'transparent';
         document.getElementById('${cardUuid}-license').innerText = data.license?.spdx_id || "no-license";
         document.getElementById('${cardUuid}-card').classList.remove("fetch-waiting");
@@ -94,12 +88,7 @@ export function GithubCardComponent(properties, children) {
 		[
 			nTitle,
 			nDescription,
-			h("div", { class: "gc-infobar" }, [
-				nStars,
-				nForks,
-				nLicense,
-				nLanguage,
-			]),
+			h("div", { class: "gc-infobar" }, [nStars, nForks, nLicense, nLanguage]),
 			nScript,
 		],
 	);

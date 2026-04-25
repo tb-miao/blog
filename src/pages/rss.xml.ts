@@ -1,135 +1,63 @@
-// import { getCollection } from "astro:content";
-import type { RSSFeedItem } from "@astrojs/rss";
-import rss from "@astrojs/rss";
-import type { APIContext, ImageMetadata } from "astro";
-import { getImage } from "astro:assets";
-import MarkdownIt from "markdown-it";
-import { parse as htmlParser } from "node-html-parser";
+import { loadRenderers } from "astro:container";
+import { render } from "astro:content";
+import { getContainerRenderer as getMDXRenderer } from "@astrojs/mdx";
+import rss, { type RSSFeedItem } from "@astrojs/rss";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import { getSortedPosts } from "@utils/content-utils";
+import { formatDateI18nWithTime } from "@utils/date-utils";
+import { url } from "@utils/url-utils";
+import type { APIContext } from "astro";
+import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import sanitizeHtml from "sanitize-html";
-
 import { siteConfig } from "@/config";
-import { getSortedPosts } from "@/utils/content-utils";
-import { initPostIdMap } from "@/utils/permalink-utils";
-import { getPostUrl } from "@/utils/url-utils";
+import pkg from "../../package.json";
 
-const markdownParser = new MarkdownIt();
-
-// get dynamic import of images as a map collection
-const imagesGlob = import.meta.glob<{ default: ImageMetadata }>(
-	"/src/content/**/*.{jpeg,jpg,png,gif,webp}", // include posts and assets
-);
+function stripInvalidXmlChars(str: string): string {
+	return str.replace(
+		// biome-ignore lint/suspicious/noControlCharactersInRegex: https://www.w3.org/TR/xml/#charsets
+		/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F\uFDD0-\uFDEF\uFFFE\uFFFF]/g,
+		"",
+	);
+}
 
 export async function GET(context: APIContext) {
-	if (!context.site) {
-		throw Error("site not set");
-	}
-
-	// Use the same ordering as site listing (pinned first, then by published desc)
-	const posts = (await getSortedPosts()).filter(
-		(post) => !post.data.encrypted,
-	);
-
-	// 初始化文章 ID 映射（用于 permalink 功能）
-	initPostIdMap(posts);
-
-	const feed: RSSFeedItem[] = [];
-
-	for (const post of posts) {
-		// convert markdown to html string, ensure post.body is a string
-		const body = markdownParser.render(String(post.body ?? ""));
-		// convert html string to DOM-like structure
-		const html = htmlParser.parse(body);
-		// hold all img tags in variable images
-		const images = html.querySelectorAll("img");
-
-		for (const img of images) {
-			const src = img.getAttribute("src");
-			if (!src) {
-				continue;
-			}
-
-			// Handle content-relative images and convert them to built _astro paths
-			if (
-				src.startsWith("./") ||
-				src.startsWith("../") ||
-				(!src.startsWith("http") && !src.startsWith("/"))
-			) {
-				let importPath: string | null = null;
-
-				if (src.startsWith("./")) {
-					// Path relative to the post file directory
-					const prefixRemoved = src.slice(2);
-					// Check if this post is in a subdirectory (like bestimageapi/index.md)
-					const postPath = post.id; // This gives us the full path like "bestimageapi/index.md"
-					const postDir = postPath.includes("/")
-						? postPath.split("/")[0]
-						: "";
-
-					if (postDir) {
-						// For posts in subdirectories
-						importPath = `/src/content/posts/${postDir}/${prefixRemoved}`;
-					} else {
-						// For posts directly in posts directory
-						importPath = `/src/content/posts/${prefixRemoved}`;
-					}
-				} else if (src.startsWith("../")) {
-					// Path like ../assets/images/xxx -> relative to /src/content/
-					const cleaned = src.replace(/^\.\.\//, "");
-					importPath = `/src/content/${cleaned}`;
-				} else {
-					// Handle direct filename (no ./ prefix) - assume it's in the same directory as the post
-					const postPath = post.id; // This gives us the full path like "bestimageapi/index.md"
-					const postDir = postPath.includes("/")
-						? postPath.split("/")[0]
-						: "";
-
-					if (postDir) {
-						// For posts in subdirectories
-						importPath = `/src/content/posts/${postDir}/${src}`;
-					} else {
-						// For posts directly in posts directory
-						importPath = `/src/content/posts/${src}`;
-					}
-				}
-
-				const imageMod = await imagesGlob[importPath]?.()?.then(
-					(res) => res.default,
-				);
-				if (imageMod) {
-					const optimizedImg = await getImage({ src: imageMod });
-					img.setAttribute(
-						"src",
-						new URL(optimizedImg.src, context.site).href,
-					);
-				} else {
-					// Debug: log the failed import path
-					console.log(
-						`Failed to load image: ${importPath} for post: ${post.id}`,
-					);
-				}
-			} else if (src.startsWith("/")) {
-				// images starting with `/` are in public dir
-				img.setAttribute("src", new URL(src, context.site).href);
-			}
+	const blog = await getSortedPosts();
+	const renderers = await loadRenderers([getMDXRenderer()]);
+	const container = await AstroContainer.create({ renderers });
+	const feedItems: RSSFeedItem[] = [];
+	for (const post of blog) {
+		if (post.data.password) {
+			feedItems.push({
+				title: post.data.title,
+				pubDate: post.data.published,
+				description: post.data.description || "",
+				link: url(`/posts/${post.id}/`),
+				content: i18n(I18nKey.passwordProtectedRss),
+			});
+			continue;
 		}
-
-		feed.push({
+		const { Content } = await render(post);
+		const rawContent = await container.renderToString(Content);
+		const cleanedContent = stripInvalidXmlChars(rawContent);
+		feedItems.push({
 			title: post.data.title,
-			description: post.data.description,
 			pubDate: post.data.published,
-			link: getPostUrl(post),
-			// sanitize the new html string with corrected image paths
-			content: sanitizeHtml(html.toString(), {
+			description: post.data.description || "",
+			link: url(`/posts/${post.id}/`),
+			content: sanitizeHtml(cleanedContent, {
 				allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
 			}),
 		});
 	}
-
 	return rss({
 		title: siteConfig.title,
 		description: siteConfig.subtitle || "No description",
-		site: context.site,
-		items: feed,
-		customData: `<language>${siteConfig.lang}</language>`,
+		site: context.site ?? "https://firefly.cuteleaf.cn",
+		customData: `<templateTheme>Firefly</templateTheme>
+		<templateThemeVersion>${pkg.version}</templateThemeVersion>
+		<templateThemeUrl>https://github.com/CuteLeaf/Firefly</templateThemeUrl>
+		<lastBuildDate>${formatDateI18nWithTime(new Date())}</lastBuildDate>`,
+		items: feedItems,
 	});
 }

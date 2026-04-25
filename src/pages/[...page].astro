@@ -1,22 +1,15 @@
 ---
-import Pagination from "@components/control/Pagination.astro";
-import CategoryBar from "@components/features/posts/CategoryBar.astro";
-import PostPage from "@components/features/posts/PostPage.astro";
-import MainGridLayout from "@layouts/MainGridLayout.astro";
 import type { GetStaticPaths } from "astro";
-
-import { siteConfig } from "../config";
-import { PAGE_SIZE } from "../constants/constants";
-import { getSortedPosts } from "../utils/content-utils";
-import { initPostIdMap } from "../utils/permalink-utils";
-
-const showCategoryBar = siteConfig.postListLayout.categoryBar?.enable ?? false;
-
+import Pagination from "@/components/common/Pagination.astro";
+import PostPage from "@/components/layout/PostPage.astro";
+import { siteConfig } from "@/config";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { getSortedPosts } from "@/utils/content-utils";
 export const getStaticPaths = (async ({ paginate }) => {
 	const allBlogPosts = await getSortedPosts();
-	// 初始化文章 ID 映射（用于 permalink 功能）
-	initPostIdMap(allBlogPosts);
-	return paginate(allBlogPosts, { pageSize: PAGE_SIZE });
+	// 使用配置中的文章数量
+	const pageSize = siteConfig.pagination.postsPerPage;
+	return paginate(allBlogPosts, { pageSize });
 }) satisfies GetStaticPaths;
 // https://github.com/withastro/astro/issues/6507#issuecomment-1489916992
 
@@ -26,11 +19,52 @@ const len = page.data.length;
 ---
 
 <MainGridLayout>
-	{showCategoryBar && <CategoryBar />}
-	<PostPage page={page} />
-	<Pagination
-		class="mx-auto onload-animation"
-		page={page}
-		style={`animation-delay: calc(var(--content-delay) + ${len * 50}ms)`}
-	/>
+  <PostPage page={page} />
+  {
+    page.total > page.size && (
+      <Pagination
+        class="mx-auto onload-animation"
+        page={page}
+        style={`animation-delay: calc(var(--content-delay) + ${len * 50}ms)`}
+      />
+    )
+  }
 </MainGridLayout>
+
+<script>
+  // 响应式分页处理脚本
+  document.addEventListener("DOMContentLoaded", function () {
+    // 如果启用了响应式分页，添加相应的CSS类
+    const responsiveEnabled = true; // ${siteConfig.pagination.responsive}
+    if (responsiveEnabled) {
+      const deviceType = getDeviceType();
+      document.body.classList.add(`device-${deviceType}`);
+
+      // 监听窗口大小变化
+      let resizeTimeout: any;
+      window.addEventListener("resize", function () {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function () {
+          const newDeviceType = getDeviceType();
+          const currentDeviceType = document.body.className.match(
+            /device-(mobile|tablet|desktop)/
+          )?.[1];
+
+          if (currentDeviceType !== newDeviceType) {
+            document.body.classList.remove(`device-${currentDeviceType}`);
+            document.body.classList.add(`device-${newDeviceType}`);
+          }
+        }, 250);
+      });
+    }
+  });
+
+  function getDeviceType() {
+    if (typeof window === "undefined") return "desktop";
+
+    const width = window.innerWidth;
+    if (width < 768) return "mobile";
+    if (width < 1024) return "tablet";
+    return "desktop";
+  }
+</script>

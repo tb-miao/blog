@@ -1,3 +1,4 @@
+# 关于我 / About Me
 <div align="center">
 
 🌸 **你好呀！** 我是 **Nachceko** ，一个超爱二次元文化的小萌新～ 喜欢粉色、动漫、游戏和一切可爱的东西！✨
@@ -36,9 +37,9 @@
 
 ## 🛠️ 关于本站
 
-- 该网站使用 **Astro** 框架，并采用了 [Mizuki](https://github.com/LyraVoid/Mizuki) 主题。
+- 该网站使用 **Astro** 框架，并采用了 [Firefly](https://github.com/CuteLeaf/Firefly) 主题。
 
-::github{repo="LyraVoid/Mizuki"}
+::github{repo="CuteLeaf/Firefly"}
 
 ::github{repo="tb-miao/blog"}
 

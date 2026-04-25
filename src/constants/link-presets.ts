@@ -1,9 +1,8 @@
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
-
 import { LinkPreset, type NavBarLink } from "@/types/config";
 
-export const LinkPresets: Record<LinkPreset, NavBarLink> = {
+export const LinkPresets: { [key in LinkPreset]: NavBarLink } = {
 	[LinkPreset.Home]: {
 		name: i18n(I18nKey.home),
 		url: "/",
@@ -24,34 +23,24 @@ export const LinkPresets: Record<LinkPreset, NavBarLink> = {
 		url: "/friends/",
 		icon: "material-symbols:group",
 	},
-	[LinkPreset.Anime]: {
-		name: i18n(I18nKey.anime),
-		url: "/anime/",
+	[LinkPreset.Sponsor]: {
+		name: i18n(I18nKey.sponsor),
+		url: "/sponsor/",
+		icon: "material-symbols:favorite",
+	},
+	[LinkPreset.Guestbook]: {
+		name: i18n(I18nKey.guestbook),
+		url: "/guestbook/",
+		icon: "material-symbols:chat",
+	},
+	[LinkPreset.Bangumi]: {
+		name: i18n(I18nKey.bangumi),
+		url: "/bangumi/",
 		icon: "material-symbols:movie",
 	},
-	[LinkPreset.Diary]: {
-		name: i18n(I18nKey.diary),
-		url: "/diary/",
-		icon: "material-symbols:book",
-	},
-	[LinkPreset.Albums]: {
-		name: i18n(I18nKey.albums),
-		url: "/albums/",
+	[LinkPreset.Gallery]: {
+		name: i18n(I18nKey.gallery),
+		url: "/gallery/",
 		icon: "material-symbols:photo-library",
-	},
-	[LinkPreset.Projects]: {
-		name: i18n(I18nKey.projects),
-		url: "/projects/",
-		icon: "material-symbols:work",
-	},
-	[LinkPreset.Skills]: {
-		name: i18n(I18nKey.skills),
-		url: "/skills/",
-		icon: "material-symbols:psychology",
-	},
-	[LinkPreset.Timeline]: {
-		name: i18n(I18nKey.timeline),
-		url: "/timeline/",
-		icon: "material-symbols:timeline",
 	},
 };

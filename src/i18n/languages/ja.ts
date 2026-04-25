@@ -3,320 +3,267 @@ import type { Translation } from "../translation";
 
 export const ja: Translation = {
 	[Key.home]: "ホーム",
-	[Key.about]: "このブログについて",
+	[Key.about]: "について",
 	[Key.archive]: "アーカイブ",
 	[Key.search]: "検索",
+	[Key.searchNoResults]: "結果が見つかりません。",
+	[Key.searchTypeSomething]: "検索キーワードを入力してください。",
+	[Key.searchLoading]: "検索中...",
+	[Key.searchSummary]: "摘要",
+	[Key.searchContent]: "内容",
+	[Key.searchViewMore]: "さらに結果を表示 ({count} 件)",
 	[Key.other]: "その他",
-
-	// ナビゲーションバータイトル
-	[Key.navLinks]: "リンク",
-	[Key.navMy]: "私の",
-	[Key.navAbout]: "情報",
-	[Key.navOthers]: "その他",
+	[Key.all]: "すべて",
 
 	[Key.tags]: "タグ",
-	[Key.categories]: "カテゴリー",
+	[Key.categories]: "カテゴリ",
 	[Key.recentPosts]: "最近の投稿",
-	[Key.postList]: "投稿の一覧",
+	[Key.postList]: "投稿リスト",
 	[Key.tableOfContents]: "目次",
-	[Key.tocEmpty]: "目次はありません",
+	[Key.tocEmpty]: "このページには目次がありません",
+	[Key.music]: "音楽",
+	[Key.musicNoPlaying]: "再生中なし",
+	[Key.musicLyrics]: "歌詞",
+	[Key.musicVolume]: "音量",
+	[Key.musicPlayMode]: "再生モードを切り替え",
+	[Key.musicPrev]: "前の曲",
+	[Key.musicNext]: "次の曲",
+	[Key.musicPlaylist]: "プレイリスト",
+	[Key.musicNoLyrics]: "歌詞なし",
+	[Key.musicLoadingLyrics]: "歌詞を読み込み中...",
+	[Key.musicFailedLyrics]: "歌詞の読み込みに失敗しました",
+	[Key.musicNoSongs]: "曲なし",
+	[Key.musicError]: "プレーヤーエラー",
+	[Key.musicPlay]: "再生",
+	[Key.musicPause]: "一時停止",
+	[Key.musicProgress]: "再生の進捗",
+	[Key.musicCover]: "カバー",
+	[Key.musicNoCover]: "カバーなし",
+	[Key.musicAudioPlayer]: "オーディオプレーヤー",
 
 	// お知らせ
 	[Key.announcement]: "お知らせ",
 	[Key.announcementClose]: "閉じる",
 
 	[Key.comments]: "コメント",
+	[Key.commentSection]: "コメント欄",
+	[Key.commentSubtitle]: "あなたの考えを共有し、みんなと議論しましょう",
+	[Key.commentNotConfigured]: "コメントシステムが設定されていません",
+	[Key.guestbookCommentHint]:
+		"設定ファイルでコメントシステムをまだ有効にしていません。有効にすると、訪問者がここにメッセージを残せるようになります",
 	[Key.friends]: "友達",
-	[Key.friendsSubtitle]: "もっと素敵なウェブサイトを見つける",
-	[Key.friendsSearchPlaceholder]: "友達の名前または説明を検索...",
-	[Key.friendsFilterAll]: "すべて",
-	[Key.friendsNoResults]: "一致する友達が見つかりません",
-	[Key.friendsVisit]: "訪問",
-	[Key.friendsCopyLink]: "リンク",
-	[Key.friendsCopySuccess]: "コピーしました",
-	[Key.friendsTags]: "タグ",
+	[Key.friendsDescription]:
+		"ここは私の友達です、お互いに訪問して交流することを歓迎します",
+	[Key.guestbook]: "ゲストブック",
+	[Key.guestbookDescription]:
+		"ここに足跡を残して、あなたの考えや提案を共有してください",
 	[Key.untitled]: "無題",
 	[Key.uncategorized]: "未分類",
-	[Key.noTags]: "タグはありません",
+	[Key.noTags]: "タグなし",
 
-	[Key.wordCount]: "文字",
-	[Key.wordsCount]: "文字",
+	[Key.wordCount]: "語",
+	[Key.wordsCount]: "語",
 	[Key.minuteCount]: "分",
 	[Key.minutesCount]: "分",
-	[Key.postCount]: "件の投稿",
-	[Key.postsCount]: "件の投稿",
+	[Key.postCount]: "投稿",
+	[Key.postsCount]: "投稿",
 
-	[Key.themeColor]: "テーマの色",
+	[Key.themeColor]: "テーマカラー",
 
 	[Key.lightMode]: "ライト",
 	[Key.darkMode]: "ダーク",
 	[Key.systemMode]: "システム",
 
-	[Key.more]: "詳細を表示",
+	[Key.more]: "もっと",
+	[Key.collapse]: "折りたたむ",
 
 	[Key.author]: "著者",
 	[Key.publishedAt]: "公開日",
+	[Key.updatedAt]: "更新日",
+	[Key.readTime]: "読了時間",
 	[Key.license]: "ライセンス",
-	[Key.anime]: "視聴したアニメ",
-	[Key.diary]: "日記",
+	[Key.bangumi]: "バングミ",
 
-	// アニメページ
-	[Key.animeTitle]: "視聴したアニメ",
-	[Key.animeSubtitle]: "アニメの旅の記録です",
-	[Key.animeStatusWatching]: "視聴中",
-	[Key.animeStatusCompleted]: "完了",
-	[Key.animeStatusPlanned]: "検討中",
-	[Key.animeStatusOnHold]: "保留中",
-	[Key.animeStatusDropped]: "中断",
-	[Key.animeFilterAll]: "すべて",
-	[Key.animeYear]: "年",
-	[Key.animeStudio]: "スタジオ",
-	[Key.animeEmpty]: "アニメのデータはありません",
-	[Key.animeEmptyBangumi]:
-		"Bangumiの構成またはネットワークを接続を確認してください",
-	[Key.animeEmptyBilibili]:
-		"Bilibiliの構成またはネットワーク接続を確認してください",
-	[Key.animeEmptyLocal]:
-		"src/data/anime.tsのファイルにアニメの情報を追加してください",
-	[Key.animeConfigBilibili]:
-		"src/config.tsファイルでBilibili vmidを設定してください",
-	[Key.animeConfigBangumi]:
-		"src/config.tsファイルでBangumi userIdを設定してください",
+	// バングミフィルターと状態文本
+	[Key.bangumiTitle]: "私のバングミ",
+	[Key.bangumiSubtitle]: "私の二次元の旅を記録する",
+	[Key.bangumiFilterAll]: "すべて",
+	[Key.bangumiFilterWatched]: "見た",
+	[Key.bangumiFilterWatching]: "視聴中",
+	[Key.bangumiFilterWish]: "見たい",
+	[Key.bangumiFilterOnHold]: "保留",
+	[Key.bangumiFilterDropped]: "中断",
+	[Key.bangumiFilterGamePlayed]: "プレイ済み",
+	[Key.bangumiFilterGamePlaying]: "プレイ中",
+	[Key.bangumiFilterGameWish]: "プレイしたい",
+	[Key.bangumiFilterBookRead]: "読んだ",
+	[Key.bangumiFilterBookReading]: "読んでいる",
+	[Key.bangumiFilterBookWish]: "読みたい",
+	[Key.bangumiFilterMusicListened]: "聴いた",
+	[Key.bangumiFilterMusicListening]: "聴いている",
+	[Key.bangumiFilterMusicWish]: "聴きたい",
+	[Key.bangumiStatusWish]: "見たい",
+	[Key.bangumiStatusWatched]: "見た",
+	[Key.bangumiStatusWatching]: "視聴中",
+	[Key.bangumiStatusOnHold]: "保留",
+	[Key.bangumiStatusDropped]: "中断",
+	[Key.bangumiStatusGameWish]: "プレイしたい",
+	[Key.bangumiStatusGamePlayed]: "プレイ済み",
+	[Key.bangumiStatusGamePlaying]: "プレイ中",
+	[Key.bangumiStatusBookWish]: "読みたい",
+	[Key.bangumiStatusBookRead]: "読んだ",
+	[Key.bangumiStatusBookReading]: "読んでいる",
+	[Key.bangumiStatusMusicWish]: "聴きたい",
+	[Key.bangumiStatusMusicListened]: "聴いた",
+	[Key.bangumiStatusMusicListening]: "聴いている",
+	[Key.bangumiStatusUnknown]: "不明",
+	[Key.bangumiNoData]: "データなし",
+	[Key.bangumiNoDataDescription]: "このカテゴリに項目がありません",
+	[Key.bangumiEmpty]: "データなし",
+	[Key.bangumiEmptyReason]:
+		"考えられる理由：ユーザー名が存在しない、ネットワーク接続の問題、またはAPI制限",
+	[Key.bangumiUsername]: "ユーザー名",
+	[Key.bangumiApi]: "API",
+	[Key.bangumiConfigTip]:
+		"ヒント：ページ設定で正しいBangumiユーザー名を設定してください",
+	[Key.bangumiPrevPage]: "前へ",
+	[Key.bangumiNextPage]: "次へ",
+	[Key.bangumiCurrentPage]: "ページ",
+	[Key.bangumiTotalPages]: "の",
+	[Key.bangumiPage]: "ページ",
 
-	// 日記ページ
-	[Key.diarySubtitle]: "いつでも、どこでも生活を共有",
-	[Key.diaryNoResults]: "一致する日記がありません",
-	[Key.diaryCount]: "件の日記",
+	// バングミカテゴリ
+	[Key.bangumiCategoryBook]: "本",
+	[Key.bangumiCategoryAnime]: "アニメ",
+	[Key.bangumiCategoryMusic]: "音楽",
+	[Key.bangumiCategoryGame]: "ゲーム",
+	[Key.bangumiCategoryReal]: "実写",
 
-	[Key.diaryTips]: "最新の30件の日記のエントリーのみを表示",
-	[Key.diaryMinutesAgo]: "分前",
-	[Key.diaryHoursAgo]: "時間前",
-	[Key.diaryDaysAgo]: "日前",
+	// バングミデータ更新
+	[Key.bangumiLastUpdated]: "データ更新",
+	[Key.bangumiUpdatedAt]: "ビルド時間",
+	[Key.bangumiDataStatic]: "静的データ",
+
+	// ページネーション
+	[Key.paginationFirst]: "最初",
+	[Key.paginationPrev]: "前へ",
+	[Key.paginationNext]: "次へ",
+	[Key.paginationLast]: "最後",
+	[Key.paginationPage]: "",
+	[Key.paginationOf]: "ページ、全",
+	[Key.paginationTotal]: "ページ、合計",
+	[Key.paginationRecords]: "件",
 
 	// 404ページ
 	[Key.notFound]: "404",
 	[Key.notFoundTitle]: "ページが見つかりません",
 	[Key.notFoundDescription]:
-		"申し訳ありません、アクセスしたページは存在しないか移動されています。",
+		"申し訳ありませんが、アクセスしたページは存在しないか、移動されています。",
 	[Key.backToHome]: "ホームに戻る",
-
-	// 音楽プレーヤー
-	[Key.musicPlayer]: "音楽プレーヤー",
-	[Key.musicPlayerShow]: "音楽プレーヤーを表示",
-	[Key.musicPlayerHide]: "音楽プレーヤーを非表示",
-	[Key.musicPlayerExpand]: "音楽プレーヤーを展開",
-	[Key.musicPlayerCollapse]: "音楽プレーヤーを折りたたむ",
-	[Key.musicPlayerPause]: "一時停止",
-	[Key.musicPlayerPlay]: "再生",
-	[Key.musicPlayerPrevious]: "前へ",
-	[Key.musicPlayerNext]: "次へ",
-	[Key.musicPlayerShuffle]: "シャッフル",
-	[Key.musicPlayerRepeat]: "リピート",
-	[Key.musicPlayerRepeatOne]: "1曲のみリピート",
-	[Key.musicPlayerVolume]: "音量コントロール",
-	[Key.musicPlayerProgress]: "再生状況",
-	[Key.musicPlayerCover]: "カバー",
-	[Key.musicPlayerPlaylist]: "プレイリスト",
-	[Key.musicPlayerLoading]: "読み込み中...",
-	[Key.musicPlayerErrorPlaylist]: "プレイリストを取得できませんでした。",
-	[Key.musicPlayerErrorSong]:
-		"曲の読み込みに失敗しました。次の曲を再生します。",
-	[Key.musicPlayerErrorEmpty]: "プレイリストに利用可能な曲がありません。",
-	[Key.unknownSong]: "不明な曲",
-	[Key.unknownArtist]: "不明なアーティスト",
-
-	// アルバムページ
-	[Key.albums]: "アルバム",
-	[Key.albumsSubtitle]: "人生の美しい瞬間の記録です",
-	[Key.albumsEmpty]: "コンテンツはありません",
-	[Key.albumsEmptyDesc]:
-		"まだアルバムが作成されていません。美しい思い出を追加しましょう!",
-	[Key.albumsBackToList]: "アルバムに戻る",
-
-	// デバイスページ
-	[Key.devices]: "デバイス",
-	[Key.devicesSubtitle]: "日常的に使用しているデバイスを紹介",
-	[Key.devicesViewDetails]: "詳細を表示",
-	[Key.albumsPhotoCount]: "件の写真",
-	[Key.albumsPhotosCount]: "件の写真",
-	[Key.albumsFilterAll]: "すべて",
-	[Key.albumsNoResults]: "一致するアルバムがありません",
-
-	// プロジェクトページ
-	[Key.projects]: "プロジェクト",
-	[Key.projectsSubtitle]: "開発プロジェクトのポートフォリオ",
-	[Key.projectsAll]: "すべて",
-	[Key.projectsWeb]: "ウェブアプリ",
-	[Key.projectsMobile]: "モバイルアプリ",
-	[Key.projectsDesktop]: "デスクトップアプリ",
-	[Key.projectsOther]: "その他",
-	[Key.projectTechStack]: "技術スタック",
-	[Key.projectLiveDemo]: "ライブデモ",
-	[Key.projectSourceCode]: "ソースコード",
-	[Key.projectDescription]: "プロジェクトの説明",
-	[Key.projectStatus]: "ステータス",
-	[Key.projectStatusCompleted]: "完了",
-	[Key.projectStatusInProgress]: "進行中",
-	[Key.projectStatusPlanned]: "計画中",
-	[Key.projectsTotal]: "プロジェクトの合計",
-	[Key.projectsCompleted]: "完了",
-	[Key.projectsInProgress]: "進行中",
-	[Key.projectsTechStack]: "技術スタック",
-	[Key.projectsFeatured]: "注目のプロジェクト",
-	[Key.projectsPlanned]: "計画中",
-	[Key.projectsDemo]: "ライブデモ",
-	[Key.projectsSource]: "ソースコード",
-	[Key.projectsVisit]: "プロジェクトを開く",
-	[Key.projectsGitHub]: "GitHub",
 
 	// RSSページ
 	[Key.rss]: "RSSフィード",
-	[Key.rssDescription]: "最新情報を受け取るために購読する",
-	[Key.rssSubtitle]:
-		"RSSフィードを購読すると最新の記事や更新情報をすぐに確認できます。",
-	[Key.rssLink]: "RSSフィードのリンク",
-	[Key.rssCopyToReader]: "RSSリーダーへのリンクをコピーします",
-	[Key.rssCopyLink]: "コピー",
+	[Key.rssDescription]: "最新の更新を購読する",
+	[Key.rssSubtitle]: "RSSで購読して、最新の記事と更新を第一时间で取得する",
+	[Key.rssLink]: "RSSリンク",
+	[Key.rssCopyToReader]: "RSSリンクをリーダーにコピー",
+	[Key.rssCopyLink]: "リンクをコピー",
 	[Key.rssLatestPosts]: "最新の投稿",
-	[Key.rssWhatIsRSS]: "RSSとは何ですか?",
+	[Key.rssWhatIsRSS]: "RSSとは？",
 	[Key.rssWhatIsRSSDescription]:
-		"RSS(Really Simple Syndication)は、頻繁に更新されるコンテンツを公開するための標準フォーマットです:",
+		"RSS（Really Simple Syndication）は、頻繁に更新されるコンテンツを公開するための標準形式です。RSSを使用すると：",
 	[Key.rssBenefit1]:
-		"手動でウェブサイトにアクセスすることなく、最新のコンテンツをタイムリーに入手できます",
-	[Key.rssBenefit2]: "複数のウェブサイトへの購読を一括で管理できます",
-	[Key.rssBenefit3]: "重要な更新情報や記事を見逃すこともありません",
-	[Key.rssBenefit4]: "広告なしのクリーンな読書体験を楽しめます",
+		"手動で訪問することなく、最新のウェブサイトコンテンツを及时に取得",
+	[Key.rssBenefit2]: "1か所で複数のウェブサイトの購読を管理",
+	[Key.rssBenefit3]: "重要な更新や記事を見逃すことを回避",
+	[Key.rssBenefit4]: "広告なしのクリーンな読書体験を楽しむ",
 	[Key.rssHowToUse]:
-		"このサイトの購読はFeedly、Inoreaderまたはその他のRSSリーダーの使用をおすすめします。",
-	[Key.rssCopied]: "RSSのリンクをクリップボードにコピーしました!",
-	[Key.rssCopyFailed]:
-		"コピーに失敗しました。リンクを手動で追加してください。",
-
-	// Atomページ
-	[Key.atom]: "Atomフィード",
-	[Key.atomDescription]: "最新情報を受け取るために購読する",
-	[Key.atomSubtitle]:
-		"Atomフィードを購読すると最新の記事や更新情報をすぐに確認できます。",
-	[Key.atomLink]: "Atomフィードのリンク",
-	[Key.atomCopyToReader]: "Atomリーダーへのリンクをコピーします",
-	[Key.atomCopyLink]: "コピー",
-	[Key.atomLatestPosts]: "最新の投稿",
-	[Key.atomWhatIsAtom]: "Atomとは何ですか?",
-	[Key.atomWhatIsAtomDescription]:
-		"Atom(Atom Syndication Format)はフィードとその項目を記述するためのXMLベースの標準フォーマットです:",
-	[Key.atomBenefit1]:
-		"手動でウェブサイトにアクセスすることなく、最新のコンテンツをタイムリーに入手できます",
-	[Key.atomBenefit2]: "複数のウェブサイトへの購読を一括で管理できます",
-	[Key.atomBenefit3]: "重要な更新情報や記事を見逃すこともありません",
-	[Key.atomBenefit4]: "広告なしのクリーンな読書体験を楽しめます",
-	[Key.atomHowToUse]:
-		"このサイトの購読はFeedly、Inoreaderまたはその他のAtomリーダーの使用をおすすめします。",
-	[Key.atomCopied]: "Atomのリンクをクリップボードにコピーしました!",
-	[Key.atomCopyFailed]:
-		"コピーに失敗しました。リンクを手動で追加してください。",
-
-	// 壁紙モード
-	[Key.wallpaperBanner]: "バナーモード",
-	[Key.wallpaperFullscreen]: "フルスクリーンモード",
-	[Key.wallpaperNone]: "壁紙を非表示",
-
-	// スキルページ
-	[Key.skills]: "スキル",
-	[Key.skillsSubtitle]: "技術スキルと専門知識",
-	[Key.skillsFrontend]: "フロントエンド開発",
-	[Key.skillsBackend]: "バックエンド開発",
-	[Key.skillsDatabase]: "データベース",
-	[Key.skillsTools]: "開発ツール",
-	[Key.skillsOther]: "その他のスキル",
-	[Key.skillLevel]: "熟練度",
-	[Key.skillLevelBeginner]: "初心者",
-	[Key.skillLevelIntermediate]: "中級者",
-	[Key.skillLevelAdvanced]: "上級者",
-	[Key.skillLevelExpert]: "専門家",
-	[Key.skillExperience]: "経験の合計",
-	[Key.skillYears]: "年",
-	[Key.skillMonths]: "ヶ月",
-	[Key.skillsTotal]: "スキルの合計",
-	[Key.skillsExpert]: "エキスパートレベル",
-	[Key.skillsAdvanced]: "上級者",
-	[Key.skillsIntermediate]: "中級者",
-	[Key.skillsBeginner]: "初心者",
-	[Key.skillsAdvancedTitle]: "プロフェッショナルスキル",
-	[Key.skillsProjects]: "関連プロジェクト",
-	[Key.skillsDistribution]: "スキル分布",
-	[Key.skillsByLevel]: "レベル別",
-	[Key.skillsByCategory]: "カテゴリー別",
-	[Key.noData]: "データなし",
-
-	// タイムラインページ
-	[Key.timeline]: "タイムライン",
-	[Key.timelineSubtitle]: "成長への旅と重要なマイルストーン",
-	[Key.timelineEducation]: "教育",
-	[Key.timelineWork]: "実務経験",
-	[Key.timelineProject]: "プロジェクト経験",
-	[Key.timelineAchievement]: "実績",
-	[Key.timelinePresent]: "現在",
-	[Key.timelineLocation]: "場所",
-	[Key.timelineDescription]: "詳細な説明",
-	[Key.timelineMonths]: "ヶ月",
-	[Key.timelineYears]: "年",
-	[Key.timelineTotal]: "合計",
-	[Key.timelineProjects]: "プロジェクト",
-	[Key.timelineExperience]: "実務経験",
-	[Key.timelineCurrent]: "現在のステータス",
-	[Key.timelineHistory]: "履歴",
-	[Key.timelineAchievements]: "実績",
-	[Key.timelineStartDate]: "開始日",
-	[Key.timelineDuration]: "期間",
-
-	// 更新记录ページ
-	[Key.commits]: "更新記錄",
-
-	// パスワード保護
-	[Key.passwordProtected]: "パスワードで保護されています",
-	[Key.passwordProtectedTitle]:
-		"このコンテンツはパスワードで保護されています",
-	[Key.passwordProtectedDescription]:
-		"保護されたコンテンツを表示するにはパスワードを入力してください。",
-	[Key.postEncrypted]: "暗号化",
-	[Key.passwordPlaceholder]: "パスワードを入力",
-	[Key.passwordUnlock]: "ロックを解除",
-	[Key.passwordUnlocking]: "ロックを解除中...",
-	[Key.passwordIncorrect]: "パスワードが間違っています。再度お試しください。",
-	[Key.passwordDecryptError]:
-		"復号に失敗しました。パスワードが正しいかどうか確認してください。",
-	[Key.passwordRequired]: "パスワードを入力してください。",
-	[Key.passwordVerifying]: "認証中...",
-	[Key.passwordDecryptFailed]:
-		"復号に失敗しました。パスワードを確認してください。",
-	[Key.passwordDecryptRetry]: "復号に失敗しました。再度お試しください。",
-	[Key.passwordUnlockButton]: "ロックを解除",
-	[Key.copyFailed]: "コピーに失敗しました:",
-	[Key.syntaxHighlightFailed]: "構文の強調表示が失敗しました:",
-	[Key.autoSyntaxHighlightFailed]: "自動構文強調表示が失敗しました:",
-	[Key.decryptionError]: "復号中にエラーが発生しました:",
-	[Key.passwordHint]: "ヒント",
+		"Feedly、Inoreaderまたは他のRSSリーダーを使用してこのサイトを購読することを推奨します。",
+	[Key.rssCopied]: "RSSリンクがクリップボードにコピーされました！",
+	[Key.rssCopyFailed]: "コピーに失敗しました。手動でリンクをコピーしてください",
 
 	// 最終更新時間カード
-	[Key.lastModifiedPrefix]: "最終編集からの時間: ",
-	[Key.lastModifiedOutdated]: "一部の情報は古い可能性があります",
+	[Key.lastModifiedPrefix]: "最終更新日：",
+	[Key.lastModifiedOutdated]: "一部の内容が古くなっている可能性があります",
+	[Key.lastModifiedDaysAgo]: "{days}日前",
 	[Key.year]: "年",
 	[Key.month]: "月",
 	[Key.day]: "日",
-	[Key.hour]: "時間",
+	[Key.hour]: "時",
 	[Key.minute]: "分",
 	[Key.second]: "秒",
 
-	// 統計情報
-	[Key.siteStats]: "統計情報",
-	[Key.siteStatsPostCount]: "投稿",
+	// ページビュー統計
+	[Key.pageViews]: "閲覧数",
+	[Key.pageViewsLoading]: "読み込み中...",
+	[Key.pageViewsError]: "統計利用不可",
+
+	// ピン留め
+	[Key.pinned]: "ピン留め",
+
+	// 関連記事
+	[Key.relatedPosts]: "関連記事",
+	[Key.randomPosts]: "ランダム記事",
+	[Key.smartRecommend]: "スマート",
+	[Key.randomRecommend]: "ランダム",
+
+	// 暗号化
+	[Key.postEncrypted]: "この記事は暗号化されています",
+
+	// 壁紙モード
+	[Key.wallpaperMode]: "壁紙モード",
+	[Key.wallpaperBannerMode]: "バナー壁紙",
+	[Key.wallpaperOverlayMode]: "透明",
+	[Key.wallpaperNoneMode]: "単色背景",
+
+	// バナー設定
+	[Key.bannerSettings]: "バナー設定",
+	[Key.bannerTitle]: "ホームバナータイトル",
+	[Key.bannerCarousel]: "バナーカルーセル",
+	[Key.wavesAnimation]: "波アニメーション",
+	[Key.overlaySettings]: "透明設定",
+	[Key.overlayOpacity]: "壁紙の透明度",
+	[Key.overlayBlur]: "背景ぼかし",
+	[Key.overlayCardOpacity]: "カード透明度",
+
+	// 投稿リストレイアウト
+	[Key.postListLayout]: "投稿リストレイアウト",
+	[Key.postListLayoutList]: "リスト",
+	[Key.postListLayoutGrid]: "グリッド",
+
+	// スポンサーページ
+	[Key.sponsor]: "スポンサー",
+	[Key.sponsorTitle]: "サポート",
+	[Key.sponsorDescription]:
+		"私のコンテンツがあなたの役に立ったなら、以下の方法で私をスポンサーしてください。あなたのサポートは私の継続的な創作の原動力です！",
+	[Key.sponsorMethods]: "支払い方法",
+	[Key.sponsorList]: "スポンサーリスト",
+	[Key.sponsorEmpty]: "スポンサー記録なし",
+	[Key.sponsorAmount]: "金額",
+	[Key.sponsorDate]: "日付",
+	[Key.sponsorMessage]: "メッセージ",
+	[Key.sponsorAnonymous]: "匿名",
+	[Key.scanToSponsor]: "スキャンしてスポンサー",
+	[Key.sponsorGoTo]: "スポンサーへ",
+	[Key.sponsorButton]: "サポートと共有",
+	[Key.sponsorButtonText]:
+		"この記事が役に立ったなら、共有またはサポートをお願いします！",
+
+	[Key.shareOnSocial]: "記事を共有",
+	[Key.shareOnSocialDescription]:
+		"この記事が役に立ったなら、ぜひ他の人と共有してください！",
+
+	// サイト統計
+	[Key.siteStats]: "サイト統計",
+	[Key.siteStatsPostCount]: "記事",
 	[Key.siteStatsCategoryCount]: "カテゴリー",
 	[Key.siteStatsTagCount]: "タグ",
-	[Key.siteStatsTotalWords]: "文字数の合計",
-	[Key.siteStatsRunningDays]: "稼働日数",
-	[Key.siteStatsLastUpdate]: "最終更新",
-	[Key.siteStatsDaysAgo]: "{days}日前",
-	[Key.siteStatsDays]: "{days}日",
+	[Key.siteStatsTotalWords]: "総文字数",
+	[Key.siteStatsRunningDays]: "運用日数",
+	[Key.siteStatsLastUpdate]: "最終活動",
+	[Key.siteStatsDaysAgo]: "{days} 日前",
+	[Key.siteStatsDays]: "{days} 日",
+	[Key.today]: "今日",
 
 	// カレンダーコンポーネント
 	[Key.calendarSunday]: "日",
@@ -339,34 +286,43 @@ export const ja: Translation = {
 	[Key.calendarNovember]: "11月",
 	[Key.calendarDecember]: "12月",
 
-	// 共有機能
 	[Key.shareArticle]: "共有",
-	[Key.generatingPoster]: "ポスターを生成中...",
+	[Key.generatingPoster]: "ポスター生成中...",
 	[Key.copied]: "コピーしました",
 	[Key.copyLink]: "リンクをコピー",
 	[Key.savePoster]: "ポスターを保存",
-	[Key.scanToRead]: "スキャンで読み込む",
-	[Key.shareOnSocial]: "共有",
-	[Key.shareOnSocialDescription]:
-		"この記事が役に立ったときは、ぜひ他の人に共有してください!",
+	[Key.scanToRead]: "QRコードで読む",
 
-	// プロフィールの統計
-	[Key.profileStatsLoading]: "統計を読み込み中...",
-	[Key.profileStatsPageViews]: "ページの閲覧",
-	[Key.profileStatsVisits]: "訪問",
-	[Key.profileStatsUnavailable]: "統計は利用できません",
+	// コードブロック折りたたみ設定
+	[Key.codeCollapsibleShowMore]: "展開する",
+	[Key.codeCollapsibleShowLess]: "折りたたむ",
+	[Key.codeCollapsibleExpanded]: "コードブロックが展開されました",
+	[Key.codeCollapsibleCollapsed]: "コードブロックが折りたたまれました",
 
-	// ページビューの統計
-	[Key.pageViewsLoading]: "統計を読み込み中...",
-	[Key.pageViewsUnavailable]: "統計は利用できません",
+	// ギャラリーページ
+	[Key.gallery]: "ギャラリー",
+	[Key.galleryDescription]: "人生の美しい瞬間を記録する",
+	[Key.galleryPhotos]: "枚の写真",
+	[Key.galleryAlbums]: "冊のアルバム",
+	[Key.galleryNoAlbums]: "アルバムがありません",
+	[Key.galleryBackToAlbums]: "アルバム一覧に戻る",
 
-	// レイアウト切り替えボタン
-	[Key.switchToGridMode]: "グリッド表示に切り替え",
-	[Key.switchToListMode]: "リスト表示に切り替え",
+	// パスワード保護
+	[Key.passwordProtected]: "パスワード保護",
+	[Key.passwordProtectedDesc]:
+		"この記事はパスワードで保護されています。内容を表示するにはパスワードを入力してください。",
+	[Key.passwordHint]: "ヒント",
+	[Key.passwordPlaceholder]: "パスワードを入力",
+	[Key.passwordSubmit]: "ロック解除",
+	[Key.passwordError]: "パスワードが間違っています。もう一度お試しください。",
+	[Key.passwordProtectedRss]:
+		"この記事は暗号化されています。ウェブサイトにアクセスしてご覧ください。",
 
-	// 関連記事とランダム記事
-	[Key.relatedPosts]: "関連記事",
-	[Key.randomPosts]: "ランダム記事",
-	[Key.smartRecommend]: "スマート",
-	[Key.randomRecommend]: "ランダム",
+	// Commits 更新履歴
+	[Key.commits]: "更新履歴",
+	[Key.commitsDescription]: "最新のコミットと更新履歴を表示",
+	[Key.commitsLoading]: "コミットを読み込んでいます...",
+	[Key.commitsFailed]: "コミットの読み込みに失敗しました",
+	[Key.commitsViewOnGitHub]: "GitHub で表示",
+
 };

@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { fetchCommits } from "../../data/commits";
+import { fetchCommits } from "../../../../Mizuki/src/data/commits";
 
 export const GET: APIRoute = async () => {
 	try {

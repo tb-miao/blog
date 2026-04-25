@@ -52,7 +52,6 @@ class Sakura {
 		cxt.translate(this.x, this.y);
 		cxt.rotate(this.r);
 		cxt.globalAlpha = this.a;
-		// 使用 transform 替代直接 drawImage 以支持 GPU 加速
 		cxt.drawImage(this.img, 0, 0, 40 * this.s, 40 * this.s);
 		cxt.restore();
 	}
@@ -86,7 +85,7 @@ class Sakura {
 	}
 
 	private resetPosition() {
-		this.r = getRandom("fnr", this.config);
+		this.fn.r = getRandom("fnr", this.config);
 		if (Math.random() > 0.4) {
 			this.x = getRandom("x", this.config);
 			this.y = 0;
@@ -137,8 +136,19 @@ class SakuraList {
 }
 
 // 获取随机值的函数
-function getRandom(option: string, config: SakuraConfig): any {
-	let ret: any;
+function getRandom(
+	option: "x" | "y" | "s" | "r" | "a",
+	config: SakuraConfig,
+): number;
+function getRandom(
+	option: "fnx" | "fny" | "fnr" | "fna",
+	config: SakuraConfig,
+): (...args: number[]) => number;
+function getRandom(
+	option: string,
+	config: SakuraConfig,
+): number | ((...args: number[]) => number) {
+	let ret: number | ((...args: number[]) => number) = 0;
 	let random: number;
 
 	switch (option) {
@@ -150,8 +160,7 @@ function getRandom(option: string, config: SakuraConfig): any {
 			break;
 		case "s":
 			ret =
-				config.size.min +
-				Math.random() * (config.size.max - config.size.min);
+				config.size.min + Math.random() * (config.size.max - config.size.min);
 			break;
 		case "r":
 			ret = Math.random() * 6;
@@ -171,8 +180,7 @@ function getRandom(option: string, config: SakuraConfig): any {
 		case "fny":
 			random =
 				config.speed.vertical.min +
-				Math.random() *
-					(config.speed.vertical.max - config.speed.vertical.min);
+				Math.random() * (config.speed.vertical.max - config.speed.vertical.min);
 			ret = (_x: number, y: number) => y + random;
 			break;
 		case "fnr":
@@ -194,12 +202,9 @@ export class SakuraManager {
 	private animationId: number | null = null;
 	private img: HTMLImageElement | null = null;
 	private isRunning = false;
-	private resizeTimeout: number | null = null;
-	private boundResizeHandler: () => void;
 
 	constructor(config: SakuraConfig) {
 		this.config = config;
-		this.boundResizeHandler = this.handleResize.bind(this);
 	}
 
 	// 初始化樱花特效
@@ -210,7 +215,7 @@ export class SakuraManager {
 
 		// 创建图片对象
 		this.img = new Image();
-		this.img.src = "/sakura.webp"; // 使用樱花图片
+		this.img.src = "/sakura.png"; // 使用樱花图片
 
 		// 等待图片加载完成
 		await new Promise<void>((resolve, reject) => {
@@ -234,23 +239,19 @@ export class SakuraManager {
 		this.canvas.width = window.innerWidth;
 		this.canvas.setAttribute(
 			"style",
-			`position: fixed; left: 0; top: 0; pointer-events: none; z-index: ${this.config.zIndex}; transform: translateZ(0); will-change: transform;`,
+			`position: fixed; left: 0; top: 0; pointer-events: none; z-index: ${this.config.zIndex};`,
 		);
 		this.canvas.setAttribute("id", "canvas_sakura");
 		document.body.appendChild(this.canvas);
 		this.ctx = this.canvas.getContext("2d");
 
-		// 使用被动事件监听器提升滚动性能
-		window.addEventListener("resize", this.boundResizeHandler, {
-			passive: true,
-		});
+		// 监听窗口大小变化
+		window.addEventListener("resize", this.handleResize.bind(this));
 	}
 
 	// 创建樱花列表
 	private createSakuraList(): void {
-		if (!this.img || !this.ctx) {
-			return;
-		}
+		if (!this.img || !this.ctx) return;
 
 		this.sakuraList = new SakuraList();
 		const limitArray = new Array(this.config.sakuraNum).fill(
@@ -293,14 +294,10 @@ export class SakuraManager {
 
 	// 开始动画
 	private startAnimation(): void {
-		if (!this.ctx || !this.canvas || !this.sakuraList) {
-			return;
-		}
+		if (!this.ctx || !this.canvas || !this.sakuraList) return;
 
 		const animate = () => {
-			if (!this.ctx || !this.canvas || !this.sakuraList) {
-				return;
-			}
+			if (!this.ctx || !this.canvas || !this.sakuraList) return;
 
 			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 			this.sakuraList.update();
@@ -311,17 +308,12 @@ export class SakuraManager {
 		this.animationId = requestAnimationFrame(animate);
 	}
 
-	// 处理窗口大小变化 - 带防抖
+	// 处理窗口大小变化
 	private handleResize(): void {
-		if (this.resizeTimeout) {
-			cancelAnimationFrame(this.resizeTimeout);
+		if (this.canvas) {
+			this.canvas.width = window.innerWidth;
+			this.canvas.height = window.innerHeight;
 		}
-		this.resizeTimeout = requestAnimationFrame(() => {
-			if (this.canvas) {
-				this.canvas.width = window.innerWidth;
-				this.canvas.height = window.innerHeight;
-			}
-		});
 	}
 
 	// 停止樱花特效
@@ -331,17 +323,12 @@ export class SakuraManager {
 			this.animationId = null;
 		}
 
-		if (this.resizeTimeout) {
-			cancelAnimationFrame(this.resizeTimeout);
-			this.resizeTimeout = null;
-		}
-
 		if (this.canvas) {
 			document.body.removeChild(this.canvas);
 			this.canvas = null;
 		}
 
-		window.removeEventListener("resize", this.boundResizeHandler);
+		window.removeEventListener("resize", this.handleResize.bind(this));
 		this.isRunning = false;
 	}
 

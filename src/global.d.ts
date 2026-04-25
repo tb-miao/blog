@@ -1,100 +1,75 @@
-export {};
-
 declare global {
 	interface HTMLElementTagNameMap {
 		"table-of-contents": HTMLElement & {
 			init?: () => void;
-			regenerateTOC?: () => void;
-		};
-	}
-
-	/**
-	 * Swup hooks interface for type-safe swup access
-	 */
-	interface Swup {
-		hooks: {
-			on: (event: string, handler: (...args: unknown[]) => void) => void;
-			off: (event: string, handler: (...args: unknown[]) => void) => void;
-		};
-		navigate?: (url: string, options?: { history?: boolean }) => void;
-		preload?: (url: string) => Promise<void>;
-	}
-
-	/**
-	 * Site config TOC section interface
-	 */
-	interface SiteConfigTOC {
-		enable?: boolean;
-		mode?: "float" | "sidebar";
-		depth?: number;
-		useJapaneseBadge?: boolean;
-	}
-
-	/**
-	 * Site config interface for type-safe global siteConfig access
-	 */
-	interface SiteConfigWindow {
-		lang?: string;
-		toc?: SiteConfigTOC;
-		wallpaperMode?: {
-			defaultMode?: "banner" | "fullscreen" | "none";
 		};
 	}
 
 	interface Window {
-		swup: Swup | undefined;
-		closeAnnouncement: () => void;
+		// biome-ignore lint/suspicious/noExplicitAny: External library
+		swup: any;
+		live2dModelInitialized?: boolean;
+		spineModelInitialized?: boolean;
+		floatingTOCListenersInitialized?: boolean;
+		// biome-ignore lint/suspicious/noExplicitAny: External library
+		spinePlayerInstance?: any;
 		pagefind: {
 			search: (query: string) => Promise<{
-				results: {
+				results: Array<{
 					data: () => Promise<SearchResult>;
-				}[];
+				}>;
 			}>;
 		};
-
-		loadPagefind?: () => Promise<void>;
-		toggleFloatingTOC?: () => void;
-		mobileTOCInit?: () => void;
-		initSemifullScrollDetection?: () => void;
-		iconifyLoaded?: boolean;
-
-		// CardTOC manager
-		CardTOC?: {
-			manager: {
-				init?: () => void;
-				cleanup?: () => void;
-			} | null;
+		__fireflyMusic?: {
+			init: () => Promise<void>;
+			getState: () => {
+				playlist: Array<{
+					name: string;
+					artist: string;
+					url: string;
+					pic: string;
+					lrc?: string;
+				}>;
+				currentIndex: number;
+				track: {
+					name: string;
+					artist: string;
+					url: string;
+					pic: string;
+					lrc?: string;
+				} | null;
+				isPlaying: boolean;
+				playMode: number;
+				volume: number;
+				isMuted: boolean;
+				currentTime: number;
+				duration: number;
+				progress: number;
+				currentTimeStr: string;
+				durationStr: string;
+				lyrics: Array<{ time: number; text: string }>;
+				currentLrcIndex: number;
+				initialized: boolean;
+				error: string | null;
+				config: Record<string, unknown>;
+			};
+			togglePlay: () => void;
+			playNext: () => void;
+			playPrev: () => void;
+			cyclePlayMode: () => void;
+			setVolume: (val: number) => void;
+			toggleMute: () => void;
+			seek: (percent: number) => void;
+			seekToTime: (time: number) => void;
+			playTrackByIndex: (index: number) => void;
+			loadTrack: (index: number, autoPlay: boolean) => void;
 		};
-
-		// TOC internal navigation flag
-		tocInternalNavigation?: boolean;
-		__iconifyLoader?: {
-			load: () => Promise<void>;
-			addToPreloadQueue: (icons: string[]) => void;
-			onLoad: (callback: () => void) => void;
-			isLoaded: boolean;
-		};
-		siteConfig: SiteConfigWindow;
-		hljs?: {
-			highlightElement: (block: HTMLElement) => void;
-		};
-		renderMermaidDiagrams?: () => void;
-
-		// Sidebar manager window properties
-		__mizukiSidebarResizeHandler?: () => void;
-		__mizukiSidebarSwupHooked?: boolean;
-		__mizukiSidebarManagerInitialized?: boolean;
-		__mizukiRightSidebarResizeHandler?: () => void;
-		__mizukiRightSidebarSwupHooked?: boolean;
-		__mizukiRightSidebarManagerInitialized?: boolean;
 	}
 
-	interface Fancybox {
-		unbind: (selector: string) => void;
-		bind: (selector: string, options: object) => void;
+	interface MediaQueryList {
+		addListener(listener: (e: MediaQueryListEvent) => void): void;
+		removeListener(listener: (e: MediaQueryListEvent) => void): void;
 	}
-
-	var Fancybox: Fancybox | undefined;
 }
 
 interface SearchResult {
@@ -106,21 +81,21 @@ interface SearchResult {
 	content?: string;
 	word_count?: number;
 	filters?: Record<string, unknown>;
-	anchors?: {
+	anchors?: Array<{
 		element: string;
 		id: string;
 		text: string;
 		location: number;
-	}[];
-	weighted_locations?: {
+	}>;
+	weighted_locations?: Array<{
 		weight: number;
 		balanced_score: number;
 		location: number;
-	}[];
+	}>;
 	locations?: number[];
 	raw_content?: string;
 	raw_url?: string;
 	sub_results?: SearchResult[];
 }
 
-export { SearchResult };
+export type { SearchResult };

@@ -2,7 +2,7 @@
 title: 临时笔记
 published: 2026-03-10
 description: '临时笔记'
-image: ''
+image: 'api'
 tags: [笔记]
 category: '笔记'
 draft: false 

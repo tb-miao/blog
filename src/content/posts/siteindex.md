@@ -2,7 +2,7 @@
 title: 入站指引
 published: 2026-01-14
 description: "入站指引，防止迷路？"
-image: "https://t.alcy.cc/pc"
+image: "api"
 tags: ["入站指引"]
 category: 入站指引
 draft: false

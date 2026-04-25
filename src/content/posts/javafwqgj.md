@@ -3,7 +3,7 @@ title: 开我的世界java服务器工具
 published: 2025-02-08
 pinned: false
 description: "简单易用的Minecraft服务器安装器/启动器"
-image: ""
+image: "api"
 tags: ["工具"]
 category: 笔记
 draft: false

@@ -1,6 +1,5 @@
 ---
 import { Icon } from "astro-icon/components";
-import Image from "@components/atoms/Image";
 import type { CommitCardProps } from "./types";
 import MarkdownIt from "markdown-it";
 
@@ -72,15 +71,15 @@ const connectorStyle = getConnectorStyle();
 >
 	<div class="p-5">
 		<div class="flex items-start gap-4">
-			{/* Git 树状时间线 */}
+			<!-- Git 树状时间线 -->
 			<div class="git-tree-line flex-shrink-0 flex flex-col items-center w-8" data-connector={connectorStyle} data-level={branchLevel}>
-				{/* 上方连接线 - 只在非第一个节点显示 */}
+				<!-- 上方连接线 - 只在非第一个节点显示 -->
 				{!isFirst && (
 					<div class="tree-line-vertical w-0.5 h-6 bg-gradient-to-b from-[var(--primary)]/50 to-[var(--primary)]/30"></div>
 				)}
 				{isFirst && <div class="h-6"></div>}
 				
-				{/* 节点圆点 */}
+				<!-- 节点圆点 -->
 				<div class={`
 					tree-node group relative flex items-center justify-center w-5 h-5 rounded-full 
 					transition-all duration-300 cursor-pointer z-10
@@ -94,19 +93,19 @@ const connectorStyle = getConnectorStyle();
 						${isLatest ? 'bg-white' : 'bg-[var(--primary)]'}
 					`}></div>
 					
-					{/* Tooltip 显示 commit hash */}
+					<!-- Tooltip 显示 commit hash -->
 					<div class="tooltip absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-20 pointer-events-none">
 						{item.hash.slice(0, 7)}
 					</div>
 				</div>
 				
-				{/* 下方连接线 - 只在非最后一个节点显示 */}
+				<!-- 下方连接线 - 只在非最后一个节点显示 -->
 				{!isLast && (
 					<div class="tree-line-vertical flex-1 min-h-[40px] w-0.5 bg-gradient-to-b from-[var(--primary)]/30 to-[var(--primary)]/50"></div>
 				)}
 				{isLast && <div class="h-4"></div>}
 				
-				{/* 分支线 - 如果有子提交 */}
+				<!-- 分支线 - 如果有子提交 -->
 				{hasChild && !isLast && (
 					<div class="branch-connector absolute left-4 top-1/2 w-4 h-0.5 bg-[var(--primary)]/40"></div>
 				)}
@@ -115,7 +114,7 @@ const connectorStyle = getConnectorStyle();
 			<div class="flex-shrink-0">
 				<div class="w-12 h-12 rounded-xl overflow-hidden ring-2 ring-transparent group-hover:ring-[var(--primary)]/30 transition-all duration-300">
 					{item.avatar ? (
-						<Image
+						<img
 							src={item.avatar}
 							alt={item.author}
 							class="w-full h-full object-cover"

@@ -12,10 +12,8 @@ export async function GET() {
 			category: post.data.category || "",
 			password: !!post.data.password,
 		}))
-		// 按发布日期降序排列
+		// 日历按纯日期排序，忽略置顶
 		.sort((a, b) => b.published - a.published);
 
-	return new Response(JSON.stringify(allPostsData), {
-		headers: { "Content-Type": "application/json" },
-	});
+	return new Response(JSON.stringify(allPostsData));
 }

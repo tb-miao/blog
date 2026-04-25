@@ -1,7 +1,7 @@
 export interface CommitItem {
 	id: string;
 	hash: string;
-	parentHashes?: string[];
+	parentHashes: string[];
 	message: string;
 	author: string;
 	date: string;
@@ -10,7 +10,7 @@ export interface CommitItem {
 		additions: number;
 		deletions: number;
 	};
-	files: string[];
+	files?: string[];
 	branch?: string;
 	tags?: string[];
 }

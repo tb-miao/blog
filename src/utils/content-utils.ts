@@ -1,8 +1,7 @@
+import { type CollectionEntry, getCollection } from "astro:content";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
-import { initPostIdMap } from "@utils/permalink-utils";
-import { getCategoryUrl, getPostUrl } from "@utils/url-utils";
-import { type CollectionEntry, getCollection } from "astro:content";
+import { getCategoryUrl } from "@utils/url-utils";
 
 // // Retrieve posts and sort them by publication date
 async function getRawSortedPosts() {
@@ -12,29 +11,10 @@ async function getRawSortedPosts() {
 
 	const sorted = allBlogPosts.sort((a, b) => {
 		// 首先按置顶状态排序，置顶文章在前
-		if (a.data.pinned && !b.data.pinned) {
-			return -1;
-		}
-		if (!a.data.pinned && b.data.pinned) {
-			return 1;
-		}
+		if (a.data.pinned && !b.data.pinned) return -1;
+		if (!a.data.pinned && b.data.pinned) return 1;
 
-		// 如果置顶状态相同，优先按 Priority 排序（数值越小越靠前）
-		if (a.data.pinned && b.data.pinned) {
-			const priorityA = a.data.priority;
-			const priorityB = b.data.priority;
-			if (priorityA !== undefined && priorityB !== undefined) {
-				if (priorityA !== priorityB) {
-					return priorityA - priorityB;
-				}
-			} else if (priorityA !== undefined) {
-				return -1;
-			} else if (priorityB !== undefined) {
-				return 1;
-			}
-		}
-
-		// 否则按发布日期排序
+		// 如果置顶状态相同，则按发布日期排序
 		const dateA = new Date(a.data.published);
 		const dateB = new Date(b.data.published);
 		return dateA > dateB ? -1 : 1;
@@ -56,42 +36,35 @@ export async function getSortedPosts() {
 
 	return sorted;
 }
-export interface PostForList {
+export type PostForList = {
 	id: string;
 	data: CollectionEntry<"posts">["data"];
-	url?: string; // 预计算的文章 URL
-}
+};
 export async function getSortedPostsList(): Promise<PostForList[]> {
 	const sortedFullPosts = await getRawSortedPosts();
 
-	// 初始化文章 ID 映射（用于 permalink 功能）
-	initPostIdMap(sortedFullPosts);
-
-	// delete post.body，并预计算 URL
+	// delete post.body
 	const sortedPostsList = sortedFullPosts.map((post) => ({
 		id: post.id,
 		data: post.data,
-		url: getPostUrl(post),
 	}));
 
 	return sortedPostsList;
 }
-export interface Tag {
+export type Tag = {
 	name: string;
 	count: number;
-}
+};
 
 export async function getTagList(): Promise<Tag[]> {
 	const allBlogPosts = await getCollection<"posts">("posts", ({ data }) => {
 		return import.meta.env.PROD ? data.draft !== true : true;
 	});
 
-	const countMap: Record<string, number> = {};
+	const countMap: { [key: string]: number } = {};
 	allBlogPosts.forEach((post: { data: { tags: string[] } }) => {
 		post.data.tags.forEach((tag: string) => {
-			if (!countMap[tag]) {
-				countMap[tag] = 0;
-			}
+			if (!countMap[tag]) countMap[tag] = 0;
 			countMap[tag]++;
 		});
 	});
@@ -104,17 +77,17 @@ export async function getTagList(): Promise<Tag[]> {
 	return keys.map((key) => ({ name: key, count: countMap[key] }));
 }
 
-export interface Category {
+export type Category = {
 	name: string;
 	count: number;
 	url: string;
-}
+};
 
 export async function getCategoryList(): Promise<Category[]> {
 	const allBlogPosts = await getCollection<"posts">("posts", ({ data }) => {
 		return import.meta.env.PROD ? data.draft !== true : true;
 	});
-	const count: Record<string, number> = {};
+	const count: { [key: string]: number } = {};
 	allBlogPosts.forEach((post: { data: { category: string | null } }) => {
 		if (!post.data.category) {
 			const ucKey = i18n(I18nKey.uncategorized);
@@ -131,7 +104,9 @@ export async function getCategoryList(): Promise<Category[]> {
 	});
 
 	const lst = Object.keys(count).sort((a, b) => {
-		return a.toLowerCase().localeCompare(b.toLowerCase());
+		return (
+			count[b] - count[a] || a.toLowerCase().localeCompare(b.toLowerCase())
+		);
 	});
 
 	const ret: Category[] = [];
@@ -147,43 +122,15 @@ export async function getCategoryList(): Promise<Category[]> {
 
 /**
  * 对标题进行分词，支持中英文混合
- *
- * - 优先使用 Intl.Segmenter（在支持的运行时中效果更好）
- * - 在不支持 Segmenter 的环境（如部分 Node 运行时）下
- *   回退到基于正则的简单分词，以避免构建报错
- * - 过滤标点和空白，英文统一小写
+ * 使用 Intl.Segmenter 对中文分词，英文按空格分词
+ * 过滤标点和空白，英文统一小写
  */
 function tokenizeTitle(title: string): Set<string> {
 	const tokens = new Set<string>();
-
-	// 运行时可能不支持 Intl.Segmenter（例如部分 Node 环境）
-	// 为了避免 SSR/构建时报错，这里做兼容处理
-	const hasSegmenter =
-		typeof Intl !== "undefined" &&
-		"Segmenter" in Intl &&
-		typeof (Intl as any).Segmenter === "function";
-
-	if (!hasSegmenter) {
-		// 简单回退方案：按照空白和标点拆分
-		const basicTokens = title
-			.toLowerCase()
-			.split(/[\s\p{P}]+/gu)
-			.filter(Boolean);
-		for (const t of basicTokens) {
-			tokens.add(t);
-		}
-		return tokens;
-	}
-
-	// 使用 Intl.Segmenter 进行更精细的中英文混合分词
-	const segmenter = new (Intl as any).Segmenter("zh", {
-		granularity: "word",
-	});
+	const segmenter = new Intl.Segmenter("zh", { granularity: "word" });
 	for (const { segment, isWordLike } of segmenter.segment(title)) {
-		if (!isWordLike) {
-			continue;
-		}
-		tokens.add((segment as string).toLowerCase());
+		if (!isWordLike) continue;
+		tokens.add(segment.toLowerCase());
 	}
 	return tokens;
 }
@@ -192,14 +139,10 @@ function tokenizeTitle(title: string): Set<string> {
  * 计算两个集合的 Jaccard 相似度
  */
 function jaccardSimilarity(a: Set<string>, b: Set<string>): number {
-	if (a.size === 0 && b.size === 0) {
-		return 0;
-	}
+	if (a.size === 0 && b.size === 0) return 0;
 	let intersection = 0;
 	for (const item of a) {
-		if (b.has(item)) {
-			intersection++;
-		}
+		if (b.has(item)) intersection++;
 	}
 	const union = a.size + b.size - intersection;
 	return union === 0 ? 0 : intersection / union;
@@ -244,8 +187,7 @@ export async function getRelatedPosts(
 
 		// timeFreshnessScore (0-30): 6 个月半衰期
 		const daysSincePublished =
-			(now - new Date(post.data.published).getTime()) /
-			(1000 * 60 * 60 * 24);
+			(now - new Date(post.data.published).getTime()) / (1000 * 60 * 60 * 24);
 		const timeFreshnessScore =
 			30 * Math.exp((-Math.LN2 * daysSincePublished) / 180);
 
@@ -257,10 +199,7 @@ export async function getRelatedPosts(
 				: 0;
 
 		const totalScore =
-			tagMatchScore +
-			titleSimilarityScore +
-			timeFreshnessScore +
-			categoryBonus;
+			tagMatchScore + titleSimilarityScore + timeFreshnessScore + categoryBonus;
 
 		return {
 			post,
@@ -281,9 +220,7 @@ export async function getRelatedPosts(
 	const result: PostForList[] = [];
 
 	for (const s of withTagMatch) {
-		if (result.length >= maxCount) {
-			break;
-		}
+		if (result.length >= maxCount) break;
 		result.push({ id: s.post.id, data: s.post.data });
 	}
 
@@ -296,9 +233,7 @@ export async function getRelatedPosts(
 				(a.timeFreshnessScore + a.categoryBonus),
 		);
 		for (const s of withoutTagMatch) {
-			if (result.length >= maxCount) {
-				break;
-			}
+			if (result.length >= maxCount) break;
 			result.push({ id: s.post.id, data: s.post.data });
 		}
 	}

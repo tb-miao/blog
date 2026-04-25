@@ -3,7 +3,7 @@ title: IDM激活脚本
 published: 2024-09-17
 pinned: false
 description: "IDM激活脚本"
-image: ""
+image: "api"
 tags: ["工具"]
 category: 笔记
 draft: false

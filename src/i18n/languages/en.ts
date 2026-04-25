@@ -6,35 +6,57 @@ export const en: Translation = {
 	[Key.about]: "About",
 	[Key.archive]: "Archive",
 	[Key.search]: "Search",
+	[Key.searchNoResults]: "No results found.",
+	[Key.searchTypeSomething]: "Type something to search...",
+	[Key.searchLoading]: "Searching...",
+	[Key.searchSummary]: "Summary",
+	[Key.searchContent]: "Content",
+	[Key.searchViewMore]: "View more results ({count} more)",
 	[Key.other]: "Other",
-
-	// Navigation bar titles
-	[Key.navLinks]: "Links",
-	[Key.navMy]: "My",
-	[Key.navAbout]: "About",
-	[Key.navOthers]: "Others",
+	[Key.all]: "All",
 
 	[Key.tags]: "Tags",
 	[Key.categories]: "Categories",
 	[Key.recentPosts]: "Recent Posts",
 	[Key.postList]: "Post List",
 	[Key.tableOfContents]: "Table of Contents",
-	[Key.tocEmpty]: "No table of contents",
+	[Key.tocEmpty]: "No table of contents on this page",
+	[Key.music]: "Music",
+	[Key.musicNoPlaying]: "No playing",
+	[Key.musicLyrics]: "Lyrics",
+	[Key.musicVolume]: "Volume",
+	[Key.musicPlayMode]: "Switch Play Mode",
+	[Key.musicPrev]: "Previous",
+	[Key.musicNext]: "Next",
+	[Key.musicPlaylist]: "Playlist",
+	[Key.musicNoLyrics]: "No lyrics available",
+	[Key.musicLoadingLyrics]: "Loading lyrics...",
+	[Key.musicFailedLyrics]: "Failed to load lyrics",
+	[Key.musicNoSongs]: "No songs",
+	[Key.musicError]: "Player Error",
+	[Key.musicPlay]: "Play",
+	[Key.musicPause]: "Pause",
+	[Key.musicProgress]: "Playback Progress",
+	[Key.musicCover]: "Cover",
+	[Key.musicNoCover]: "No cover available",
+	[Key.musicAudioPlayer]: "Audio Player",
 
 	// Announcement
 	[Key.announcement]: "Announcement",
 	[Key.announcementClose]: "Close",
 
 	[Key.comments]: "Comments",
+	[Key.commentSection]: "Comments",
+	[Key.commentSubtitle]: "Share your thoughts and discuss with everyone",
+	[Key.commentNotConfigured]: "Comment system not configured",
+	[Key.guestbookCommentHint]:
+		"You have not enabled the comment system in the configuration file yet. After enabling it, visitors will be able to leave messages here",
 	[Key.friends]: "Friends",
-	[Key.friendsSubtitle]: "Discover more great websites",
-	[Key.friendsSearchPlaceholder]: "Search friend's name or description...",
-	[Key.friendsFilterAll]: "All",
-	[Key.friendsNoResults]: "No matching friends found",
-	[Key.friendsVisit]: "Visit",
-	[Key.friendsCopyLink]: "Copy Link",
-	[Key.friendsCopySuccess]: "Copied",
-	[Key.friendsTags]: "Tags",
+	[Key.friendsDescription]:
+		"Here are my friends, welcome to visit and communicate with each other",
+	[Key.guestbook]: "Guestbook",
+	[Key.guestbookDescription]:
+		"Welcome to leave your mark here, share your thoughts and suggestions",
 	[Key.untitled]: "Untitled",
 	[Key.uncategorized]: "Uncategorized",
 	[Key.noTags]: "No Tags",
@@ -53,45 +75,84 @@ export const en: Translation = {
 	[Key.systemMode]: "System",
 
 	[Key.more]: "More",
+	[Key.collapse]: "Collapse",
 
 	[Key.author]: "Author",
 	[Key.publishedAt]: "Published at",
+	[Key.updatedAt]: "Updated at",
+	[Key.readTime]: "Read time",
 	[Key.license]: "License",
-	[Key.anime]: "Anime",
-	[Key.diary]: "Diary",
+	[Key.bangumi]: "Bangumi",
 
-	// Anime Page
-	[Key.animeTitle]: "My Anime List",
-	[Key.animeSubtitle]: "Record my anime journey",
-	[Key.animeStatusWatching]: "Watching",
-	[Key.animeStatusCompleted]: "Completed",
-	[Key.animeStatusPlanned]: "Planned",
-	[Key.animeStatusOnHold]: "On Hold",
-	[Key.animeStatusDropped]: "Dropped",
-	[Key.animeFilterAll]: "All",
-	[Key.animeYear]: "Year",
-	[Key.animeStudio]: "Studio",
-	[Key.animeEmpty]: "No anime data available",
-	[Key.animeEmptyBangumi]:
-		"Please check Bangumi configuration or network connection",
-	[Key.animeEmptyBilibili]:
-		"Please check Bilibili configuration or network connection",
-	[Key.animeEmptyLocal]:
-		"Please add anime information in src/data/anime.ts file",
-	[Key.animeConfigBilibili]:
-		"Please set your Bilibili vmid in the src/config.ts file",
-	[Key.animeConfigBangumi]:
-		"Please set your Bangumi userId in the src/config.ts file",
+	// Bangumi Filter and Status Text
+	[Key.bangumiTitle]: "My Bangumi",
+	[Key.bangumiSubtitle]: "Record my ACG journey",
+	[Key.bangumiFilterAll]: "All",
+	[Key.bangumiFilterWatched]: "Watched",
+	[Key.bangumiFilterWatching]: "Watching",
+	[Key.bangumiFilterWish]: "Wish",
+	[Key.bangumiFilterOnHold]: "On Hold",
+	[Key.bangumiFilterDropped]: "Dropped",
+	[Key.bangumiFilterGamePlayed]: "Played",
+	[Key.bangumiFilterGamePlaying]: "Playing",
+	[Key.bangumiFilterGameWish]: "Wish to Play",
+	[Key.bangumiFilterBookRead]: "Read",
+	[Key.bangumiFilterBookReading]: "Reading",
+	[Key.bangumiFilterBookWish]: "Wish to Read",
+	[Key.bangumiFilterMusicListened]: "Listened",
+	[Key.bangumiFilterMusicListening]: "Listening",
+	[Key.bangumiFilterMusicWish]: "Wish to Listen",
+	[Key.bangumiStatusWish]: "Wish",
+	[Key.bangumiStatusWatched]: "Watched",
+	[Key.bangumiStatusWatching]: "Watching",
+	[Key.bangumiStatusOnHold]: "On Hold",
+	[Key.bangumiStatusDropped]: "Dropped",
+	[Key.bangumiStatusGameWish]: "Wish to Play",
+	[Key.bangumiStatusGamePlayed]: "Played",
+	[Key.bangumiStatusGamePlaying]: "Playing",
+	[Key.bangumiStatusBookWish]: "Wish to Read",
+	[Key.bangumiStatusBookRead]: "Read",
+	[Key.bangumiStatusBookReading]: "Reading",
+	[Key.bangumiStatusMusicWish]: "Wish to Listen",
+	[Key.bangumiStatusMusicListened]: "Listened",
+	[Key.bangumiStatusMusicListening]: "Listening",
+	[Key.bangumiStatusUnknown]: "Unknown",
+	[Key.bangumiNoData]: "No Data",
+	[Key.bangumiNoDataDescription]: "No items in this category",
+	[Key.bangumiEmpty]: "No Data",
+	[Key.bangumiEmptyReason]:
+		"Possible reasons: username does not exist, network connection issue, or API limit",
+	[Key.bangumiUsername]: "Username",
+	[Key.bangumiApi]: "API",
+	[Key.bangumiConfigTip]:
+		"Tip: Please set the correct Bangumi username in the page configuration",
+	[Key.bangumiPrevPage]: "Previous",
+	[Key.bangumiNextPage]: "Next",
+	[Key.bangumiCurrentPage]: "Page",
+	[Key.bangumiTotalPages]: "of",
+	[Key.bangumiPage]: "page",
 
-	// Diary Page
-	[Key.diarySubtitle]: "Share life, anytime, anywhere",
-	[Key.diaryNoResults]: "No matching moments",
-	[Key.diaryCount]: "entries",
+	// Bangumi Categories
+	[Key.bangumiCategoryBook]: "Book",
+	[Key.bangumiCategoryAnime]: "Anime",
+	[Key.bangumiCategoryMusic]: "Music",
+	[Key.bangumiCategoryGame]: "Game",
+	[Key.bangumiCategoryReal]: "Real",
 
-	[Key.diaryTips]: "Only show the latest 30 diary entries",
-	[Key.diaryMinutesAgo]: "minutes ago",
-	[Key.diaryHoursAgo]: "hours ago",
-	[Key.diaryDaysAgo]: "days ago",
+	// Bangumi Data Update
+	[Key.bangumiLastUpdated]: "Data updated at",
+	[Key.bangumiUpdatedAt]: "Build time",
+	[Key.bangumiDataStatic]: "Static data",
+
+	// Pagination
+	[Key.paginationFirst]: "First",
+	[Key.paginationPrev]: "Previous",
+	[Key.paginationNext]: "Next",
+	[Key.paginationLast]: "Last",
+	[Key.paginationPage]: "Page",
+	[Key.paginationOf]: "of",
+	[Key.paginationTotal]: ", Total",
+	[Key.paginationRecords]: " records",
 
 	// 404 Page
 	[Key.notFound]: "404",
@@ -100,88 +161,20 @@ export const en: Translation = {
 		"Sorry, the page you visited does not exist or has been moved.",
 	[Key.backToHome]: "Back to Home",
 
-	// Music Player
-	[Key.musicPlayer]: "Music Player",
-	[Key.musicPlayerShow]: "Show Music Player",
-	[Key.musicPlayerHide]: "Hide Music Player",
-	[Key.musicPlayerExpand]: "Expand Music Player",
-	[Key.musicPlayerCollapse]: "Collapse Music Player",
-	[Key.musicPlayerPause]: "Pause",
-	[Key.musicPlayerPlay]: "Play",
-	[Key.musicPlayerPrevious]: "Previous",
-	[Key.musicPlayerNext]: "Next",
-	[Key.musicPlayerShuffle]: "Shuffle",
-	[Key.musicPlayerRepeat]: "Repeat All",
-	[Key.musicPlayerRepeatOne]: "Repeat One",
-	[Key.musicPlayerVolume]: "Volume Control",
-	[Key.musicPlayerProgress]: "Playback Progress",
-	[Key.musicPlayerCover]: "Cover",
-	[Key.musicPlayerPlaylist]: "Playlist",
-	[Key.musicPlayerLoading]: "Loading...",
-	[Key.musicPlayerErrorPlaylist]: "Failed to fetch playlist",
-	[Key.musicPlayerErrorSong]: "Failed to load current song, trying next",
-	[Key.musicPlayerErrorEmpty]: "No available songs in playlist",
-	[Key.unknownSong]: "Unknown Song",
-	[Key.unknownArtist]: "Unknown Artist",
-
-	// Albums Page
-	[Key.albums]: "Albums",
-	[Key.albumsSubtitle]: "Record beautiful moments in life",
-	[Key.albumsEmpty]: "No content",
-	[Key.albumsEmptyDesc]:
-		"No albums have been created yet. Go add some beautiful memories!",
-	[Key.albumsBackToList]: "Back to Albums",
-
-	// Devices Page
-	[Key.devices]: "My Devices",
-	[Key.devicesSubtitle]: "Here are the devices I use in my daily life",
-	[Key.devicesViewDetails]: "View Details",
-	[Key.albumsPhotoCount]: "photo",
-	[Key.albumsPhotosCount]: "photos",
-	[Key.albumsFilterAll]: "All",
-	[Key.albumsNoResults]: "No matching albums",
-
-	// Projects Page
-	[Key.projects]: "Projects",
-	[Key.projectsSubtitle]: "My development project portfolio",
-	[Key.projectsAll]: "All",
-	[Key.projectsWeb]: "Web Applications",
-	[Key.projectsMobile]: "Mobile Applications",
-	[Key.projectsDesktop]: "Desktop Applications",
-	[Key.projectsOther]: "Other",
-	[Key.projectTechStack]: "Tech Stack",
-	[Key.projectLiveDemo]: "Live Demo",
-	[Key.projectSourceCode]: "Source Code",
-	[Key.projectDescription]: "Project Description",
-	[Key.projectStatus]: "Status",
-	[Key.projectStatusCompleted]: "Completed",
-	[Key.projectStatusInProgress]: "In Progress",
-	[Key.projectStatusPlanned]: "Planned",
-	[Key.projectsTotal]: "Total Projects",
-	[Key.projectsCompleted]: "Completed",
-	[Key.projectsInProgress]: "In Progress",
-	[Key.projectsTechStack]: "Tech Stack Statistics",
-	[Key.projectsFeatured]: "Featured Projects",
-	[Key.projectsPlanned]: "Planned",
-	[Key.projectsDemo]: "Live Demo",
-	[Key.projectsSource]: "Source Code",
-	[Key.projectsVisit]: "Visit Project",
-	[Key.projectsGitHub]: "GitHub",
-
 	// RSS Page
 	[Key.rss]: "RSS Feed",
 	[Key.rssDescription]: "Subscribe to get latest updates",
 	[Key.rssSubtitle]:
-		"Subscribe via RSS to get the latest articles and updates immediately",
+		"Subscribe via RSS to get the latest articles and updates imediately",
 	[Key.rssLink]: "RSS Link",
 	[Key.rssCopyToReader]: "Copy link to your RSS reader",
-	[Key.rssCopyLink]: "Copy",
+	[Key.rssCopyLink]: "Copy Link",
 	[Key.rssLatestPosts]: "Latest Posts",
 	[Key.rssWhatIsRSS]: "What is RSS?",
 	[Key.rssWhatIsRSSDescription]:
 		"RSS (Really Simple Syndication) is a standard format for publishing frequently updated content. With RSS, you can:",
 	[Key.rssBenefit1]:
-		"Get latest website content in time without manually visiting",
+		"Get the latest website content in time without manually visiting",
 	[Key.rssBenefit2]: "Manage subscriptions to multiple websites in one place",
 	[Key.rssBenefit3]: "Avoid missing important updates and articles",
 	[Key.rssBenefit4]: "Enjoy an ad-free, clean reading experience",
@@ -190,122 +183,78 @@ export const en: Translation = {
 	[Key.rssCopied]: "RSS link copied to clipboard!",
 	[Key.rssCopyFailed]: "Copy failed, please copy the link manually",
 
-	// Atom Page
-	[Key.atom]: "Atom Feed",
-	[Key.atomDescription]: "Subscribe to get latest updates",
-	[Key.atomSubtitle]:
-		"Subscribe via Atom to get the latest articles and updates immediately",
-	[Key.atomLink]: "Atom Link",
-	[Key.atomCopyToReader]: "Copy link to your Atom reader",
-	[Key.atomCopyLink]: "Copy",
-	[Key.atomLatestPosts]: "Latest Posts",
-	[Key.atomWhatIsAtom]: "What is Atom?",
-	[Key.atomWhatIsAtomDescription]:
-		"Atom (Atom Syndication Format) is an XML-based standard for describing feeds and their items. With Atom, you can:",
-	[Key.atomBenefit1]:
-		"Get latest website content in time without manually visiting",
-	[Key.atomBenefit2]:
-		"Manage subscriptions to multiple websites in one place",
-	[Key.atomBenefit3]: "Avoid missing important updates and articles",
-	[Key.atomBenefit4]: "Enjoy an ad-free, clean reading experience",
-	[Key.atomHowToUse]:
-		"It is recommended to use Feedly, Inoreader or other Atom readers to subscribe to this site.",
-	[Key.atomCopied]: "Atom link copied to clipboard!",
-	[Key.atomCopyFailed]: "Copy failed, please copy the link manually",
-
-	// Wallpaper mode
-	[Key.wallpaperBanner]: "Banner Mode",
-	[Key.wallpaperFullscreen]: "Fullscreen Mode",
-	[Key.wallpaperNone]: "Hide Wallpaper",
-
-	// Skills Page
-	[Key.skills]: "Skills",
-	[Key.skillsSubtitle]: "My technical skills and expertise",
-	[Key.skillsFrontend]: "Frontend Development",
-	[Key.skillsBackend]: "Backend Development",
-	[Key.skillsDatabase]: "Database",
-	[Key.skillsTools]: "Development Tools",
-	[Key.skillsOther]: "Other Skills",
-	[Key.skillLevel]: "Proficiency",
-	[Key.skillLevelBeginner]: "Beginner",
-	[Key.skillLevelIntermediate]: "Intermediate",
-	[Key.skillLevelAdvanced]: "Advanced",
-	[Key.skillLevelExpert]: "Expert",
-	[Key.skillExperience]: "Experience",
-	[Key.skillYears]: "years",
-	[Key.skillMonths]: "months",
-	[Key.skillsTotal]: "Total Skills",
-	[Key.skillsExpert]: "Expert Level",
-	[Key.skillsAdvanced]: "Advanced",
-	[Key.skillsIntermediate]: "Intermediate",
-	[Key.skillsBeginner]: "Beginner",
-	[Key.skillsAdvancedTitle]: "Professional Skills",
-	[Key.skillsProjects]: "Related Projects",
-	[Key.skillsDistribution]: "Skill Distribution",
-	[Key.skillsByLevel]: "By Level",
-	[Key.skillsByCategory]: "By Category",
-	[Key.noData]: "No data",
-
-	// Timeline Page
-	[Key.timeline]: "Timeline",
-	[Key.timelineSubtitle]: "My growth journey and important milestones",
-	[Key.timelineEducation]: "Education",
-	[Key.timelineWork]: "Work Experience",
-	[Key.timelineProject]: "Project Experience",
-	[Key.timelineAchievement]: "Achievements",
-	[Key.timelinePresent]: "Present",
-	[Key.timelineLocation]: "Location",
-	[Key.timelineDescription]: "Detailed Description",
-	[Key.timelineMonths]: "months",
-	[Key.timelineYears]: "years",
-	[Key.timelineTotal]: "Total",
-	[Key.timelineProjects]: "Projects",
-	[Key.timelineExperience]: "Work Experience",
-	[Key.timelineCurrent]: "Current Status",
-	[Key.timelineHistory]: "History",
-	[Key.timelineAchievements]: "Achievements",
-	[Key.timelineStartDate]: "Start Date",
-	[Key.timelineDuration]: "Duration",
-
-	// 更新记录页面
-	[Key.commits]: "Commits",
-
-
-	// Password Protection
-	[Key.passwordProtected]: "Password Protected",
-	[Key.passwordProtectedTitle]: "This content is password protected",
-	[Key.passwordProtectedDescription]:
-		"Please enter the password to view the protected content",
-	[Key.postEncrypted]: "Encrypted",
-	[Key.passwordPlaceholder]: "Enter password",
-	[Key.passwordUnlock]: "Unlock",
-	[Key.passwordUnlocking]: "Unlocking...",
-	[Key.passwordIncorrect]: "Incorrect password, please try again",
-	[Key.passwordDecryptError]:
-		"Decryption failed, please check if the password is correct",
-	[Key.passwordRequired]: "Please enter the password",
-	[Key.passwordVerifying]: "Verifying...",
-	[Key.passwordDecryptFailed]: "Decryption failed, please check the password",
-	[Key.passwordDecryptRetry]: "Decryption failed, please try again",
-	[Key.passwordUnlockButton]: "Unlock",
-	[Key.copyFailed]: "Copy failed:",
-	[Key.syntaxHighlightFailed]: "Syntax highlighting failed:",
-	[Key.autoSyntaxHighlightFailed]:
-		"Automatic syntax highlighting also failed:",
-	[Key.decryptionError]: "An error occurred during decryption:",
-	[Key.passwordHint]: "Hint",
-
 	// Last Modified Time Card
-	[Key.lastModifiedPrefix]: "Time since last edit: ",
-	[Key.lastModifiedOutdated]: "Some information may be outdated",
-	[Key.year]: "y",
-	[Key.month]: "m",
-	[Key.day]: "d",
-	[Key.hour]: "h",
-	[Key.minute]: "min",
-	[Key.second]: "s",
+	[Key.lastModifiedPrefix]: "Last updated on ",
+	[Key.lastModifiedOutdated]: "Some content may be outdated",
+	[Key.lastModifiedDaysAgo]: "{days} days ago",
+	[Key.year]: "year",
+	[Key.month]: "month",
+	[Key.day]: "day",
+	[Key.hour]: "hour",
+	[Key.minute]: "minute",
+	[Key.second]: "second",
 
-	// Site Stats
+	// Page Views Statistics
+	[Key.pageViews]: "Views",
+	[Key.pageViewsLoading]: "Loading...",
+	[Key.pageViewsError]: "Stats unavailable",
+
+	// Pinned
+	[Key.pinned]: "Pinned",
+
+	// Related Posts
+	[Key.relatedPosts]: "Related Posts",
+	[Key.randomPosts]: "Random Posts",
+	[Key.smartRecommend]: "Smart",
+	[Key.randomRecommend]: "Random",
+
+	// Encrypted
+	[Key.postEncrypted]: "This post is encrypted",
+
+	// Wallpaper Mode
+	[Key.wallpaperMode]: "Wallpaper Mode",
+	[Key.wallpaperBannerMode]: "Banner Wallpaper",
+	[Key.wallpaperOverlayMode]: "Overlay Wallpaper",
+	[Key.wallpaperNoneMode]: "None Wallpaper",
+
+	// Banner Settings
+	[Key.bannerSettings]: "Banner Settings",
+	[Key.bannerTitle]: "Home Banner Title",
+	[Key.bannerCarousel]: "Banner Carousel",
+	[Key.wavesAnimation]: "Waves Animation",
+	[Key.overlaySettings]: "Transparency Settings",
+	[Key.overlayOpacity]: "Wallpaper Opacity",
+	[Key.overlayBlur]: "Background Blur",
+	[Key.overlayCardOpacity]: "Card Opacity",
+
+	// Post List Layout
+	[Key.postListLayout]: "Post List Layout",
+	[Key.postListLayoutList]: "List",
+	[Key.postListLayoutGrid]: "Grid",
+
+	// Sponsor Page
+	[Key.sponsor]: "Sponsor",
+	[Key.sponsorTitle]: "Support Me",
+	[Key.sponsorDescription]:
+		"If my content has been helpful to you, welcome to sponsor me through the following methods. Your support is the driving force for my continued creation!",
+	[Key.sponsorMethods]: "Payment Methods",
+	[Key.sponsorList]: "Sponsors",
+	[Key.sponsorEmpty]: "No sponsors yet",
+	[Key.sponsorAmount]: "Amount",
+	[Key.sponsorDate]: "Date",
+	[Key.sponsorMessage]: "Message",
+	[Key.sponsorAnonymous]: "Anonymous",
+	[Key.scanToSponsor]: "Scan to Sponsor",
+	[Key.sponsorGoTo]: "Go to Sponsor",
+	[Key.sponsorButton]: "Support & Share",
+	[Key.sponsorButtonText]:
+		"If this article helped you, please share or support!",
+
+	[Key.shareOnSocial]: "Share Article",
+	[Key.shareOnSocialDescription]:
+		"If this article helped you, please share it with others!",
+
+	// Site Statistics
 	[Key.siteStats]: "Site Statistics",
 	[Key.siteStatsPostCount]: "Posts",
 	[Key.siteStatsCategoryCount]: "Categories",
@@ -315,6 +264,7 @@ export const en: Translation = {
 	[Key.siteStatsLastUpdate]: "Last Activity",
 	[Key.siteStatsDaysAgo]: "{days} days ago",
 	[Key.siteStatsDays]: "{days} days",
+	[Key.today]: "Today",
 
 	// Calendar Component
 	[Key.calendarSunday]: "Sun",
@@ -337,34 +287,43 @@ export const en: Translation = {
 	[Key.calendarNovember]: "Nov",
 	[Key.calendarDecember]: "Dec",
 
-	// Share Functionality
 	[Key.shareArticle]: "Share",
-	[Key.generatingPoster]: "Generating poster...",
+	[Key.generatingPoster]: "Generating Poster...",
 	[Key.copied]: "Copied",
 	[Key.copyLink]: "Copy Link",
 	[Key.savePoster]: "Save Poster",
 	[Key.scanToRead]: "Scan to Read",
-	[Key.shareOnSocial]: "Share",
-	[Key.shareOnSocialDescription]:
-		"If this article helped you, please share it with others!",
 
-	// Profile Stats
-	[Key.profileStatsLoading]: "Loading stats...",
-	[Key.profileStatsPageViews]: "Page views",
-	[Key.profileStatsVisits]: "Visits",
-	[Key.profileStatsUnavailable]: "Stats unavailable",
+	// Code Block Collapsible Configuration
+	[Key.codeCollapsibleShowMore]: "Show more",
+	[Key.codeCollapsibleShowLess]: "Show less",
+	[Key.codeCollapsibleExpanded]: "Code block expanded",
+	[Key.codeCollapsibleCollapsed]: "Code block collapsed",
 
-	// Page Views Stats
-	[Key.pageViewsLoading]: "Loading stats...",
-	[Key.pageViewsUnavailable]: "Stats unavailable",
+	// Gallery Page
+	[Key.gallery]: "Gallery",
+	[Key.galleryDescription]: "Capturing beautiful moments in life",
+	[Key.galleryPhotos]: "photos",
+	[Key.galleryAlbums]: "albums",
+	[Key.galleryNoAlbums]: "No albums yet",
+	[Key.galleryBackToAlbums]: "Back to albums",
 
-	// Layout Switch Button
-	[Key.switchToGridMode]: "Switch to Grid Mode",
-	[Key.switchToListMode]: "Switch to List Mode",
+	// Password Protection
+	[Key.passwordProtected]: "Password Protected",
+	[Key.passwordProtectedDesc]:
+		"This article is password protected. Please enter the password to view the content.",
+	[Key.passwordHint]: "Hint",
+	[Key.passwordPlaceholder]: "Enter password",
+	[Key.passwordSubmit]: "Unlock",
+	[Key.passwordError]: "Incorrect password, please try again.",
+	[Key.passwordProtectedRss]:
+		"This article is encrypted. Please visit the website to view it.",
 
-	// Related Posts & Random Posts
-	[Key.relatedPosts]: "Related Posts",
-	[Key.randomPosts]: "Random Posts",
-	[Key.smartRecommend]: "Smart",
-	[Key.randomRecommend]: "Random",
+	// Commits Update History
+	[Key.commits]: "Commits",
+	[Key.commitsDescription]: "View the latest commits and update history",
+	[Key.commitsLoading]: "Loading commits...",
+	[Key.commitsFailed]: "Failed to load commits",
+	[Key.commitsViewOnGitHub]: "View on GitHub",
+
 };

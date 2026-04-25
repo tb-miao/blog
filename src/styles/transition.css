@@ -1,235 +1,131 @@
-@import "./_transition-vars.css";
+/* ==========================================================================
+   Page Transition Animations (Swup) & Global Animations
+   ========================================================================== */
 
-/* 主要内容区域的过渡动画 - 纯垂直效果 */
+/* --------------------------------------------------------------------------
+   1. Swup Page Transitions
+   -------------------------------------------------------------------------- */
+
+/* Main Content Transition */
 .transition-main {
-  transition:
-    opacity var(--transition-duration) var(--transition-easing),
-    transform var(--transition-duration) var(--transition-easing);
+    transition: 
+        opacity 120ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        transform 120ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* 离开动画 */
+/* Leaving Animation */
 .transition-leaving {
-  transition:
-    transform var(--transition-duration) var(--transition-easing-out),
-    opacity var(--transition-duration) var(--transition-easing-out);
+    transition:
+        transform 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19),
+        opacity 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
+/* State: Changing (Swup) */
 html.is-changing .transition-main {
-  transition:
-    opacity var(--transition-duration) var(--transition-easing),
-    transform var(--transition-duration) var(--transition-easing);
+    transition: 
+        opacity 120ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        transform 120ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 html.is-leaving .transition-main {
-  transition:
-    opacity var(--transition-duration) var(--transition-easing-out),
-    transform var(--transition-duration) var(--transition-easing-out);
+    transition: 
+        opacity 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19),
+        transform 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
-/* 进入动画 - 纯垂直 */
+/* State: Animating (Entering) */
 html.is-animating .transition-main {
-  opacity: 0;
-  transform: translateY(var(--transition-translate));
+    opacity: 0;
+    transform: translateY(2rem);
 }
 
-/* 离开动画 - 向上滑出 */
+/* State: Leaving */
 html.is-animating.is-leaving .transition-leaving {
-  transform: translateY(calc(var(--transition-translate) * -1));
-  opacity: 0;
+    transform: translateY(-2rem);
+    opacity: 0;
 }
 
-/* Swup fade 动画 */
+/* Swup Fade Fallback */
 html.is-changing .transition-swup-fade {
-  transition: all var(--transition-duration) ease-out;
+    transition: all 120ms ease-out;
 }
 
 html.is-animating .transition-swup-fade {
-  opacity: 0;
-  transform: translateY(var(--transition-translate));
+    opacity: 0;
+    transform: translateY(1rem);
 }
 
-/* 淡入动画 */
+/* --------------------------------------------------------------------------
+   2. Keyframes
+   -------------------------------------------------------------------------- */
+
 @keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(var(--transition-translate));
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(2rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-@keyframes fade-out-down {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(calc(var(--transition-translate) * -1));
-  }
-}
+/* --------------------------------------------------------------------------
+   3. Onload Animations
+   -------------------------------------------------------------------------- */
 
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* 页面加载动画 */
 .onload-animation {
-  opacity: 0;
-  animation: fade-in-up var(--transition-duration) ease-out forwards;
-}
-
-.onload-animation-fade-in {
-  opacity: 0;
-  animation: fade-in var(--transition-duration) ease-in forwards;
+    opacity: 0;
+    animation: fade-in-up 120ms ease-out forwards;
 }
 
 /* 渐进式动画延迟 */
-.onload-animation:nth-child(1) {
-  animation-delay: calc(var(--transition-stagger) * 0);
-}
-.onload-animation:nth-child(2) {
-  animation-delay: calc(var(--transition-stagger) * 1);
-}
-.onload-animation:nth-child(3) {
-  animation-delay: calc(var(--transition-stagger) * 2);
-}
-.onload-animation:nth-child(4) {
-  animation-delay: calc(var(--transition-stagger) * 3);
-}
-.onload-animation:nth-child(5) {
-  animation-delay: calc(var(--transition-stagger) * 4);
-}
+.onload-animation:nth-child(1) { animation-delay: 0ms; }
+.onload-animation:nth-child(2) { animation-delay: 30ms; }
+.onload-animation:nth-child(3) { animation-delay: 60ms; }
+.onload-animation:nth-child(4) { animation-delay: 90ms; }
+.onload-animation:nth-child(5) { animation-delay: 120ms; }
 
-/* 特殊元素的动画 */
-.transition-slide-in {
-  opacity: 0;
-  transform: translateY(calc(var(--transition-translate) * 1.2));
-  transition: all calc(var(--transition-duration) * 1.5) var(--transition-easing);
-}
+/* --------------------------------------------------------------------------
+   4. Navigation Progress Bar
+   -------------------------------------------------------------------------- */
 
-.transition-slide-in.active {
-  opacity: 1;
-  transform: translateY(0);
-}
+#progress-bar {
+    --progress-height: 3px;
+    --progress-duration: 8s;
 
-/* 卡片动画 */
-.card-animation {
-  opacity: 0;
-  transform: translateY(calc(var(--transition-translate) * 1.5)) scale(0.98);
-  transition: all calc(var(--transition-duration) * 1.2) var(--transition-easing);
-}
-
-.card-animation.visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-/* 导航动画 */
-.nav-animation {
-  opacity: 0;
-  transform: translateX(calc(var(--transition-translate) * -1));
-  transition: all calc(var(--transition-duration) * 0.8) var(--transition-easing);
-}
-
-.nav-animation.loaded {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-/* 性能优化 */
-.transition-main,
-.transition-leaving,
-.onload-animation,
-.transition-slide-in,
-.card-animation {
-  backface-visibility: hidden;
-  -webkit-font-smoothing: antialiased;
-  transform: translateZ(0);
-  will-change: transform;
-}
-
-/* GPU 加速优化 - 用于 wave 等重型动画 */
-.gpu-accelerated {
-  transform: translateZ(0);
-  will-change: transform;
-  backface-visibility: hidden;
-  isolation: isolate;
-}
-
-/* View Transitions API - 主题切换动画 */
-::view-transition-old(root) {
-  animation: theme-fade-out 0.25s ease-out forwards;
-  z-index: 2;
-}
-
-::view-transition-new(root) {
-  animation: theme-fade-in 0.25s ease-in forwards;
-  z-index: 1;
-}
-
-@keyframes theme-fade-out {
-  from {
-    opacity: 1;
-  }
-  to {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: var(--progress-height);
+    z-index: 9999;
+    pointer-events: none;
+    background: var(--primary);
+    box-shadow: 0 0 8px color-mix(in oklch, var(--primary) 60%, transparent);
     opacity: 0;
-  }
 }
 
-@keyframes theme-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
+@keyframes progress-loading {
+    0% { width: 0; }
+    100% { width: 95%; }
+}
+
+#progress-bar.loading {
     opacity: 1;
-  }
+    width: 0;
+    animation: progress-loading var(--progress-duration) cubic-bezier(0.1, 0.05, 0.1, 1) forwards;
 }
 
-/* 主题切换期间禁用复杂动画 */
-.is-theme-transitioning .waves > .parallax use,
-.is-theme-transitioning .sakura-canvas,
-.is-theme-transitioning .animation-element {
-  animation-play-state: paused !important;
+#progress-bar.finishing {
+    animation: none;
+    width: 100%;
+    opacity: 1;
+    transition: width 200ms ease-out;
 }
 
-/* 移动端性能优化 */
-@media (max-width: 768px) {
-  .transition-main,
-  .transition-leaving,
-  .onload-animation,
-  .transition-slide-in,
-  .card-animation {
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -webkit-perspective: 1000;
-    perspective: 1000;
-  }
-}
-
-/* 减少动画的用户偏好设置 */
-@media (prefers-reduced-motion: reduce) {
-  .transition-main,
-  .transition-leaving,
-  .onload-animation,
-  .transition-slide-in,
-  .card-animation,
-  .nav-animation,
-  .waves > .parallax use,
-  .sakura-canvas,
-  .animation-element {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    will-change: auto !important;
-  }
+#progress-bar.done {
+    width: 100%;
+    opacity: 0;
+    transition: opacity 300ms ease-out;
 }

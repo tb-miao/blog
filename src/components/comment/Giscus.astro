@@ -1,175 +1,63 @@
 ---
 import { commentConfig } from "@/config";
 
-interface Props {
-	path: string;
+if (!commentConfig?.giscus) {
+	throw new Error("Giscus comments are not configured");
 }
 
-const config = {
-	...commentConfig.giscus,
-	term: Astro.props.path,
-};
+const giscus = commentConfig.giscus;
+const lightTheme = "light";
+const darkTheme = "dark";
 ---
 
-<div id="giscus-container" class="giscus-container"></div>
+<script is:inline type="module" src="https://esm.sh/giscus"></script>
 
-<script is:inline define:vars={{ config }}>
-	(function () {
-		const GISCUS_CONTAINER_ID = "giscus-container";
-		const ROOT_MARGIN = "200px";
+<!-- 
+  Giscus 官方Web Component用法，兼容Astro静态输出，无需import包，无需NPM依赖！
+  参考：https://giscus.app/ 详情配置说明
+-->
+<giscus-widget
+  id="comments"
+  repo={giscus.repo}
+  repoId={giscus.repoId}
+  category={giscus.category}
+  categoryId={giscus.categoryId}
+  mapping={giscus.mapping}
+  strict={giscus.strict}
+  reactionsEnabled={giscus.reactionsEnabled}
+  emitMetadata={giscus.emitMetadata}
+  inputPosition={giscus.inputPosition}
+  theme={lightTheme}
+  lang={giscus.lang}
+  loading={giscus.loading}
+/>
 
-		let observer = null;
+<script is:inline define:vars={{ lightTheme, darkTheme }}>
+  function updateGiscusTheme() {
+    const isDark = document.documentElement.classList.contains('dark');
+    const theme = isDark ? darkTheme : lightTheme;
+    const widget = document.querySelector('giscus-widget');
+    if (widget) {
+      widget.setAttribute('theme', theme);
+    }
+  }
 
-		function getCurrentPath() {
-			const pathname = window.location.pathname;
-			return pathname.endsWith("/") && pathname.length > 1
-				? pathname.slice(0, -1)
-				: pathname;
-		}
+  // Initial update
+  updateGiscusTheme();
 
-		async function initGiscus() {
-			const container = document.getElementById(GISCUS_CONTAINER_ID);
-			if (!container) {
-				return;
-			}
+  // Clean up previous observer if exists
+  if (window.giscusThemeObserver) {
+    window.giscusThemeObserver.disconnect();
+  }
 
-			let theme = config.theme;
-			if (theme === "preferred_color_scheme") {
-				const isDark =
-					document.documentElement.classList.contains("dark") ||
-					document.documentElement
-						.getAttribute("data-theme")
-						?.includes("dark");
-				theme = isDark ? "dark" : "light";
-			}
+  // Create new observer
+  window.giscusThemeObserver = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+        updateGiscusTheme();
+      }
+    });
+  });
 
-			container.innerHTML = "";
-
-			const script = document.createElement("script");
-			script.src = "https://giscus.app/client.js";
-			script.setAttribute("data-repo", config.repo);
-			script.setAttribute("data-repo-id", config.repoId);
-			script.setAttribute("data-category", config.category);
-			script.setAttribute("data-category-id", config.categoryId);
-			script.setAttribute("data-mapping", config.mapping);
-			script.setAttribute("data-term", getCurrentPath());
-			script.setAttribute("data-strict", config.strict);
-			script.setAttribute(
-				"data-reactions-enabled",
-				config.reactionsEnabled,
-			);
-			script.setAttribute("data-emit-metadata", config.emitMetadata);
-			script.setAttribute("data-input-position", config.inputPosition);
-			script.setAttribute("data-theme", theme);
-			script.setAttribute(
-				"data-lang",
-				config.lang ? config.lang.replace("_", "-") : "en",
-			);
-			script.setAttribute("data-loading", config.loading);
-			script.crossOrigin = "anonymous";
-			script.async = true;
-
-			container.appendChild(script);
-		}
-
-		function cleanup() {
-			if (observer) {
-				observer.disconnect();
-				observer = null;
-			}
-			if (window.swup?.hooks) {
-				window.swup.hooks.off("content:replace", initGiscus);
-			}
-		}
-
-		function setupLazyLoad() {
-			const container = document.getElementById(GISCUS_CONTAINER_ID);
-			if (!container) {
-				return;
-			}
-
-			observer = new IntersectionObserver(
-				(entries) => {
-					if (entries[0].isIntersecting) {
-						observer.disconnect();
-						observer = null;
-						initGiscus();
-					}
-				},
-				{ rootMargin: ROOT_MARGIN },
-			);
-
-			observer.observe(container);
-		}
-
-		function setupSwupHooks() {
-			if (window.swup?.hooks) {
-				window.swup.hooks.on("content:replace", () => {
-					setTimeout(setupLazyLoad, 200);
-				});
-			} else {
-				document.addEventListener(
-					"swup:enable",
-					() => {
-						if (window.swup?.hooks) {
-							window.swup.hooks.on("content:replace", () => {
-								setTimeout(setupLazyLoad, 200);
-							});
-						}
-					},
-					{ once: true },
-				);
-			}
-		}
-
-		document.addEventListener("mizuki:page:loaded", () => {
-			setupLazyLoad();
-		});
-
-		window.addEventListener("beforeunload", cleanup);
-
-		if (document.readyState === "loading") {
-			document.addEventListener("DOMContentLoaded", () => {
-				setupLazyLoad();
-				setupSwupHooks();
-			});
-		} else {
-			setupLazyLoad();
-			setupSwupHooks();
-		}
-
-		const observer_theme = new MutationObserver((mutations) => {
-			mutations.forEach((mutation) => {
-				if (
-					mutation.attributeName === "class" ||
-					mutation.attributeName === "data-theme"
-				) {
-					const isDark =
-						document.documentElement.classList.contains("dark") ||
-						document.documentElement
-							.getAttribute("data-theme")
-							?.includes("dark");
-					const theme = isDark ? "dark" : "light";
-
-					const iframe = document.querySelector(
-						"iframe.giscus-frame",
-					);
-					if (iframe) {
-						iframe.contentWindow?.postMessage(
-							{ giscus: { setConfig: { theme } } },
-							"https://giscus.app",
-						);
-					}
-				}
-			});
-		});
-
-		observer_theme.observe(document.documentElement, { attributes: true });
-	})();
+  window.giscusThemeObserver.observe(document.documentElement, { attributes: true });
 </script>
-
-<style>
-	.giscus-container {
-		min-height: 200px;
-	}
-</style>
