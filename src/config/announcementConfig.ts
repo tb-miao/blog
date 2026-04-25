@@ -9,7 +9,7 @@ export const announcementConfig: AnnouncementConfig = {
 # 🚧维护中...
 - 本站正在进行大型维护，会出现无法访问或页面异常现象。
 ---
-
+已修复’Commits‘页面的API问题，现在正常获取Git数据。
 ---
 可以点击【[这里](https://github.com/tb-miao/blog/issues)】提交对网站的建议。
 `,
