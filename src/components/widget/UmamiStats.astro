@@ -158,22 +158,38 @@ async function fetchUmamiStats() {
 }
 
 let __umamiStatsStarted = false;
+let __umamiObserver: IntersectionObserver | null = null;
+
 function startUmamiStats() {
     if (__umamiStatsStarted) return;
     __umamiStatsStarted = true;
+    if (__umamiObserver) {
+        __umamiObserver.disconnect();
+        __umamiObserver = null;
+    }
     fetchUmamiStats();
 }
 
 function initUmamiStatsVisibility() {
     const container = document.getElementById('umami-stats');
-    const io = new IntersectionObserver((entries) => {
+    if (!container) return;
+
+    if (__umamiStatsStarted) return;
+
+    const observerCallback: IntersectionObserverCallback = (entries) => {
         if (entries[0].isIntersecting) {
             startUmamiStats();
-            io.disconnect();
         }
-    }, { threshold: 0.1 });
+    };
 
-    if (container) io.observe(container);
+    __umamiObserver = new IntersectionObserver(observerCallback, { threshold: 0 });
+    __umamiObserver.observe(container);
+
+    const rect = container.getBoundingClientRect();
+    const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+    if (isInViewport && !__umamiStatsStarted) {
+        startUmamiStats();
+    }
 }
 
 initUmamiStatsVisibility();
@@ -181,7 +197,8 @@ initUmamiStatsVisibility();
 if (window.swup) {
     window.swup.hooks.on('page:view', () => {
         __umamiStatsStarted = false;
-        initUmamiStatsVisibility();
+        __umamiObserver = null;
+        setTimeout(initUmamiStatsVisibility, 100);
     });
 }
 </script>

@@ -8,6 +8,7 @@ draft: false
 pinned: false
 updated: 2026-01-28
 author: renleihaokun
+image: "api"
 ---
 # 开始
 主页右上角那个就是，也是用api实现的

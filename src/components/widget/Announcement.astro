@@ -31,6 +31,10 @@ const style = Astro.props.style;
     <!-- 公告栏内容 -->
     <div class="text-neutral-600 dark:text-neutral-300 leading-relaxed mb-3 announcement-content prose prose-sm dark:prose-invert !max-w-none" set:html={renderedContent}>  
     </div>
+    <!-- 提示tip -->
+     <div class="text-sm text-neutral-500 dark:text-neutral-400">
+      可以点击【<a href="https://github.com/tb-miao/blog/issues" class="underline">这里</a>】提交对网站的建议。
+     </div>
 
     <!-- 可选链接和关闭按钮 -->
     <div class="flex items-center justify-between gap-3">

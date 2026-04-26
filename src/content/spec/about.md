@@ -55,7 +55,7 @@
 
 如果你想和我交流技术问题，分享有趣的想法，或者只是想打个招呼，欢迎通过以下方式联系我：
 
-- ✉️ **Email**: [init@tbmiao.dpdns.org](mailto:init@tbmiao.dpdns.org)
+- ✉️ **Email**: init@tbmiao.dpdns.org
 
 ## 小宣传一下
 这是我在 `Github` 创建的组织~

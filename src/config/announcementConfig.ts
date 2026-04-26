@@ -7,11 +7,7 @@ export const announcementConfig: AnnouncementConfig = {
 	// 公告内容    （🎉🎉 欢迎来到我的博客喵！本站2周年啦！）
 	content: `
 # 🚧维护中...
-- 本站正在进行大型维护，会出现无法访问或页面异常现象。
----
-已修复’Commits‘页面的API问题，现在正常获取Git数据。
----
-可以点击【[这里](https://github.com/tb-miao/blog/issues)】提交对网站的建议。
+- 本站正在进行大型维护，会出现无法访问或页面异常现象。（80%）
 `,
 	// 是否允许用户关闭公告
 	closable: false,
