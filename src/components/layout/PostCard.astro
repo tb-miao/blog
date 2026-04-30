@@ -32,6 +32,7 @@ const {
 	title,
 	url,
 	published,
+	updated,
 	tags,
 	category,
 	image,
@@ -94,6 +95,15 @@ const descriptionText = description || remarkPluginFrontmatter.excerpt || "";
         before:w-1 before:h-5 before:rounded-md before:bg-(--primary)
         before:absolute before:top-[35px] before:left-[18px] before:hidden md:before:block"
     >
+      <!-- pinned -->
+  {
+    pinned && (
+      <span class="inline-flex items-center gap-1 rounded-full border border-[var(--primary)]/20 bg-[var(--primary)]/10 px-2.5 py-1 text-xs font-semibold text-[var(--primary)] leading-none">
+        <Icon name="material-symbols:keep-rounded" class="text-lg"></Icon>
+        {i18n(I18nKey.pinned)}
+      </span>
+    )
+  }
       {title}
 
       {
@@ -109,6 +119,7 @@ const descriptionText = description || remarkPluginFrontmatter.excerpt || "";
     <!-- metadata -->
     <PostMetadata
       published={published}
+      updated={updated}
       tags={tags}
       showTags={false}
       category={category || undefined}
