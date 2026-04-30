@@ -32,6 +32,6 @@ export const coverImageConfig: CoverImageConfig = {
 		// API失败时的回退图片路径（相对于src目录或以/开头的public目录路径）
 		fallback: "assets/images/cover.avif",
 		// 是否显示加载动画
-		showLoading: true,
+		showLoading: false,
 	},
 };

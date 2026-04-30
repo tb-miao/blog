@@ -35,10 +35,98 @@ if (!perfConfig?.enable) {
 
 <script is:inline>
 	(function() {
+		const LOG_PREFIX = '[PerformanceMonitor]';
+		const DEBUG = false;
+		const LOG_THROTTLE_MS = 1000;
+
+		const loggedWarnings = new Set();
+		const lastLogTime = new Map();
+		const logDebounceTimers = new Map();
+
+		function log(...args) {
+			if (!DEBUG) return;
+			
+			const key = args.join(' ');
+			const now = Date.now();
+			const lastTime = lastLogTime.get(key) || 0;
+			
+			if (now - lastTime < LOG_THROTTLE_MS) {
+				return;
+			}
+			
+			lastLogTime.set(key, now);
+			console.log(LOG_PREFIX, ...args);
+		}
+
+		function logOnce(...args) {
+			if (!DEBUG) return;
+			
+			const key = args.join(' ');
+			if (loggedWarnings.has(key)) {
+				return;
+			}
+			
+			loggedWarnings.add(key);
+			console.log(LOG_PREFIX, ...args);
+		}
+
+		function warn(...args) {
+			if (!DEBUG) return;
+			
+			const key = args.join(' ');
+			if (loggedWarnings.has(key)) {
+				return;
+			}
+			
+			loggedWarnings.add(key);
+			console.warn(LOG_PREFIX, ...args);
+		}
+
+		function error(...args) {
+			if (!DEBUG) return;
+			
+			const key = args.join(' ');
+			const now = Date.now();
+			const lastTime = lastLogTime.get(key) || 0;
+			
+			if (now - lastTime < LOG_THROTTLE_MS * 5) {
+				return;
+			}
+			
+			lastLogTime.set(key, now);
+			console.error(LOG_PREFIX, ...args);
+		}
+
+		function logDebounced(type, fn, ...args) {
+			if (!DEBUG) return;
+			
+			if (logDebounceTimers.has(type)) {
+				clearTimeout(logDebounceTimers.get(type));
+			}
+			
+			logDebounceTimers.set(type, setTimeout(() => {
+				fn(...args);
+				logDebounceTimers.delete(type);
+			}, 50));
+		}
+
 		const perfMonitor = document.getElementById('performance-monitor');
-		if (!perfMonitor) return;
+		if (!perfMonitor) {
+			warn('组件未找到，跳过初始化');
+			return;
+		}
+
+		logOnce('组件初始化');
+
+		let updateTimer = null;
+		let isCleanup = false;
+		let updateCount = 0;
 
 		function updatePerformance() {
+			if (isCleanup) {
+				return;
+			}
+
 			const loadTimeEl = document.getElementById('perf-load-time');
 			const memoryEl = document.getElementById('perf-memory');
 
@@ -47,7 +135,11 @@ if (!perfConfig?.enable) {
 				const loadTime = timing.loadEventEnd - timing.navigationStart;
 				if (loadTime > 0) {
 					loadTimeEl.textContent = loadTime + 'ms';
+					updateCount++;
+					logDebounced('update', log, '更新 #%d: 加载时间 %dms', updateCount, loadTime);
 				}
+			} else if (!loadTimeEl) {
+				warn('加载时间元素未找到');
 			}
 
 			if (memoryEl && window.performance && window.performance.memory) {
@@ -55,24 +147,107 @@ if (!perfConfig?.enable) {
 				const usedMB = (memory.usedJSHeapSize / 1024 / 1024).toFixed(2);
 				const totalMB = (memory.totalJSHeapSize / 1024 / 1024).toFixed(2);
 				memoryEl.textContent = `${usedMB}MB / ${totalMB}MB`;
+				logDebounced('memory', log, '内存使用：%sMB / %sMB', usedMB, totalMB);
 			} else if (memoryEl) {
-				memoryEl.textContent = 'N/A';
+				warn('浏览器不支持内存 API');
+			} else {
+				warn('内存元素未找到');
 			}
 		}
 
-		window.addEventListener('load', function() {
-			setTimeout(updatePerformance, 100);
-		});
+		function scheduleUpdate() {
+			if (isCleanup) {
+				return;
+			}
+			if (updateTimer) {
+				clearTimeout(updateTimer);
+			}
+			updateTimer = setTimeout(updatePerformance, 100);
+		}
+
+		function loadHandler() {
+			logOnce('页面加载完成');
+			scheduleUpdate();
+		}
+
+		function popstateHandler() {
+			log('路由变化');
+			scheduleUpdate();
+		}
+
+		function swupHandler() {
+			log('Swup 页面切换');
+			scheduleUpdate();
+		}
+
+		window.addEventListener('load', loadHandler, { passive: true });
+		window.addEventListener('popstate', popstateHandler, { passive: true });
+		logOnce('事件监听器已注册');
+
+		let swupCleanup = null;
+		if (typeof window.swup !== 'undefined' && window.swup.hooks) {
+			window.swup.hooks.on('content:replace', swupHandler);
+			logOnce('Swup 钩子已注册');
+			swupCleanup = function() {
+				if (window.swup && window.swup.hooks) {
+					window.swup.hooks.off('content:replace', swupHandler);
+				}
+			};
+		} else {
+			warn('Swup 未启用');
+		}
+
+		function cleanup() {
+			if (isCleanup) {
+				return;
+			}
+			isCleanup = true;
+			log('清理资源...');
+
+			if (updateTimer) {
+				clearTimeout(updateTimer);
+				updateTimer = null;
+			}
+
+			logDebounceTimers.forEach((timer) => clearTimeout(timer));
+			logDebounceTimers.clear();
+
+			window.removeEventListener('load', loadHandler);
+			window.removeEventListener('popstate', popstateHandler);
+
+			if (swupCleanup) {
+				swupCleanup();
+				swupCleanup = null;
+			}
+
+			log('清理完成');
+		}
 
 		if (typeof window.swup !== 'undefined' && window.swup.hooks) {
-			window.swup.hooks.on('content:replace', function() {
-				setTimeout(updatePerformance, 100);
+			window.swup.hooks.on('page:view', function() {
+				const currentMonitor = document.getElementById('performance-monitor');
+				if (!currentMonitor) {
+					log('组件已移除，执行清理');
+					cleanup();
+				}
 			});
 		}
 
-		window.addEventListener('popstate', function() {
-			setTimeout(updatePerformance, 100);
+		window.addEventListener('beforeunload', cleanup, { passive: true });
+
+		const observer = new MutationObserver(function(mutations) {
+			for (let i = 0; i < mutations.length; i++) {
+				if (!document.contains(perfMonitor)) {
+					log('检测到组件移除');
+					cleanup();
+					observer.disconnect();
+					break;
+				}
+			}
 		});
+
+		observer.observe(document.body, { childList: true, subtree: true });
+		logOnce('监控器已启动');
 	})();
 </script>
 

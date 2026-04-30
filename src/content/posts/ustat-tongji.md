@@ -2,7 +2,7 @@
 title: 添加ustat统计（有密码）
 published: 2026-02-19
 description: '添加ustat统计 ./tip：此文章存在AI生成的内容，可能包含错误或不准确的地方。'
-image: 'https://www.ustat.com/static/images/home/zh/started.png?v=20260122-e956bba'
+image: 'https://www.ustat.com/static/images/home/light/started.jpg'
 tags: ['ustat']
 category: '教程'
 draft: false 
