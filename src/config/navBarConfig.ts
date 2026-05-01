@@ -66,6 +66,12 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 		// 子菜单
 		children: [
 			{
+				name: "状态",
+				url: "https://stats.uptimerobot.com/DJSVHOeDrY",
+				icon: "simple-icons:statuspage",
+				external: true,
+			},
+			{
 				name: "监测统计",
 				url: "https://cloud.umami.is/share/uldxG2QTnboi9OlF",
 				icon: "material-symbols:group",

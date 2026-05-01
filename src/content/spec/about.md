@@ -29,8 +29,7 @@
 
 |   **博&emsp;客**    |    **https://tbmiao.dpdns.org**    |
 | :-----------------: | :-------------------------------: |
-|   **组织网站**      |     **https://nachceko.qzz.io**   |
-|  **网站监测**   |    **https://status.tbmiao.dpdns.org**    |
+|   **主页**      |     **https://nachceko.qzz.io**   |
 |  **Ba_logo**  | **https://ba.tbmiao.dpdns.org** |
 
 ---
