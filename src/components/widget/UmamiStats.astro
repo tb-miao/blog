@@ -9,22 +9,33 @@ const { class: className, style } = Astro.props;
 ---
 
 <WidgetLayout name="统计" id="umami-stats" class:list={[className, "cursor-pointer transition-opacity active:scale-95"]} {style}>
-    <a id="umami-link" target="_blank" rel="noopener noreferrer" class="block">
-        <div class="text-center py-2">
-            <div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100" id="total-pageviews">-</div>
-            <div class="text-sm text-neutral-500 dark:text-neutral-400">总浏览量</div>
-        </div>
-        <div class="grid grid-cols-2 divide-x divide-neutral-200 dark:divide-neutral-700 text-center pt-2">
-            <div class="px-2">
-                <div class="text-xl font-bold text-neutral-900 dark:text-neutral-100" id="total-visits">-</div>
-                <div class="text-sm text-neutral-500 dark:text-neutral-400">访问数</div>
+    <div class="relative">
+        <a id="umami-link" target="_blank" rel="noopener noreferrer" class="block">
+            <div class="text-center py-2">
+                <div class="text-3xl font-bold text-neutral-900 dark:text-neutral-100" id="total-pageviews">-</div>
+                <div class="text-sm text-neutral-500 dark:text-neutral-400">总浏览量</div>
             </div>
-            <div class="px-2">
-                <div class="text-xl font-bold text-neutral-900 dark:text-neutral-100" id="total-visitors">-</div>
-                <div class="text-sm text-neutral-500 dark:text-neutral-400">游客数</div>
+            <div class="grid grid-cols-2 divide-x divide-neutral-200 dark:divide-neutral-700 text-center pt-2">
+                <div class="px-2">
+                    <div class="text-xl font-bold text-neutral-900 dark:text-neutral-100" id="total-visits">-</div>
+                    <div class="text-sm text-neutral-500 dark:text-neutral-400">访问数</div>
+                </div>
+                <div class="px-2">
+                    <div class="text-xl font-bold text-neutral-900 dark:text-neutral-100" id="total-visitors">-</div>
+                    <div class="text-sm text-neutral-500 dark:text-neutral-400">游客数</div>
+                </div>
             </div>
-        </div>
-    </a>
+        </a>
+        <button 
+            id="umami-refresh"
+            class="absolute top-2 right-2 p-1.5 rounded-full bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+            title="刷新统计"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-neutral-600 dark:text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+        </button>
+    </div>
 </WidgetLayout>
 
 <script>
@@ -157,48 +168,55 @@ async function fetchUmamiStats() {
     }
 }
 
-let __umamiStatsStarted = false;
-let __umamiObserver: IntersectionObserver | null = null;
+let isLoading = false;
 
-function startUmamiStats() {
-    if (__umamiStatsStarted) return;
-    __umamiStatsStarted = true;
-    if (__umamiObserver) {
-        __umamiObserver.disconnect();
-        __umamiObserver = null;
-    }
+function loadUmamiStats() {
+    console.log('[UmamiStats] 开始加载统计数据...');
     fetchUmamiStats();
 }
 
-function initUmamiStatsVisibility() {
-    const container = document.getElementById('umami-stats');
-    if (!container) return;
-
-    if (__umamiStatsStarted) return;
-
-    const observerCallback: IntersectionObserverCallback = (entries) => {
-        if (entries[0].isIntersecting) {
-            startUmamiStats();
-        }
-    };
-
-    __umamiObserver = new IntersectionObserver(observerCallback, { threshold: 0 });
-    __umamiObserver.observe(container);
-
-    const rect = container.getBoundingClientRect();
-    const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
-    if (isInViewport && !__umamiStatsStarted) {
-        startUmamiStats();
+function refreshUmamiStats() {
+    if (isLoading) {
+        console.log('[UmamiStats] 正在加载中，请稍后...');
+        return;
     }
+    
+    console.log('[UmamiStats] 手动刷新统计数据...');
+    isLoading = true;
+    const refreshBtn = document.getElementById('umami-refresh') as HTMLButtonElement;
+    if (refreshBtn) {
+        refreshBtn.classList.add('animate-spin');
+        refreshBtn.disabled = true;
+    }
+    
+    fetchUmamiStats().finally(() => {
+        isLoading = false;
+        if (refreshBtn) {
+            refreshBtn.classList.remove('animate-spin');
+            refreshBtn.disabled = false;
+        }
+        console.log('[UmamiStats] 刷新完成');
+    });
 }
 
-initUmamiStatsVisibility();
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadUmamiStats);
+} else {
+    loadUmamiStats();
+}
+
+const refreshBtn = document.getElementById('umami-refresh');
+if (refreshBtn) {
+    refreshBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        refreshUmamiStats();
+    });
+}
 
 if (window.swup) {
     window.swup.hooks.on('page:view', () => {
-        __umamiStatsStarted = false;
-        __umamiObserver = null;
-        setTimeout(initUmamiStatsVisibility, 100);
+        setTimeout(loadUmamiStats, 100);
     });
 }
 </script>

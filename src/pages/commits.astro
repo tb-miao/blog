@@ -99,27 +99,14 @@ if (latestTags.length > 0) {
 					</div>
 				</div>
 
-				<div id="commits-list" class="space-y-0">
-					{sortedCommits.map((commit, index) => {
-						const isFirst = index === 0;
-						const isLast = index === sortedCommits.length - 1;
-						// 检查是否有子提交（即是否有其他提交的 parentHashes 包含当前 hash）
-						const hasChild = sortedCommits.some((c, i) => 
-							i > index && c.parentHashes?.includes(commit.hash)
-						);
-						
-						return (
-							<CommitCard 
-								item={commit} 
-								isLatest={index === 0}
-								isFirst={isFirst}
-								isLast={isLast}
-								hasChild={hasChild}
-								branchLevel={0}
-							/>
-							);
-						})}
-					</div>
+				<div id="commits-list" class="markdown-content">
+					{sortedCommits.map((commit, index) => (
+						<CommitCard 
+							item={commit} 
+							isLatest={index === 0}
+						/>
+					))}
+				</div>
 
 				<div id="no-results" class="hidden text-center py-20">
 					<p class="text-pink-400 dark:text-purple-500 text-lg">
@@ -216,6 +203,77 @@ if (latestTags.length > 0) {
 				if (autoRefreshInterval) {
 					clearInterval(autoRefreshInterval);
 				}
+			});
+		})();
+	</script>
+
+	<!-- Swup 页面切换动画重载脚本 -->
+	<script is:inline data-swup-reload-script>
+		(function initCommitCardAnimations() {
+			// 重置所有 commit-card 的动画
+			function resetAnimations() {
+				const cards = document.querySelectorAll('.commit-card');
+				cards.forEach((card, index) => {
+					// 移除动画类以重置
+					card.style.animation = 'none';
+					card.style.opacity = '0';
+					
+					// 强制重绘
+					void card.offsetWidth;
+					
+					// 重新应用动画
+					card.style.animation = '';
+				});
+
+				// 同时重置节点动画
+				const nodes = document.querySelectorAll('.tree-node');
+				nodes.forEach((node) => {
+					node.style.animation = 'none';
+					node.style.opacity = '0';
+					void node.offsetWidth;
+					node.style.animation = '';
+				});
+
+				// 重置标题动画
+				const titles = document.querySelectorAll('[data-tag-title]');
+				titles.forEach((title) => {
+					title.style.animation = 'none';
+					title.style.opacity = '0';
+					void title.offsetWidth;
+					title.style.animation = '';
+				});
+			}
+
+			// 初始加载时执行
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', () => {
+					setTimeout(resetAnimations, 50);
+				});
+			} else {
+				setTimeout(resetAnimations, 50);
+			}
+
+			// Swup 页面切换后重新执行
+			if (window.swup) {
+				window.swup.hooks.on('page:view', () => {
+					setTimeout(resetAnimations, 50);
+				});
+			} else {
+				document.addEventListener('swup:enable', () => {
+					if (window.swup) {
+						window.swup.hooks.on('page:view', () => {
+							setTimeout(resetAnimations, 50);
+						});
+					}
+				});
+			}
+
+			// 兼容旧版 Swup 事件
+			document.addEventListener('swup:contentReplaced', () => {
+				setTimeout(resetAnimations, 50);
+			});
+			document.addEventListener('swup:content:replace', () => {
+				setTimeout(resetAnimations, 50);
 			});
 		})();
 	</script>

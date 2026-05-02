@@ -64,7 +64,8 @@ const fallbackCommitData: CommitItem[] = [
 			additions: 35,
 			deletions: 20
 		},
-		files: ["src/components/features/commits/CommitCard.astro"]
+		files: ["src/components/features/commits/CommitCard.astro"],
+		tags: ["v1.2.9"]
 	},
 	{
 		id: "3",
@@ -79,7 +80,8 @@ const fallbackCommitData: CommitItem[] = [
 			deletions: 5
 		},
 		files: ["src/data/commits.ts"],
-		branch: "main"
+		branch: "main",
+		tags: ["v1.9.0"]
 	}
 ];
 
@@ -90,7 +92,6 @@ export async function fetchCommits(): Promise<CommitItem[]> {
 	
 	try {
 		isDevelopment = import.meta.env.DEV;
-		logWithTimestamp(`[Commits]环境判断: import.meta.env.DEV = ${isDevelopment}`);
 	} catch (error) {
 		logWithTimestamp(`[Commits]环境判断出错: ${error}`, 'error');
 		// 如果环境变量获取失败，默认使用开发环境模式
@@ -99,7 +100,6 @@ export async function fetchCommits(): Promise<CommitItem[]> {
 	
 	// 额外检查：如果是本地开发环境，直接使用静态数据
 	const isLocalDevelopment = isDevelopment || process.env.NODE_ENV === 'development';
-	logWithTimestamp(`[Commits]最终环境判断: isLocalDevelopment = ${isLocalDevelopment}`);
 	
 	// 在开发环境中，直接使用静态数据，避免 TLS 证书验证问题
 	if (isLocalDevelopment) {

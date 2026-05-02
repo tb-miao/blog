@@ -62,7 +62,7 @@ export const siteConfig: SiteConfig = {
 		// 是否开启卡片边框和阴影，开启后让网站更有立体感
 		border: true,
 		// 是否让卡片风格跟随主题色相
-		followTheme: false,
+		followTheme: true,
 	},
 
 	// Favicon 配置
@@ -166,7 +166,7 @@ export const siteConfig: SiteConfig = {
 		// 文章简介显示行数，设为 0 则不截断
 		descriptionLines: 2,
 		// 是否允许用户切换布局
-		allowSwitch: false,
+		allowSwitch: true,
 		// 网格布局配置，仅在 defaultMode 为 "grid" 或允许切换布局时生效
 		grid: {
 			// 是否开启瀑布流布局，同时有封面图和无封面图的混合文章推荐开启
@@ -255,11 +255,11 @@ export const siteConfig: SiteConfig = {
 	// 性能监控配置
 	performanceMonitor: {
 		// 是否启用性能监控面板
-		enable: true,
+		enable: false,
 		// 是否显示加载时间
 		showLoadTime: false,
 		// 是否显示内存占用
-		showMemoryUsage: true,
+		showMemoryUsage: false,
 	},
 
 	// 站点语言，在本配置文件顶部SITE_LANG定义

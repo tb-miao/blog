@@ -3,8 +3,8 @@ title: 【PerformanceMonitor】组件内存泄漏修复功能介绍
 published: 2026-04-30
 description: ' 【PerformanceMonitor】 组件添加内存泄漏修复功能介绍。'
 image: 'api'
-tags: ['内存泄漏修复']
-category: '笔记'
+tags: ['【PerformanceMonitor】']
+category: '随写'
 draft: false 
 pinned: false
 ---

@@ -1,10 +1,10 @@
 ---
 title: windows永久激活
 published: 2024-12-22
-tags: ["windows"]
+tags: ["windows激活"]
 description: 一行命令永久激活Win11,Win10，Office, 无需找激活码，无需下载安装；目前看到最最简单，安全，可靠的激活方法，开源免费，一直有效
 image: "/images/windows-jh/1.jpg"
-category: 笔记
+category: 教程
 draft: false
 ---
 

@@ -33,6 +33,7 @@
 ## Trae AI 推荐：
 1. 前端样式：Kimi-K2.5
 2. 文章： Doubao-seed-1.8
+3. Code: Qwen3.5-Plus
 
 
 🚀 快速指南：

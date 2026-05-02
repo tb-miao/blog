@@ -3,7 +3,7 @@ title: 看看你的网制作教程
 published: 2026-01-28
 description: '看看你的网制作教程，源码来自困'
 tags: ["API"]
-category: '教程'
+category: 教程
 draft: false 
 pinned: false
 updated: 2026-01-28

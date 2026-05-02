@@ -4,8 +4,8 @@ description: 通知系统的配置和使用说明
 published: 2026-02-20 15:55:00
 image: '/images/notification/notification-1.png'
 tags: ['本站博客通知系统']
-category: '笔记'
-draft: false 
+category: '随写'
+draft: true 
 pinned: false
 updated: 2026-02-20
 ---

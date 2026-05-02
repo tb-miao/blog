@@ -4,7 +4,7 @@ published: 2025-10-25
 tags: ["homepage"]
 description: 搭建个人主页
 image: "/images/home-page/502824092-7d394bbd-c4ed-4398-a551-104237f90c4e.png"
-category: 笔记
+category: 随写
 draft: false
 ---
 

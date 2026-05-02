@@ -4,8 +4,8 @@ published: 2024-09-17
 pinned: false
 description: "IDM激活脚本"
 image: "api"
-tags: ["工具"]
-category: 笔记
+tags: ["IDM"]
+category: 随写
 draft: false
 slug: 
 ---
