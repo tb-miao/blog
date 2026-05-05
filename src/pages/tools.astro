@@ -1,0 +1,390 @@
+---
+import { Icon } from "astro-icon/components";
+import {
+	toolListPageConfig,
+	getEnabledTools,
+	getAllToolTags,
+} from "@/config/toollist";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+
+// 获取工具列表和分类
+const tools = getEnabledTools();
+const allTags = getAllToolTags();
+
+// 页面标题和描述
+const title = toolListPageConfig.title;
+const description = toolListPageConfig.description;
+---
+
+<MainGridLayout title={title} description={description}>
+	<div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+		<div class="card-base z-10 px-4 md:px-6 lg:px-9 py-4 md:py-6 relative w-full">
+			<!-- 页面标题和描述 -->
+			<div class="mb-4 md:mb-6">
+				<div class="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
+					<div
+						class="h-7 w-7 md:h-8 md:w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70 animate-in fade-in slide-in-from-left-2 duration-500"
+					>
+						<Icon name="material-symbols:build" class="text-[1.25rem] md:text-[1.5rem]" />
+					</div>
+					<div class="text-2xl md:text-3xl font-bold text-neutral-900 dark:text-neutral-100 animate-in fade-in slide-in-from-right-2 duration-500">
+						{title}
+					</div>
+				</div>
+				{description && (
+					<p class="text-sm md:text-base text-neutral-600 dark:text-neutral-400 leading-relaxed animate-in fade-in slide-in-from-bottom-2 duration-500 delay-150">
+						{description}
+					</p>
+				)}
+			</div>
+
+			<!-- 搜索框 -->
+			<div class="relative mb-4 md:mb-6 animate-in fade-in duration-500 delay-150">
+				<div class="relative">
+					<Icon
+						name="material-symbols:search"
+						class="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-sm md:text-base"
+					/>
+					<input
+						type="text"
+						id="tool-search-input"
+						placeholder="搜索工具名称、描述或标签..."
+						class="w-full pl-9 pr-12 py-2.5 md:py-3 rounded-xl bg-(--card-bg) border border-(--line-divider) text-sm md:text-base text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none focus:border-(--primary) focus:ring-2 focus:ring-(--primary)/20 transition-all duration-300"
+					/>
+					<button
+						id="clear-search-btn"
+						class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 opacity-0 transition-opacity duration-200"
+						style="display: none;"
+					>
+						<Icon name="material-symbols:close" class="text-sm md:text-base" />
+					</button>
+				</div>
+				<!-- 搜索结果统计 -->
+				<div id="search-results-count" class="mt-2 text-xs text-neutral-500 dark:text-neutral-400 opacity-0 transition-opacity duration-200">
+					找到 <span id="results-count">0</span> 个工具
+				</div>
+			</div>
+
+			<!-- 标签筛选 -->
+			{allTags.length > 0 && (
+				<tool-filter class="flex flex-wrap gap-1.5 md:gap-2 mb-4 md:mb-6">
+					<button
+						data-tag="all"
+						class="px-2.5 md:px-3 py-1 md:py-1.5 rounded-lg bg-(--primary) text-white hover:opacity-90 transition-all duration-200 text-xs md:text-sm font-medium whitespace-nowrap"
+					>
+						全部
+					</button>
+					{allTags.map((tag) => (
+						<button
+							data-tag={tag}
+							class="px-2.5 md:px-3 py-1 md:py-1.5 rounded-lg bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) transition-all duration-200 text-xs md:text-sm font-medium whitespace-nowrap"
+						>
+							{tag}
+						</button>
+					))}
+				</tool-filter>
+			)}
+
+			<!-- 工具网格 -->
+			<div class="tools-grid my-4 md:my-6">
+				{tools.map((tool, index) => (
+					<a
+						href={tool.url}
+						target="_blank"
+						rel="noopener noreferrer"
+						data-tags={tool.tags?.join(",")}
+						data-title={tool.title}
+						data-description={tool.description}
+						class="tool-card group relative flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-xl border border-(--line-divider) hover:border-(--primary) hover:bg-(--card-bg) transition-all duration-300 hover:shadow-lg hover:shadow-(--primary)/10 overflow-hidden"
+					>
+						{/* 背景装饰光效 - 悬停显示 */}
+						<div class="absolute inset-0 bg-gradient-to-r from-(--primary)/0 via-(--primary)/5 to-(--primary)/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+						
+						{/* 左侧发光边框 */}
+						<div class="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-0 group-hover:h-3/4 bg-(--primary) rounded-full transition-all duration-300 opacity-0 group-hover:opacity-100" />
+
+						{/* 工具图标 */}
+						<div
+							class="relative h-10 w-10 md:h-12 md:w-12 shrink-0 rounded-xl bg-(--primary)/10 flex items-center justify-center text-(--primary) group-hover:bg-(--primary) group-hover:text-white transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
+						>
+							<img src={tool.icon} alt={tool.title} class="text-[1.25rem] md:text-[1.5rem] transition-transform duration-300 group-hover:scale-110" />
+						</div>
+
+						{/* 工具信息 */}
+						<div class="grow min-w-0 flex flex-col justify-center gap-0.5 md:gap-1">
+							<div class="flex items-center justify-between">
+								<h3 class="font-bold text-sm md:text-base text-neutral-900 dark:text-neutral-100 group-hover:text-(--primary) transition-colors duration-300 truncate pr-2">
+									{tool.title}
+								</h3>
+								{/* 外部链接图标 - 悬停滑入效果 */}
+								<Icon
+									name="material-symbols:arrow-outward-rounded"
+									class="text-(--primary) text-base md:text-lg opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 flex-shrink-0"
+								/>
+							</div>
+
+							<p class="text-xs md:text-sm text-neutral-500 dark:text-neutral-400 line-clamp-1 md:line-clamp-2">
+								{tool.description}
+							</p>
+
+							{/* 标签 */}
+							{tool.tags && tool.tags.length > 0 && (
+								<div class="flex flex-wrap gap-1 mt-0.5 md:mt-1">
+									{tool.tags.map((tag) => (
+										<span class="text-[0.65rem] md:text-xs px-1.5 md:px-2 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 group-hover:bg-(--primary)/10 group-hover:text-(--primary) transition-colors duration-300">
+											{tag}
+										</span>
+									))}
+								</div>
+							)}
+						</div>
+					</a>
+				))}
+			</div>
+
+			<!-- 搜索无结果状态 -->
+			<div id="search-empty-state" class="flex flex-col items-center justify-center py-8 md:py-12 text-center hidden">
+				<div class="h-12 w-12 md:h-16 md:w-16 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center mb-3 md:mb-4">
+					<Icon
+						name="material-symbols:search-off"
+						class="text-[1.5rem] md:text-[2rem] text-neutral-400"
+					/>
+				</div>
+				<h3 class="text-base md:text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-1 md:mb-2">
+					未找到工具
+				</h3>
+				<p class="text-sm md:text-base text-neutral-600 dark:text-neutral-400">
+					尝试使用其他关键词搜索
+				</p>
+			</div>
+
+			<!-- 空状态 -->
+			{tools.length === 0 && (
+				<div class="flex flex-col items-center justify-center py-8 md:py-12 text-center">
+					<div class="h-12 w-12 md:h-16 md:w-16 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center mb-3 md:mb-4 animate-pulse">
+						<Icon
+							name="material-symbols:build-outline"
+							class="text-[1.5rem] md:text-[2rem] text-neutral-400"
+						/>
+					</div>
+					<h3 class="text-base md:text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-1 md:mb-2">
+						暂无工具
+					</h3>
+					<p class="text-sm md:text-base text-neutral-600 dark:text-neutral-400">
+						还没有添加工具，请在配置文件中添加
+					</p>
+				</div>
+			)}
+		</div>
+	</div>
+</MainGridLayout>
+
+<style is:global>
+	@reference "@/styles/main.css";
+
+	.tools-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+		gap: 0.75rem;
+	}
+
+	@media (max-width: 640px) {
+		.tools-grid {
+			grid-template-columns: 1fr;
+			gap: 0.5rem;
+		}
+	}
+
+	/* 入场动画 - 仅首次加载 */
+	.tool-card {
+		animation: fade-in-up 0.4s ease-out backwards;
+	}
+
+	@keyframes fade-in-up {
+		from {
+			opacity: 0;
+			transform: translateY(10px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	/* 悬停时的微妙浮动效果 */
+	.tool-card:hover {
+		transform: translateY(-2px);
+	}
+
+	/* 标签筛选动画 */
+	@keyframes fade-in {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+
+	.animate-fade-in {
+		animation: fade-in 0.3s ease-out;
+	}
+</style>
+
+<script is:inline>
+	// 搜索功能
+	(function() {
+		var searchInput = document.getElementById("tool-search-input");
+		var clearBtn = document.getElementById("clear-search-btn");
+		var resultsCount = document.getElementById("results-count");
+		var resultsContainer = document.getElementById("search-results-count");
+		var toolsGrid = document.querySelector(".tools-grid");
+		var searchEmptyState = document.getElementById("search-empty-state");
+
+		if (!searchInput) return;
+
+		// 获取所有工具卡片
+		function getToolCards() {
+			return document.querySelectorAll(".tool-card");
+		}
+
+		// 搜索函数
+		function performSearch(query) {
+			var searchTerm = query.toLowerCase().trim();
+			var visibleCount = 0;
+			var toolCards = getToolCards();
+
+			// 显示/隐藏清除按钮
+			if (searchTerm && clearBtn) {
+				clearBtn.style.display = "block";
+				setTimeout(function() { clearBtn.classList.add("opacity-100"); }, 10);
+			} else if (clearBtn) {
+				clearBtn.classList.remove("opacity-100");
+				setTimeout(function() { clearBtn.style.display = "none"; }, 200);
+			}
+
+			// 筛选卡片
+			toolCards.forEach(function(card) {
+				var title = (card.dataset.title || "").toLowerCase();
+				var description = (card.dataset.description || "").toLowerCase();
+				var tags = (card.dataset.tags || "").toLowerCase();
+				var categories = (card.dataset.categories || "").toLowerCase();
+
+				var matches = title.includes(searchTerm) ||
+					description.includes(searchTerm) ||
+					tags.includes(searchTerm) ||
+					categories.includes(searchTerm);
+
+				if (matches) {
+					card.style.display = "";
+					visibleCount++;
+				} else {
+					card.style.display = "none";
+				}
+			});
+
+			// 更新结果统计
+			if (searchTerm) {
+				if (resultsCount) resultsCount.textContent = String(visibleCount);
+				if (resultsContainer) resultsContainer.classList.add("opacity-100");
+			} else {
+				if (resultsContainer) resultsContainer.classList.remove("opacity-100");
+			}
+
+			// 显示/隐藏空状态
+			if (searchTerm && visibleCount === 0) {
+				if (searchEmptyState) searchEmptyState.classList.remove("hidden");
+				if (toolsGrid) toolsGrid.style.display = "none";
+			} else {
+				if (searchEmptyState) searchEmptyState.classList.add("hidden");
+				if (toolsGrid) toolsGrid.style.display = "";
+			}
+		}
+
+		// 搜索输入事件
+		var debounceTimer;
+		searchInput.addEventListener("input", function(e) {
+			clearTimeout(debounceTimer);
+			debounceTimer = setTimeout(function() {
+				performSearch(e.target.value);
+			}, 150);
+		});
+
+		// 清除按钮点击
+		if (clearBtn) {
+			clearBtn.addEventListener("click", function() {
+				searchInput.value = "";
+				performSearch("");
+				searchInput.focus();
+			});
+		}
+	})();
+
+	// 标签筛选功能 - 使用自定义元素
+	if (!customElements.get("tool-filter")) {
+		class ToolFilter extends HTMLElement {
+			constructor() {
+				super();
+			}
+
+			connectedCallback() {
+				this.addEventListener("click", this.handleClick);
+			}
+
+			disconnectedCallback() {
+				this.removeEventListener("click", this.handleClick);
+			}
+
+			handleClick(e) {
+				const target = e.target;
+				const button = target.closest("button");
+				if (!button) return;
+
+				const selectedTag = button.dataset.tag;
+				const filters = this.querySelectorAll("button");
+				const container = this.closest(".card-base");
+				if (!container) return;
+
+				const cards = container.querySelectorAll(".tool-card");
+
+				filters.forEach((f) => {
+					f.classList.remove("bg-(--primary)", "text-white");
+					f.classList.remove("hover:opacity-90");
+					f.classList.add(
+						"bg-(--btn-regular-bg)",
+						"text-(--btn-content)"
+					);
+					f.classList.add("hover:bg-(--btn-regular-bg-hover)");
+
+					if (f === button) {
+						f.classList.remove(
+							"bg-(--btn-regular-bg)",
+							"text-(--btn-content)"
+						);
+						f.classList.remove("hover:bg-(--btn-regular-bg-hover)");
+						f.classList.add("bg-(--primary)", "text-white");
+						f.classList.add("hover:opacity-90");
+					}
+				});
+
+				cards.forEach((card) => {
+					const cardEl = card;
+					const tags = (cardEl.dataset.tags || "").split(",");
+					const categories = (cardEl.dataset.categories || "").split(",");
+					
+					if (
+						selectedTag === "all" ||
+						(selectedTag && (tags.includes(selectedTag) || categories.includes(selectedTag)))
+					) {
+						cardEl.style.display = "";
+						cardEl.classList.add("animate-fade-in");
+					} else {
+						cardEl.style.display = "none";
+						cardEl.classList.remove("animate-fade-in");
+					}
+				});
+			}
+		}
+		customElements.define("tool-filter", ToolFilter);
+	}
+</script>

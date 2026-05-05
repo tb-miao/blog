@@ -795,3 +795,22 @@ export type PerformanceMonitorConfig = {
 	showLoadTime: boolean; // 是否显示加载时间
 	showMemoryUsage: boolean; // 是否显示内存占用
 };
+
+
+// 工具项配置
+export type ToolItem = {
+	title: string; // 工具名称
+	description: string; // 工具描述
+	url: string; // 工具链接地址
+	icon: string; // 工具图标
+	tags?: string[]; // 标签数组
+	enabled: boolean; // 是否启用
+};
+
+// 工具列表页面配置
+export type ToolListPageConfig = {
+	title?: string; // 页面标题，留空则使用默认值
+	description?: string; // 页面描述，留空则使用默认值
+	showSearch?: boolean; // 是否显示搜索框
+	showCategoryFilter?: boolean; // 是否显示分类筛选
+};

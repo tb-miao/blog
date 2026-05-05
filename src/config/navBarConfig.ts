@@ -40,6 +40,11 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 					icon: "material-symbols:person",
 				},
 				{
+					name: "工具",
+					url: "/tools/",
+					icon: "material-symbols:tools-wrench",
+				},
+				{
 					name: "更新记录",
 					url: "/commits/",
 					icon: "material-symbols:history",
