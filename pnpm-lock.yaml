@@ -53,9 +53,6 @@ importers:
       '@iconify-json/fa7-solid':
         specifier: ^1.2.4
         version: 1.2.4
-      '@iconify-json/material-symbols':
-        specifier: ^1.2.69
-        version: 1.2.69
       '@iconify-json/mingcute':
         specifier: ^1.2.7
         version: 1.2.7
@@ -192,6 +189,9 @@ importers:
       '@biomejs/biome':
         specifier: 2.4.13
         version: 2.4.13
+      '@iconify-json/material-symbols':
+        specifier: ^1.2.69
+        version: 1.2.69
       '@iconify-json/mdi':
         specifier: ^1.2.3
         version: 1.2.3
@@ -3837,9 +3837,6 @@ packages:
     resolution: {integrity: sha512-KZxYo1BUkWD2TVFLr0MQoM8vUUigWD3LlD83a/75BqC+4qE0Hb1Vo5v1FgcfaNXvfXzr+5EhQ6ing/CaBijTlw==}
     engines: {node: '>= 18'}
 
-  mlly@1.8.0:
-    resolution: {integrity: sha512-l8D9ODSRWLe2KHJSifWGwBqpTZXIXTeo8mlKjY+E2HAakaTeNpqAyBZ8GSqLzHgw4XmHmC8whvpjJNMbFZN7/g==}
-
   mlly@1.8.2:
     resolution: {integrity: sha512-d+ObxMQFmbt10sretNDytwt85VrbkhhUA/JBGm1MPaWJ65Cl4wOgLaB1NYvJSZ0Ef03MMEU/0xpPMXUIQ29UfA==}
 
@@ -6790,7 +6787,7 @@ snapshots:
       globals: 15.15.0
       kolorist: 1.8.0
       local-pkg: 1.1.2
-      mlly: 1.8.0
+      mlly: 1.8.2
     transitivePeerDependencies:
       - supports-color
 
@@ -9364,7 +9361,7 @@ snapshots:
 
   local-pkg@1.1.2:
     dependencies:
-      mlly: 1.8.0
+      mlly: 1.8.2
       pkg-types: 2.3.0
       quansync: 0.2.11
 
@@ -10017,13 +10014,6 @@ snapshots:
   minizlib@3.1.0:
     dependencies:
       minipass: 7.1.2
-
-  mlly@1.8.0:
-    dependencies:
-      acorn: 8.16.0
-      pathe: 2.0.3
-      pkg-types: 1.3.1
-      ufo: 1.6.3
 
   mlly@1.8.2:
     dependencies:

@@ -54,7 +54,7 @@ export const toolList: ToolItem[] = [
         title: "Potplayer",
         description: "视频播放器",
         url: "https://potplayer.tv/",
-        icon: "https://t1.daumcdn.net/potplayer/main/img/favicon.ico",
+        icon: "/assets/images/tools-img/polplayer.ico",
         tags: ["视频播放器"],
         enabled: true,
     },

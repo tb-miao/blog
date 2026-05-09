@@ -60,6 +60,13 @@ export type SiteConfig = {
 		sizes?: string;
 	}>;
 
+	// 启用开发者工具提示信息
+	devtoolsWarning: {
+		enable: boolean; // 是否启用
+		message?: string; // 提示信息内容，留空为默认
+		time?: number; // 提示信息显示时间，单位秒
+	};
+
 	navbar: {
 		/** 导航栏Logo图标，可选类型：icon库、本地图片、网络图片链接 */
 		logo?: {

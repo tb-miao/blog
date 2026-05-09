@@ -1,0 +1,178 @@
+---
+import { siteConfig } from "@/config";
+
+const devtoolsWarning = siteConfig.devtoolsWarning || false;
+---
+
+<script is:inline define:vars={{ devtoolsWarning }}>
+  (function () {
+    const style = document.createElement("style");
+    style.textContent = `
+    #devtools-warning {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-150px);
+      background: var(--card-bg, #fff);
+      color: var(--text-primary, #1f2937);
+      padding: 0;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      z-index: 999999;
+      font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, sans-serif);
+      min-width: 320px;
+      max-width: 400px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      border: 1px solid var(--line-divider, rgba(0,0,0,0.05));
+    }
+
+    :root.dark #devtools-warning {
+      background: var(--card-bg, #1f2937);
+      color: var(--text-primary, #f9fafb);
+      border-color: var(--line-divider, rgba(255,255,255,0.1));
+    }
+
+    #devtools-warning.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    #devtools-warning.hide {
+      transform: translateX(-50%) translateY(-150px);
+      opacity: 0;
+    }
+
+    #devtools-warning-content {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    #devtools-warning-icon {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      background: #fbbf24;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    #devtools-warning-text {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.4;
+      color: var(--text-primary, #1f2937);
+    }
+
+    :root.dark #devtools-warning-text {
+      color: var(--text-primary, #f9fafb);
+    }
+
+    #devtools-warning-progress {
+      height: 3px;
+      background: var(--line-divider, rgba(0,0,0,0.05));
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    :root.dark #devtools-warning-progress {
+      background: var(--line-divider, rgba(255,255,255,0.1));
+    }
+
+    #devtools-warning-progress-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: var(--primary, #6366f1);
+      transform-origin: left;
+      transform: scaleX(1);
+    }
+
+    #devtools-warning-progress-bar.animate {
+      animation: shrink ${devtoolsWarning.time}s linear forwards;
+    }
+
+    @keyframes shrink {
+      from { transform: scaleX(1); }
+      to { transform: scaleX(0); }
+    }
+  `;
+    document.head.appendChild(style);
+
+    const warning = document.createElement("div");
+    warning.id = "devtools-warning";
+    warning.innerHTML = `
+    <div id="devtools-warning-content">
+      <div id="devtools-warning-icon">!</div>
+      <div id="devtools-warning-text">${devtoolsWarning.message || "检测到开发者工具已打开"}</div>
+    </div>
+    <div id="devtools-warning-progress">
+      <div id="devtools-warning-progress-bar"></div>
+    </div>
+  `;
+    document.body.appendChild(warning);
+
+    let hasShown = false;
+
+    function showWarning() {
+      if (hasShown) return;
+      hasShown = true;
+      const progressBar = warning.querySelector("#devtools-warning-progress-bar");
+      warning.classList.add("show");
+      progressBar.classList.add("animate");
+
+      const onProgressComplete = () => {
+        warning.classList.remove("show");
+        warning.classList.add("hide");
+        setTimeout(() => warning.remove(), 300);
+      };
+      progressBar.addEventListener("animationend", onProgressComplete, { once: true });
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (hasShown) return;
+      if (e.key === "F12") {
+        showWarning();
+        return;
+      }
+      if (e.ctrlKey && e.shiftKey && e.key.toUpperCase() === "I") {
+        showWarning();
+        return;
+      }
+      if (e.ctrlKey && e.shiftKey && e.key.toUpperCase() === "J") {
+        showWarning();
+        return;
+      }
+      if (e.ctrlKey && e.shiftKey && e.key.toUpperCase() === "C") {
+        showWarning();
+        return;
+      }
+      if (e.metaKey && e.altKey && e.key.toUpperCase() === "I") {
+        showWarning();
+        return;
+      }
+      if (e.metaKey && e.altKey && e.key.toUpperCase() === "J") {
+        showWarning();
+        return;
+      }
+      if (e.metaKey && e.altKey && e.key.toUpperCase() === "C") {
+        showWarning();
+        return;
+      }
+    });
+  })();
+</script>

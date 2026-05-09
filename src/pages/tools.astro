@@ -16,6 +16,196 @@ const title = toolListPageConfig.title;
 const description = toolListPageConfig.description;
 ---
 
+<script slot="head" is:inline>
+	// 标签筛选功能 - 使用自定义元素（在head中定义，确保DOM渲染前可用）
+	if (!customElements.get("tool-filter")) {
+		class ToolFilter extends HTMLElement {
+			constructor() {
+				super();
+			}
+
+			connectedCallback() {
+				this.addEventListener("click", this.handleClick.bind(this));
+			}
+
+			disconnectedCallback() {
+				this.removeEventListener("click", this.handleClick.bind(this));
+			}
+
+			handleClick(e) {
+				const target = e.target;
+				const button = target.closest("button");
+				if (!button) return;
+
+				const selectedTag = button.dataset.tag;
+				const filters = this.querySelectorAll("button");
+				const container = this.closest(".card-base");
+				if (!container) return;
+
+				const cards = container.querySelectorAll(".tool-card");
+
+				filters.forEach((f) => {
+					f.classList.remove("bg-(--primary)", "text-white");
+					f.classList.remove("hover:opacity-90");
+					f.classList.add(
+						"bg-(--btn-regular-bg)",
+						"text-(--btn-content)"
+					);
+					f.classList.add("hover:bg-(--btn-regular-bg-hover)");
+
+					if (f === button) {
+						f.classList.remove(
+							"bg-(--btn-regular-bg)",
+							"text-(--btn-content)"
+						);
+						f.classList.remove("hover:bg-(--btn-regular-bg-hover)");
+						f.classList.add("bg-(--primary)", "text-white");
+						f.classList.add("hover:opacity-90");
+					}
+				});
+
+				cards.forEach((card) => {
+					const cardEl = card;
+					const tags = (cardEl.dataset.tags || "").split(",");
+					const categories = (cardEl.dataset.categories || "").split(",");
+					
+					if (
+						selectedTag === "all" ||
+						(selectedTag && (tags.includes(selectedTag) || categories.includes(selectedTag)))
+					) {
+						cardEl.style.display = "";
+						cardEl.classList.add("animate-fade-in");
+					} else {
+						cardEl.style.display = "none";
+						cardEl.classList.remove("animate-fade-in");
+					}
+				});
+			}
+		}
+		customElements.define("tool-filter", ToolFilter);
+	}
+
+	// 搜索功能 - 使用全局函数，在页面加载时调用
+	window.initToolSearch = function() {
+		var searchInput = document.getElementById("tool-search-input");
+		var clearBtn = document.getElementById("clear-search-btn");
+		var resultsCount = document.getElementById("results-count");
+		var resultsContainer = document.getElementById("search-results-count");
+		var toolsGrid = document.querySelector(".tools-grid");
+		var searchEmptyState = document.getElementById("search-empty-state");
+
+		if (!searchInput) return;
+
+		// 获取所有工具卡片
+		function getToolCards() {
+			return document.querySelectorAll(".tool-card");
+		}
+
+		// 搜索函数
+		function performSearch(query) {
+			var searchTerm = query.toLowerCase().trim();
+			var visibleCount = 0;
+			var toolCards = getToolCards();
+
+			// 显示/隐藏清除按钮
+			if (searchTerm && clearBtn) {
+				clearBtn.style.display = "block";
+				setTimeout(function() { clearBtn.classList.add("opacity-100"); }, 10);
+			} else if (clearBtn) {
+				clearBtn.classList.remove("opacity-100");
+				setTimeout(function() { clearBtn.style.display = "none"; }, 200);
+			}
+
+			// 筛选卡片
+			toolCards.forEach(function(card) {
+				var title = (card.dataset.title || "").toLowerCase();
+				var description = (card.dataset.description || "").toLowerCase();
+				var tags = (card.dataset.tags || "").toLowerCase();
+				var categories = (card.dataset.categories || "").toLowerCase();
+
+				var matches = title.includes(searchTerm) ||
+					description.includes(searchTerm) ||
+					tags.includes(searchTerm) ||
+					categories.includes(searchTerm);
+
+				if (matches) {
+					card.style.display = "";
+					visibleCount++;
+				} else {
+					card.style.display = "none";
+				}
+			});
+
+			// 更新结果统计
+			if (searchTerm) {
+				if (resultsCount) resultsCount.textContent = String(visibleCount);
+				if (resultsContainer) resultsContainer.classList.add("opacity-100");
+			} else {
+				if (resultsContainer) resultsContainer.classList.remove("opacity-100");
+			}
+
+			// 显示/隐藏空状态
+			if (searchTerm && visibleCount === 0) {
+				if (searchEmptyState) searchEmptyState.classList.remove("hidden");
+				if (toolsGrid) toolsGrid.style.display = "none";
+			} else {
+				if (searchEmptyState) searchEmptyState.classList.add("hidden");
+				if (toolsGrid) toolsGrid.style.display = "";
+			}
+		}
+
+		var debounceTimer;
+		function handleSearchInput(e) {
+			clearTimeout(debounceTimer);
+			debounceTimer = setTimeout(function() {
+				performSearch(e.target.value);
+			}, 150);
+		}
+
+		function handleClearClick() {
+			searchInput.value = "";
+			performSearch("");
+			searchInput.focus();
+		}
+
+		// 移除旧的事件监听器（防止重复绑定）
+		searchInput.removeEventListener("input", handleSearchInput);
+		if (clearBtn) {
+			clearBtn.removeEventListener("click", handleClearClick);
+		}
+
+		// 绑定新的事件监听器
+		searchInput.addEventListener("input", handleSearchInput);
+		if (clearBtn) {
+			clearBtn.addEventListener("click", handleClearClick);
+		}
+	};
+
+	// 页面加载完成后初始化搜索功能
+	document.addEventListener('DOMContentLoaded', function() {
+		window.initToolSearch();
+	});
+
+	// Swup页面转换后重新初始化
+	if (window.swup) {
+		window.swup.hooks.on("content:replace", function() {
+			window.initToolSearch();
+		});
+		window.swup.hooks.on("page:view", function() {
+			window.initToolSearch();
+		});
+	} else {
+		document.addEventListener("swup:enable", function() {
+			window.swup.hooks.on("content:replace", function() {
+				window.initToolSearch();
+			});
+			window.swup.hooks.on("page:view", function() {
+				window.initToolSearch();
+			});
+		});
+	}
+</script>
+
 <MainGridLayout title={title} description={description}>
 	<div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
 		<div class="card-base z-10 px-4 md:px-6 lg:px-9 py-4 md:py-6 relative w-full">
@@ -231,160 +421,4 @@ const description = toolListPageConfig.description;
 	}
 </style>
 
-<script is:inline>
-	// 搜索功能
-	(function() {
-		var searchInput = document.getElementById("tool-search-input");
-		var clearBtn = document.getElementById("clear-search-btn");
-		var resultsCount = document.getElementById("results-count");
-		var resultsContainer = document.getElementById("search-results-count");
-		var toolsGrid = document.querySelector(".tools-grid");
-		var searchEmptyState = document.getElementById("search-empty-state");
 
-		if (!searchInput) return;
-
-		// 获取所有工具卡片
-		function getToolCards() {
-			return document.querySelectorAll(".tool-card");
-		}
-
-		// 搜索函数
-		function performSearch(query) {
-			var searchTerm = query.toLowerCase().trim();
-			var visibleCount = 0;
-			var toolCards = getToolCards();
-
-			// 显示/隐藏清除按钮
-			if (searchTerm && clearBtn) {
-				clearBtn.style.display = "block";
-				setTimeout(function() { clearBtn.classList.add("opacity-100"); }, 10);
-			} else if (clearBtn) {
-				clearBtn.classList.remove("opacity-100");
-				setTimeout(function() { clearBtn.style.display = "none"; }, 200);
-			}
-
-			// 筛选卡片
-			toolCards.forEach(function(card) {
-				var title = (card.dataset.title || "").toLowerCase();
-				var description = (card.dataset.description || "").toLowerCase();
-				var tags = (card.dataset.tags || "").toLowerCase();
-				var categories = (card.dataset.categories || "").toLowerCase();
-
-				var matches = title.includes(searchTerm) ||
-					description.includes(searchTerm) ||
-					tags.includes(searchTerm) ||
-					categories.includes(searchTerm);
-
-				if (matches) {
-					card.style.display = "";
-					visibleCount++;
-				} else {
-					card.style.display = "none";
-				}
-			});
-
-			// 更新结果统计
-			if (searchTerm) {
-				if (resultsCount) resultsCount.textContent = String(visibleCount);
-				if (resultsContainer) resultsContainer.classList.add("opacity-100");
-			} else {
-				if (resultsContainer) resultsContainer.classList.remove("opacity-100");
-			}
-
-			// 显示/隐藏空状态
-			if (searchTerm && visibleCount === 0) {
-				if (searchEmptyState) searchEmptyState.classList.remove("hidden");
-				if (toolsGrid) toolsGrid.style.display = "none";
-			} else {
-				if (searchEmptyState) searchEmptyState.classList.add("hidden");
-				if (toolsGrid) toolsGrid.style.display = "";
-			}
-		}
-
-		// 搜索输入事件
-		var debounceTimer;
-		searchInput.addEventListener("input", function(e) {
-			clearTimeout(debounceTimer);
-			debounceTimer = setTimeout(function() {
-				performSearch(e.target.value);
-			}, 150);
-		});
-
-		// 清除按钮点击
-		if (clearBtn) {
-			clearBtn.addEventListener("click", function() {
-				searchInput.value = "";
-				performSearch("");
-				searchInput.focus();
-			});
-		}
-	})();
-
-	// 标签筛选功能 - 使用自定义元素
-	if (!customElements.get("tool-filter")) {
-		class ToolFilter extends HTMLElement {
-			constructor() {
-				super();
-			}
-
-			connectedCallback() {
-				this.addEventListener("click", this.handleClick);
-			}
-
-			disconnectedCallback() {
-				this.removeEventListener("click", this.handleClick);
-			}
-
-			handleClick(e) {
-				const target = e.target;
-				const button = target.closest("button");
-				if (!button) return;
-
-				const selectedTag = button.dataset.tag;
-				const filters = this.querySelectorAll("button");
-				const container = this.closest(".card-base");
-				if (!container) return;
-
-				const cards = container.querySelectorAll(".tool-card");
-
-				filters.forEach((f) => {
-					f.classList.remove("bg-(--primary)", "text-white");
-					f.classList.remove("hover:opacity-90");
-					f.classList.add(
-						"bg-(--btn-regular-bg)",
-						"text-(--btn-content)"
-					);
-					f.classList.add("hover:bg-(--btn-regular-bg-hover)");
-
-					if (f === button) {
-						f.classList.remove(
-							"bg-(--btn-regular-bg)",
-							"text-(--btn-content)"
-						);
-						f.classList.remove("hover:bg-(--btn-regular-bg-hover)");
-						f.classList.add("bg-(--primary)", "text-white");
-						f.classList.add("hover:opacity-90");
-					}
-				});
-
-				cards.forEach((card) => {
-					const cardEl = card;
-					const tags = (cardEl.dataset.tags || "").split(",");
-					const categories = (cardEl.dataset.categories || "").split(",");
-					
-					if (
-						selectedTag === "all" ||
-						(selectedTag && (tags.includes(selectedTag) || categories.includes(selectedTag)))
-					) {
-						cardEl.style.display = "";
-						cardEl.classList.add("animate-fade-in");
-					} else {
-						cardEl.style.display = "none";
-						cardEl.classList.remove("animate-fade-in");
-					}
-				});
-			}
-		}
-		customElements.define("tool-filter", ToolFilter);
-	}
-</script>

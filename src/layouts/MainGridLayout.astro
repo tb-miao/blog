@@ -11,6 +11,7 @@ import ImageWrapper from "@/components/common/ImageWrapper.astro";
 import FloatingControls from "@/components/controls/FloatingControls.astro";
 import TypewriterText from "@/components/features/TypewriterText.astro";
 import CategoryBar from "@/components/layout/CategoryBar.astro";
+import DevToolsWarning from "@components/features/DevToolsWarning.astro";
 import {
 	backgroundWallpaper,
 	live2dModelConfig,
@@ -935,6 +936,7 @@ const bannerCarouselInterval = Math.max(
 
         <SpineModel></SpineModel>
         {live2dModelConfig.enable && <Live2DWidget config={live2dModelConfig} />}
+        {siteConfig.devtoolsWarning?.enable && <DevToolsWarning />}
     </div>
 </div>
 

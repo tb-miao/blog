@@ -77,6 +77,14 @@ export const siteConfig: SiteConfig = {
 		},
 	],
 
+	// 启用开发者工具提示信息
+	devtoolsWarning: {
+		enable: true, // 是否启用
+		message:
+			"请按本站规定合法使用开发者工具", // 提示信息内容，留空为默认
+		time: 2, // 提示信息显示时间，单位秒
+	},
+
 	// 导航栏配置
 	navbar: {
 		// 导航栏Logo
