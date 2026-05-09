@@ -7,9 +7,6 @@ export const announcementConfig: AnnouncementConfig = {
 	// 公告内容    
 	content: `
 ## 🎉🎉 欢迎来到我的博客喵！本站2周年啦！
----
-- 目前已关闭性能检测面板，后续会删除。
----
 `,
 	// 是否允许用户关闭公告
 	closable: false,

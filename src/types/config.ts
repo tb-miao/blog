@@ -168,8 +168,6 @@ export type SiteConfig = {
 		noReferrerDomains?: string[];
 	};
 
-	// 性能监控配置
-	performanceMonitor?: PerformanceMonitorConfig;
 };
 
 export type Favicon = {
@@ -796,12 +794,6 @@ export type GalleryConfig = {
 	columnWidth?: number; // 瀑布流最小列宽(px)，默认 240，浏览器根据容器宽度自动计算列数
 };
 
-// 性能监控配置
-export type PerformanceMonitorConfig = {
-	enable: boolean; // 是否启用性能监控面板
-	showLoadTime: boolean; // 是否显示加载时间
-	showMemoryUsage: boolean; // 是否显示内存占用
-};
 
 
 // 工具项配置

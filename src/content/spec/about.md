@@ -34,7 +34,7 @@
 
 |   **博&emsp;客**    |    **https://tbmiao.dpdns.org**    |
 | :-----------------: | :-------------------------------: |
-|   **主页**      |     **https://nachceko.qzz.io**   |
+|   **Team website**      |     **https://nachceko.qzz.io**   |
 |  **Ba_logo**  | **https://ba.tbmiao.dpdns.org** |
 
 ---

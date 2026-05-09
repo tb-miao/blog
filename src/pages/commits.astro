@@ -56,7 +56,7 @@ if (latestCommit) {
 // latestTags = sortedCommits[0]?.tags || [];
 
 // 构建 subtitle
-let subtitle = "网站更新记录。";
+let subtitle = "网站更新记录。/.由于平台API限制，更新时这个地方有时不显示，是正常现象。";
 if (latestTags.length > 0) {
 	subtitle += `\n最新版本: ${latestTags.join(", ")}`;
 } else {
@@ -213,7 +213,7 @@ if (latestTags.length > 0) {
 			// 重置所有 commit-card 的动画
 			function resetAnimations() {
 				const cards = document.querySelectorAll('.commit-card');
-				cards.forEach((card, index) => {
+				cards.forEach((card) => {
 					// 移除动画类以重置
 					card.style.animation = 'none';
 					card.style.opacity = '0';
