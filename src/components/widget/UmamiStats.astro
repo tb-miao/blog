@@ -169,10 +169,18 @@ async function fetchUmamiStats() {
 }
 
 let isLoading = false;
+let isLoaded = false;
 
 function loadUmamiStats() {
+    if (isLoaded) {
+        console.log('[UmamiStats] 统计数据已加载，跳过自动加载');
+        return;
+    }
+    
     console.log('[UmamiStats] 开始加载统计数据...');
-    fetchUmamiStats();
+    fetchUmamiStats().then(() => {
+        isLoaded = true;
+    });
 }
 
 function refreshUmamiStats() {
@@ -191,6 +199,7 @@ function refreshUmamiStats() {
     
     fetchUmamiStats().finally(() => {
         isLoading = false;
+        isLoaded = true;
         if (refreshBtn) {
             refreshBtn.classList.remove('animate-spin');
             refreshBtn.disabled = false;
@@ -199,11 +208,10 @@ function refreshUmamiStats() {
     });
 }
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadUmamiStats);
-} else {
-    loadUmamiStats();
-}
+window.addEventListener('load', () => {
+    console.log('[UmamiStats] 页面加载完成，准备加载统计');
+    setTimeout(loadUmamiStats, 100);
+});
 
 const refreshBtn = document.getElementById('umami-refresh');
 if (refreshBtn) {
@@ -216,6 +224,7 @@ if (refreshBtn) {
 
 if (window.swup) {
     window.swup.hooks.on('page:view', () => {
+        isLoaded = false;
         setTimeout(loadUmamiStats, 100);
     });
 }

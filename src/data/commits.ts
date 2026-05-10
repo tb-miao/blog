@@ -4,6 +4,18 @@ import type { CommitItem } from "../components/features/commits/types";
 const GITHUB_OWNER = "tb-miao";
 const GITHUB_REPO = "blog";
 
+// 环境控制开关
+// true: 开发环境模式 - 禁用 GitHub API 调用，使用静态数据
+// false: 生产环境模式 - 启用 GitHub API 调用
+const DISABLE_GITHUB_API = false;
+
+// 缓存相关
+const CACHE_TTL = 5 * 60 * 1000; // 缓存有效期 5 分钟
+let commitCache: {
+	data: CommitItem[];
+	timestamp: number;
+} | null = null;
+
 // 生成带时间戳的日志函数
 const logWithTimestamp = (message: string, level: 'log' | 'error' = 'log') => {
 	const now = new Date();
@@ -15,16 +27,14 @@ const logWithTimestamp = (message: string, level: 'log' | 'error' = 'log') => {
 		timeZone: 'Asia/Shanghai'
 	});
 	
-	// 定义颜色代码
 	const colors = {
 		reset: '\x1b[0m',
-		pink: '\x1b[38;5;218m', // 嫩粉色 ANSI 颜色代码
+		pink: '\x1b[38;5;218m',
 		green: '\x1b[32m',
 		red: '\x1b[31m',
 		blue: '\x1b[34m'
 	};
 	
-	// 根据消息内容添加颜色
 	let coloredMessage = message;
 	if (message.includes('[Commits]')) {
 		coloredMessage = `${colors.green}[Commits]${colors.reset}${colors.pink}${message.replace('[Commits]', '')}${colors.reset}`;
@@ -85,145 +95,238 @@ const fallbackCommitData: CommitItem[] = [
 	}
 ];
 
-// 从 GitHub API 获取 commit 数据
+// 延迟函数，用于控制请求频率
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+// 重试包装器
+async function withRetry<T>(
+	fn: () => Promise<T>,
+	maxRetries: number = 3,
+	initialDelay: number = 1000
+): Promise<T> {
+	let lastError: Error;
+	
+	for (let attempt = 1; attempt <= maxRetries; attempt++) {
+		try {
+			return await fn();
+		} catch (error) {
+			lastError = error as Error;
+			
+			if (attempt < maxRetries) {
+				const delayTime = initialDelay * Math.pow(2, attempt - 1);
+				logWithTimestamp(`[Commits] 重试 ${attempt}/${maxRetries}，等待 ${delayTime}ms...`);
+				await delay(delayTime);
+			}
+		}
+	}
+	
+	throw lastError!;
+}
+
+// 从 GitHub API 获取 commit 数据（优化版）
 export async function fetchCommits(): Promise<CommitItem[]> {
-	// 检查是否在开发环境中
+	// 检查开关设置
+	if (DISABLE_GITHUB_API) {
+		logWithTimestamp("[Commits] GitHub API 已禁用，使用静态 commit 数据");
+		return fallbackCommitData;
+	}
+	
+	// 检查是否在开发环境中（仅用于日志提示）
 	let isDevelopment = false;
 	
 	try {
 		isDevelopment = import.meta.env.DEV;
 	} catch (error) {
-		logWithTimestamp(`[Commits]环境判断出错: ${error}`, 'error');
-		// 如果环境变量获取失败，默认使用开发环境模式
-		isDevelopment = true;
+		logWithTimestamp(`[Commits] 环境判断出错：${error}`, 'error');
+		isDevelopment = false;
 	}
 	
-	// 额外检查：如果是本地开发环境，直接使用静态数据
-	const isLocalDevelopment = isDevelopment || process.env.NODE_ENV === 'development';
+	if (isDevelopment) {
+		logWithTimestamp("[Commits] 开发环境模式，将调用 GitHub API");
+	}
 	
-	// 在开发环境中，直接使用静态数据，避免 TLS 证书验证问题
-	if (isLocalDevelopment) {
-		logWithTimestamp("[Commits]在开发环境中，使用静态 commit 数据");
-		return fallbackCommitData;
+	// 检查缓存是否有效
+	if (commitCache && Date.now() - commitCache.timestamp < CACHE_TTL) {
+		logWithTimestamp(`[Commits] 使用缓存数据（剩余有效期：${Math.round((CACHE_TTL - (Date.now() - commitCache.timestamp)) / 1000)}s）`);
+		return commitCache.data;
 	}
 	
 	try {
-		// 构建 GitHub API URL
 		const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/commits`;
 		
-		logWithTimestamp(`[Commits]正在从 GitHub API 获取 commit 数据: ${apiUrl}`);
+		logWithTimestamp(`[Commits] 正在从 GitHub API 获取 commit 数据`);
 		
-		// 发送请求，添加超时设置
-		const controller = new AbortController();
-		const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒超时
-		
-		try {
-			const response = await fetch(apiUrl, {
-				signal: controller.signal,
-				headers: {
-					"Accept": "application/vnd.github.v3+json"
+		// 使用重试机制获取 commit 列表
+		const githubCommits = await withRetry(async () => {
+			const controller = new AbortController();
+			const timeoutId = setTimeout(() => controller.abort(), 15000);
+			
+			try {
+				const response = await fetch(apiUrl, {
+					signal: controller.signal,
+					headers: {
+						"Accept": "application/vnd.github.v3+json",
+						"User-Agent": "tb-miao-blog"
+					}
+				});
+				
+				clearTimeout(timeoutId);
+				
+				if (!response.ok) {
+					if (response.status === 403) {
+						throw new Error(`GitHub API 速率限制 (${response.status})`);
+					}
+					throw new Error(`GitHub API 响应失败：${response.status} ${response.statusText}`);
 				}
-			});
-			
-			clearTimeout(timeoutId);
-			
-			if (!response.ok) {
-				logWithTimestamp(`[Commits Error]GitHub API 响应失败: ${response.status} ${response.statusText}`, 'error');
-				throw new Error(`[Commits Error]GitHub API 响应失败: ${response.status} ${response.statusText}`);
+				
+				const data = await response.json();
+				
+				if (!Array.isArray(data)) {
+					throw new Error("GitHub API 返回的数据不是数组");
+				}
+				
+				return data;
+			} catch (error) {
+				clearTimeout(timeoutId);
+				
+				// 特殊处理 fetch failed 错误
+				if (error instanceof TypeError && error.message.includes('fetch failed')) {
+					const cause = (error as any).cause;
+					if (cause) {
+						throw new Error(`网络请求失败：${cause.message || '未知网络错误'}`);
+					}
+					throw new Error(`网络请求失败：无法连接到 GitHub API，请检查网络连接`);
+				}
+				
+				throw error;
 			}
+		}, 3, 2000);
+		
+		logWithTimestamp(`[Commits] 成功获取 ${githubCommits.length} 条 commit 数据`);
+		
+		// 只获取最新的 10 条 commit
+		const limitedCommits = githubCommits.slice(0, 10);
+		
+		// 批量获取详细信息，控制请求频率
+		const commits: CommitItem[] = [];
+		
+		for (let i = 0; i < limitedCommits.length; i++) {
+			const commit = limitedCommits[i];
 			
-			// 解析响应数据
-			const githubCommits = await response.json();
-			
-			if (!Array.isArray(githubCommits)) {
-				logWithTimestamp("[Commits Error]GitHub API 返回的数据不是数组", 'error');
-				throw new Error("[Commits Error]GitHub API 返回的数据不是数组");
-			}
-			
-			logWithTimestamp(`[Commits]成功获取 ${githubCommits.length} 条 commit 数据`);
-			
-			// 限制获取的 commit 数量，避免过多请求
-			const limitedCommits = githubCommits.slice(0, 10);
-			
-			// 转换为 CommitItem 格式
-			const commits: CommitItem[] = await Promise.all(
-				limitedCommits.map(async (commit: any) => {
+			try {
+				// 在请求之间添加延迟，避免触发速率限制
+				if (i > 0) {
+					await delay(1500);
+				}
+				
+				const detailData = await withRetry(async () => {
+					const controller = new AbortController();
+					const timeoutId = setTimeout(() => controller.abort(), 15000);
+					
 					try {
-						// 获取详细的 commit 信息以获取文件变更
 						const detailResponse = await fetch(commit.url, {
 							signal: controller.signal,
 							headers: {
-								"Accept": "application/vnd.github.v3+json"
+								"Accept": "application/vnd.github.v3+json",
+								"User-Agent": "tb-miao-blog"
 							}
 						});
 						
+						clearTimeout(timeoutId);
+						
 						if (!detailResponse.ok) {
-							logWithTimestamp(`[Commits Error]获取 commit 详情失败: ${detailResponse.status} ${detailResponse.statusText}`, 'error');
-							// 失败时使用默认值
-						return {
-							id: commit.sha,
-							hash: commit.sha,
-							parentHashes: commit.parents?.map((p: any) => p.sha) || [],
-							message: commit.commit?.message || "(无提交信息)",
-							author: commit.commit?.author?.name || "Unknown",
-							date: commit.commit?.author?.date || new Date().toISOString(),
-							avatar: commit.author?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${commit.commit?.author?.name || "Unknown"}`,
-							changes: {
-								additions: 0,
-								deletions: 0
-							},
-							files: [],
-							branch: "main"
-						};
+							if (detailResponse.status === 403) {
+								throw new Error(`GitHub API 速率限制 (${detailResponse.status})`);
+							}
+							throw new Error(`获取详情失败：${detailResponse.status} ${detailResponse.statusText}`);
 						}
 						
-						const detailData = await detailResponse.json();
-						
-						return {
-								id: commit.sha,
-								hash: commit.sha,
-								parentHashes: commit.parents?.map((p: any) => p.sha) || [],
-								message: commit.commit?.message || "(无提交信息)",
-								author: commit.commit?.author?.name || "Unknown",
-								date: commit.commit?.author?.date || new Date().toISOString(),
-								avatar: commit.author?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${commit.commit?.author?.name || "Unknown"}`,
-								changes: {
-									additions: detailData.stats?.additions || 0,
-									deletions: detailData.stats?.deletions || 0
-								},
-								files: detailData.files?.map((file: any) => file.filename) || [],
-								branch: "main"
-							};
+						return await detailResponse.json();
 					} catch (error) {
-						logWithTimestamp(`[Commits Error]处理 commit 数据时出错: ${error}`, 'error');
-						// 失败时使用默认值
-						return {
-								id: commit.sha,
-								hash: commit.sha,
-								parentHashes: commit.parents?.map((p: any) => p.sha) || [],
-								message: commit.commit?.message || "(无提交信息)",
-								author: commit.commit?.author?.name || "Unknown",
-								date: commit.commit?.author?.date || new Date().toISOString(),
-								avatar: commit.author?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${commit.commit?.author?.name || "Unknown"}`,
-								changes: {
-									additions: 0,
-									deletions: 0
-								},
-								files: [],
-								branch: "main"
-							};
+						clearTimeout(timeoutId);
+						
+						// 特殊处理 fetch failed 错误
+						if (error instanceof TypeError && error.message.includes('fetch failed')) {
+							const cause = (error as any).cause;
+							if (cause) {
+								throw new Error(`网络请求失败：${cause.message || '未知网络错误'}`);
+							}
+							throw new Error(`网络请求失败：无法连接到 GitHub API，请检查网络连接`);
+						}
+						
+						throw error;
 					}
-				})
-			);
-			
-			return commits;
-		} catch (error) {
-			clearTimeout(timeoutId);
-			throw error;
+				}, 2, 3000);
+				
+				commits.push({
+					id: commit.sha,
+					hash: commit.sha,
+					parentHashes: commit.parents?.map((p: any) => p.sha) || [],
+					message: commit.commit?.message || "(无提交信息)",
+					author: commit.commit?.author?.name || "Unknown",
+					date: commit.commit?.author?.date || new Date().toISOString(),
+					avatar: commit.author?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${commit.commit?.author?.name || "Unknown"}`,
+					changes: {
+						additions: detailData.stats?.additions || 0,
+						deletions: detailData.stats?.deletions || 0
+					},
+					files: detailData.files?.map((file: any) => file.filename) || [],
+					branch: "main"
+				});
+				
+			} catch (error) {
+				logWithTimestamp(`[Commits Error] 处理 commit ${commit.sha?.slice(0, 7)} 时出错：${error}`, 'error');
+				
+				// 失败时使用简化数据
+				commits.push({
+					id: commit.sha,
+					hash: commit.sha,
+					parentHashes: commit.parents?.map((p: any) => p.sha) || [],
+					message: commit.commit?.message || "(无提交信息)",
+					author: commit.commit?.author?.name || "Unknown",
+					date: commit.commit?.author?.date || new Date().toISOString(),
+					avatar: commit.author?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${commit.commit?.author?.name || "Unknown"}`,
+					changes: {
+						additions: 0,
+						deletions: 0
+					},
+					files: [],
+					branch: "main"
+				});
+			}
 		}
+		
+		// 更新缓存
+		commitCache = {
+			data: commits,
+			timestamp: Date.now()
+		};
+		
+		logWithTimestamp(`[Commits] 成功处理 ${commits.length} 条 commit 数据，已缓存`);
+		
+		return commits;
+		
 	} catch (error) {
-		logWithTimestamp(`[Commits Error]获取 GitHub commit 数据失败: ${error}`, 'error');
-		// 失败时使用静态数据
+		// 特殊处理 fetch failed 错误
+		let errorMessage = error instanceof Error ? error.message : String(error);
+		
+		if (error instanceof TypeError && error.message.includes('fetch failed')) {
+			const cause = (error as any).cause;
+			if (cause) {
+				errorMessage = `网络请求失败：${cause.message || '未知网络错误'}`;
+			} else {
+				errorMessage = `网络请求失败：无法连接到 GitHub API，请检查网络连接`;
+			}
+		}
+		
+		logWithTimestamp(`[Commits Error] 获取 GitHub commit 数据失败：${errorMessage}`, 'error');
+		
+		// 如果有缓存但已过期，仍然返回缓存数据
+		if (commitCache) {
+			logWithTimestamp("[Commits] 返回过期缓存数据");
+			return commitCache.data;
+		}
+		
 		return fallbackCommitData;
 	}
 }
