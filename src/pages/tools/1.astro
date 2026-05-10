@@ -38,6 +38,8 @@ const description = toolListPageConfig.description;
 				if (!button) return;
 
 				const selectedTag = button.dataset.tag;
+				window.currentSelectedTag = selectedTag;
+
 				const filters = this.querySelectorAll("button");
 				const container = this.closest(".card-base");
 				if (!container) return;
@@ -64,22 +66,7 @@ const description = toolListPageConfig.description;
 					}
 				});
 
-				cards.forEach((card) => {
-					const cardEl = card;
-					const tags = (cardEl.dataset.tags || "").split(",");
-					const categories = (cardEl.dataset.categories || "").split(",");
-					
-					if (
-						selectedTag === "all" ||
-						(selectedTag && (tags.includes(selectedTag) || categories.includes(selectedTag)))
-					) {
-						cardEl.style.display = "";
-						cardEl.classList.add("animate-fade-in");
-					} else {
-						cardEl.style.display = "none";
-						cardEl.classList.remove("animate-fade-in");
-					}
-				});
+				window.applyFilters();
 			}
 		}
 		customElements.define("tool-filter", ToolFilter);
@@ -96,18 +83,19 @@ const description = toolListPageConfig.description;
 
 		if (!searchInput) return;
 
-		// 获取所有工具卡片
+		window.currentSelectedTag = window.currentSelectedTag || "all";
+		window.currentSearchTerm = window.currentSearchTerm || "";
+
 		function getToolCards() {
 			return document.querySelectorAll(".tool-card");
 		}
 
-		// 搜索函数
-		function performSearch(query) {
-			var searchTerm = query.toLowerCase().trim();
+		window.applyFilters = function() {
+			var searchTerm = (window.currentSearchTerm || "").toLowerCase().trim();
+			var selectedTag = window.currentSelectedTag || "all";
 			var visibleCount = 0;
 			var toolCards = getToolCards();
 
-			// 显示/隐藏清除按钮
 			if (searchTerm && clearBtn) {
 				clearBtn.style.display = "block";
 				setTimeout(function() { clearBtn.classList.add("opacity-100"); }, 10);
@@ -116,19 +104,24 @@ const description = toolListPageConfig.description;
 				setTimeout(function() { clearBtn.style.display = "none"; }, 200);
 			}
 
-			// 筛选卡片
 			toolCards.forEach(function(card) {
 				var title = (card.dataset.title || "").toLowerCase();
 				var description = (card.dataset.description || "").toLowerCase();
 				var tags = (card.dataset.tags || "").toLowerCase();
 				var categories = (card.dataset.categories || "").toLowerCase();
+				var cardTags = (card.dataset.tags || "").split(",");
+				var cardCategories = (card.dataset.categories || "").split(",");
 
-				var matches = title.includes(searchTerm) ||
+				var matchesSearch = !searchTerm ||
+					title.includes(searchTerm) ||
 					description.includes(searchTerm) ||
 					tags.includes(searchTerm) ||
 					categories.includes(searchTerm);
 
-				if (matches) {
+				var matchesTag = selectedTag === "all" ||
+					(selectedTag && (cardTags.includes(selectedTag) || cardCategories.includes(selectedTag)));
+
+				if (matchesSearch && matchesTag) {
 					card.style.display = "";
 					visibleCount++;
 				} else {
@@ -136,7 +129,6 @@ const description = toolListPageConfig.description;
 				}
 			});
 
-			// 更新结果统计
 			if (searchTerm) {
 				if (resultsCount) resultsCount.textContent = String(visibleCount);
 				if (resultsContainer) resultsContainer.classList.add("opacity-100");
@@ -144,7 +136,6 @@ const description = toolListPageConfig.description;
 				if (resultsContainer) resultsContainer.classList.remove("opacity-100");
 			}
 
-			// 显示/隐藏空状态
 			if (searchTerm && visibleCount === 0) {
 				if (searchEmptyState) searchEmptyState.classList.remove("hidden");
 				if (toolsGrid) toolsGrid.style.display = "none";
@@ -152,6 +143,11 @@ const description = toolListPageConfig.description;
 				if (searchEmptyState) searchEmptyState.classList.add("hidden");
 				if (toolsGrid) toolsGrid.style.display = "";
 			}
+		};
+
+		function performSearch(query) {
+			window.currentSearchTerm = query;
+			window.applyFilters();
 		}
 
 		var debounceTimer;
@@ -168,25 +164,21 @@ const description = toolListPageConfig.description;
 			searchInput.focus();
 		}
 
-		// 移除旧的事件监听器（防止重复绑定）
 		searchInput.removeEventListener("input", handleSearchInput);
 		if (clearBtn) {
 			clearBtn.removeEventListener("click", handleClearClick);
 		}
 
-		// 绑定新的事件监听器
 		searchInput.addEventListener("input", handleSearchInput);
 		if (clearBtn) {
 			clearBtn.addEventListener("click", handleClearClick);
 		}
 	};
 
-	// 页面加载完成后初始化搜索功能
 	document.addEventListener('DOMContentLoaded', function() {
 		window.initToolSearch();
 	});
 
-	// Swup页面转换后重新初始化
 	if (window.swup) {
 		window.swup.hooks.on("content:replace", function() {
 			window.initToolSearch();
@@ -212,6 +204,13 @@ const description = toolListPageConfig.description;
 			<!-- 页面标题和描述 -->
 			<div class="mb-4 md:mb-6">
 				<div class="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
+					<a
+						href="/tools/"
+						class="h-7 w-7 md:h-8 md:w-8 rounded-lg bg-(--btn-regular-bg) text-(--btn-content) flex items-center justify-center hover:bg-(--primary) hover:text-white transition-all duration-200 animate-in fade-in slide-in-from-left-2 duration-500 cursor-pointer"
+						title="返回"
+					>
+						<Icon name="material-symbols:arrow-back-rounded" class="text-[1.25rem] md:text-[1.5rem]" />
+					</a>
 					<div
 						class="h-7 w-7 md:h-8 md:w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70 animate-in fade-in slide-in-from-left-2 duration-500"
 					>
@@ -374,7 +373,7 @@ const description = toolListPageConfig.description;
 
 	.tools-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+		grid-template-columns: repeat(2, 1fr);
 		gap: 0.75rem;
 	}
 

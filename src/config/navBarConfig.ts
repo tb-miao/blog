@@ -32,7 +32,7 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 	links.push({
 		name: "我的",
 		url: "/my/",
-		icon: "material-symbols:person",
+		icon: "material-symbols:info",
 		children: [
 				{
 					name: "关于",
@@ -40,9 +40,9 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 					icon: "material-symbols:person",
 				},
 				{
-					name: "工具",
+					name: "工具合集",
 					url: "/tools/",
-					icon: "material-symbols:tools-wrench",
+					icon: "material-symbols:folder-open-rounded",
 				},
 				{
 					name: "更新记录",

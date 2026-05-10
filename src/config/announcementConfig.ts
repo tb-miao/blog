@@ -7,6 +7,9 @@ export const announcementConfig: AnnouncementConfig = {
 	// 公告内容    
 	content: `
 ## 🎉🎉 欢迎来到我的博客喵！本站2周年啦！
+---
+- 优化了一些东西。（不知道）
+---
 `,
 	// 是否允许用户关闭公告
 	closable: false,

@@ -1,0 +1,127 @@
+---
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { Icon } from "astro-icon/components";
+
+// 手动添加 tools 目录下的页面列表
+const pages = [
+	{
+		url: "/tools/1/",
+		title: "工具列表",
+		description: "我用过的工具吖~",
+		icon: "material-symbols:build"
+	}
+	// 添加更多页面示例：
+	// {
+	// 	url: "/tools/2",
+	// 	title: "页面标题",
+	// 	description: "页面描述",
+	// 	icon: "material-symbols:search" // 可选，默认 article
+	// }
+];
+
+// 页面标题和描述
+const title = "工具合集";
+const description = "一个普通的汇总页面";
+---
+
+<MainGridLayout title={title} description={description}>
+	<div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+		<div class="card-base z-10 px-4 md:px-6 lg:px-9 py-4 md:py-6 relative w-full">
+			<!-- 页面标题和描述 -->
+			<div class="mb-4 md:mb-6">
+				<div class="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
+					<div
+						class="h-7 w-7 md:h-8 md:w-8 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70"
+					>
+						<Icon name="material-symbols:folder-open-rounded" class="text-[1.25rem] md:text-[1.5rem]" />
+					</div>
+					<div class="text-2xl md:text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+						{title}
+					</div>
+				</div>
+				{description && (
+					<p class="text-sm md:text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
+						{description}
+					</p>
+				)}
+			</div>
+
+			<!-- 页面列表 -->
+			<div class="pages-list my-4 md:my-6">
+				{pages.length > 0 ? (
+					pages.map((page) => (
+						<a
+							href={page.url}
+							class="page-card group flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-xl border border-(--line-divider) hover:border-(--primary) hover:bg-(--card-bg) transition-all duration-300 hover:shadow-lg hover:shadow-(--primary)/10"
+						>
+							<!-- 图标 -->
+							<div
+								class="relative h-10 w-10 md:h-12 md:w-12 shrink-0 rounded-xl bg-(--primary)/10 flex items-center justify-center text-(--primary) group-hover:bg-(--primary) group-hover:text-white transition-all duration-300"
+							>
+								<Icon name={page.icon || "material-symbols:article"} class="text-[1.25rem] md:text-[1.5rem]" />
+							</div>
+
+							<!-- 页面信息 -->
+							<div class="grow min-w-0 flex flex-col justify-center gap-0.5 md:gap-1">
+								<h3 class="font-bold text-sm md:text-base text-neutral-900 dark:text-neutral-100 group-hover:text-(--primary) transition-colors duration-300">
+									{page.title}
+								</h3>
+								<p class="text-xs md:text-sm text-neutral-500 dark:text-neutral-400">
+									{page.description}
+								</p>
+							</div>
+
+							<!-- 箭头图标 -->
+							<Icon
+								name="material-symbols:arrow-outward-rounded"
+								class="text-(--primary) text-base md:text-lg opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 flex-shrink-0"
+							/>
+						</a>
+					))
+				) : (
+					<div class="flex flex-col items-center justify-center py-8 md:py-12 text-center">
+						<div class="h-12 w-12 md:h-16 md:w-16 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center mb-3 md:mb-4">
+							<Icon
+								name="material-symbols:folder-open-rounded"
+								class="text-[1.5rem] md:text-[2rem] text-neutral-400"
+							/>
+						</div>
+						<h3 class="text-base md:text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-1 md:mb-2">
+							暂无页面
+						</h3>
+						<p class="text-sm md:text-base text-neutral-600 dark:text-neutral-400">
+							tools 目录下暂无子页面
+						</p>
+					</div>
+				)}
+			</div>
+		</div>
+	</div>
+</MainGridLayout>
+
+<style is:global>
+	.pages-list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+
+	.page-card {
+		animation: fade-in-up 0.4s ease-out backwards;
+	}
+
+	@keyframes fade-in-up {
+		from {
+			opacity: 0;
+			transform: translateY(10px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.page-card:hover {
+		transform: translateY(-2px);
+	}
+</style>

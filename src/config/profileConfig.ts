@@ -25,13 +25,13 @@ export const profileConfig: ProfileConfig = {
 			name: "Bilibili",
 			icon: "fa7-brands:bilibili",
 			url: "https://space.bilibili.com/3546708996786634",
-			showName: false,
+			showName: true,
 		},
 		{
 			name: "GitHub",
 			icon: "fa7-brands:github",
 			url: "https://github.com/tb-miao",
-			showName: false,
+			showName: true,
 		},
 		{
 			name: "RSS",
@@ -39,5 +39,11 @@ export const profileConfig: ProfileConfig = {
 			url: "/rss/",
 			showName: false,
 		},
+		{
+			name: "工具合集",
+			icon: "material-symbols:folder-open-outline-rounded",
+			url: "/tools/",
+			showName: true,
+		}
 	],
 };
