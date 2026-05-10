@@ -200,25 +200,20 @@ export async function fetchCommits(): Promise<CommitItem[]> {
 				
 				throw error;
 			}
-		}, 3, 2000);
+		}, 2, 2000);
 		
 		logWithTimestamp(`[Commits] 成功获取 ${githubCommits.length} 条 commit 数据`);
 		
 		// 只获取最新的 10 条 commit
 		const limitedCommits = githubCommits.slice(0, 10);
 		
-		// 批量获取详细信息，控制请求频率
+		// 批量获取详细信息
 		const commits: CommitItem[] = [];
 		
 		for (let i = 0; i < limitedCommits.length; i++) {
 			const commit = limitedCommits[i];
 			
 			try {
-				// 在请求之间添加延迟，避免触发速率限制
-				if (i > 0) {
-					await delay(1500);
-				}
-				
 				const detailData = await withRetry(async () => {
 					const controller = new AbortController();
 					const timeoutId = setTimeout(() => controller.abort(), 15000);
@@ -256,7 +251,7 @@ export async function fetchCommits(): Promise<CommitItem[]> {
 						
 						throw error;
 					}
-				}, 2, 3000);
+				}, 2, 2000);
 				
 				commits.push({
 					id: commit.sha,
@@ -273,7 +268,6 @@ export async function fetchCommits(): Promise<CommitItem[]> {
 					files: detailData.files?.map((file: any) => file.filename) || [],
 					branch: "main"
 				});
-				
 			} catch (error) {
 				logWithTimestamp(`[Commits Error] 处理 commit ${commit.sha?.slice(0, 7)} 时出错：${error}`, 'error');
 				
