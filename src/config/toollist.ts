@@ -19,11 +19,11 @@ export const toolListPageConfig = {
 // 工具列表配置
 export const toolList: ToolItem[] = [
 	//{
-	//	title: "JSON 格式化",
-	//	description: "在线 JSON 格式化、验证和美化工具",
-	//	url: "https://jsonformatter.org/",
-	//	icon: "https://jsonformatter.org/favicon.ico",
-	//	tags: ["JSON", "格式化", "验证"],
+	//	title: "",
+	//	description: "",
+	//	url: "",
+	//	icon: ",
+	//	tags: [],
 	//	enabled: true,
 	//},
     {
@@ -138,6 +138,38 @@ export const toolList: ToolItem[] = [
         tags: ["bilibili美化插件"],
         enabled: true,
     },
+	{
+		title: "virustotal",
+		description: "Analyse suspicious files, domains, IPs and URLs to detect malware and other breaches, automatically share them with the security community.",
+		url: "https://www.virustotal.com/gui/home/upload",
+		icon: "https://www.virustotal.com/gui/images/favicon.svg",
+		tags: ["病毒扫描（exe）"],
+		enabled: true,
+	},
+    {
+		title: "魔盾安全分析",
+		description: "恶意软件分析 & URL链接扫描 免费在线病毒分析平台",
+		url: "https://www.maldun.com/submit/submit_file/",
+		icon: "https://www.maldun.com/static/graphic/MalDun_logo3.png",
+		tags: ["病毒扫描（exe）"],
+		enabled: true,
+	},
+	{
+		title: "微步在线云沙箱",
+		description: "微步在线云沙箱",
+		url: "https://s.threatbook.com/",
+		icon: "https://s.threatbook.com/assets/images/common/logoShort.svg",
+		tags: ["病毒扫描（exe）"],
+		enabled: true,
+	},
+	{
+		title: "VirScan - 多引擎文件在线检测平台",
+		description: "恶意文件检测平台，保护我们的文件安全 文件黑白，一扫便知",
+		url: "https://www.virscan.org/",
+		icon: "https://www.virscan.org/logo.svg",
+		tags: ["病毒扫描（exe）"],
+		enabled: true,
+	},
 ];
 
 // 获取启用的工具列表

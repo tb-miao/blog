@@ -15,10 +15,7 @@
 [![Forks](https://img.shields.io/github/forks/CuteLeaf/Firefly?style=social)](https://github.com/CuteLeaf/Firefly/network/members)
 [![Issues](https://img.shields.io/github/issues/CuteLeaf/Firefly)](https://github.com/CuteLeaf/Firefly/issues)
 > 
-> [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Z8Z41NQALY)
-> 
-> ![GitHub License](https://img.shields.io/github/license/CuteLeaf/Firefly)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/CuteLeaf/Firefly)
+
 
 </div>
 
@@ -51,44 +48,6 @@
 
 <img alt="firefly" src="./docs/images/1.webp" />
 <img alt="Lighthouse" src="./docs/images/Lighthouse.png" />
-
->[!TIP]
->
->Firefly 是一款基于 Astro 框架和 Fuwari 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。
-> 
->在重要的布局上，Firefly 创新性地增加了左右双侧边栏、文章网格(多列)布局、瀑布流布局。
->
->增加了站点统计、日历、文章目录、音乐播放器、快捷分类导航等小组件，让侧边栏和整体页面布局更加丰富。
->
->同时也增加了分享海报、相关文章推荐、随机文章等组件，让文章页面内容更丰富。
->
->**如果你参考或使用了 Firefly 以上组件设计和相关代码，请注明来自 Firefly。**
->
->Firefly 也保留了原版 fuwari 的布局，可根据自己的喜好在配置文件中自由切换。
->
->**更多布局配置及演示请查看：[Firefly 布局系统详解](https://firefly.cuteleaf.cn/posts/firefly-layout-system/)**
->
->Firefly 支持i18n多语言UI，但除了简体中文，其他语言均为AI翻译转换，如有错误，欢迎提交 [Pull Request](https://github.com/CuteLeaf/Firefly/pulls) 修正。
-
-## ✨ 功能特性
-
-### 核心功能
-
-- [x] **Astro + Tailwind CSS** - 基于现代技术栈的超快静态站点生成
-- [x] **流畅动画** - Swup 页面过渡动画，提供丝滑的浏览体验
-- [x] **响应式设计** - 完美适配桌面端、平板和移动设备
-- [x] **多语言支持** - i18n 国际化，UI支持简体中文、繁体中文、英文、日文、俄语
-- [x] **全文搜索** - 基于 Pagefind 的客户端搜索，支持文章内容索引
-
-### 个性化
-- [x] **动态侧边栏** - 支持配置单侧边栏、双侧边栏
-- [x] **文章布局** - 支持配置(单列)列表、网格(多列/瀑布流)布局
-- [x] **字体管理** - 支持自定义字体，丰富的字体选择器
-- [x] **页脚配置** - HTML 内容注入，完全自定义
-- [x] **亮暗色模式** - 支持亮色/暗色/跟随系统三种模式
-- [x] **导航栏自定义** - Logo、标题、链接全面自定义
-- [x] **壁纸模式切换** - 横幅壁纸、全屏透明壁纸、纯色背景
-- [x] **主题色自定义** - 360° 色相调节
 
 ## 📖 配置说明
 
@@ -132,8 +91,6 @@ comment: true    # 是否允许评论
 
 非常感谢 [saicaca](https://github.com/saicaca) 开发的 [fuwari](https://github.com/saicaca/fuwari) 模板，Firefly 就是基于这个模板二次开发
 
-流萤部分相关图片素材版权归游戏 [《崩坏：星穹铁道》](https://sr.mihoyo.com/) 开发商 [米哈游](https://www.mihoyo.com/) 所有
-
 ### 技术栈
 
 - [Astro](https://astro.build) 
@@ -150,12 +107,6 @@ comment: true    # 是否允许评论
 ### 其他参考
 - 博主`霞葉`的 [Bangumi 收藏](https://kasuha.com/posts/fuwari-enhance-ep2/) 页面组件
 - 哔哩哔哩up主 `公公的日常` 的Q版 [流萤看板娘Spine切片数据](https://www.bilibili.com/video/BV1fuVzzdE5y) 
-
-## 📝 许可协议
-
-本项目遵循 [MIT license](https://mit-license.org/) 开源协议，详细查看 [LICENSE](./LICENSE) 文件
-
-最初 Fork 自 [saicaca/fuwari](https://github.com/saicaca/fuwari)，感谢原作者的贡献
 
 ## ⭐ Star History
 
