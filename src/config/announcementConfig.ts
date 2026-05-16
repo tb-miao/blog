@@ -9,6 +9,7 @@ export const announcementConfig: AnnouncementConfig = {
 ## 🎉🎉 欢迎来到我的博客喵！本站2周年啦！
 ---
 - 优化了背景图片， it's more beautiful!
+- 优化了整体代码，修复了一些BUG，提高了性能。
 ---
 `,
 	// 是否允许用户关闭公告
