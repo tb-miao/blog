@@ -215,14 +215,18 @@ export const ru: Translation = {
 	// Режим обоев
 	[Key.wallpaperMode]: "Режим обоев",
 	[Key.wallpaperBannerMode]: "Баннер обои",
+	[Key.wallpaperFullscreenMode]: "Полноэкранные обои",
 	[Key.wallpaperOverlayMode]: "Прозрачный",
 	[Key.wallpaperNoneMode]: "Однотонный фон",
 
-	// Настройки баннера
-	[Key.bannerSettings]: "Настройки баннера",
-	[Key.bannerTitle]: "Заголовок главного баннера",
-	[Key.bannerCarousel]: "Карусель баннера",
+	// Настройки обоев
+	[Key.wallpaperSettings]: "Настройки обоев",
+	[Key.wallpaperTitle]: "Заголовок главных обоев",
+	[Key.wallpaperCarousel]: "Карусель обоев",
 	[Key.wavesAnimation]: "Анимация волн",
+	[Key.gradientTransition]: "Градиентный переход",
+	[Key.sakuraEffect]: "Эффект сакуры",
+	[Key.effectsSettings]: "Настройки эффектов",
 	[Key.overlaySettings]: "Настройки прозрачности",
 	[Key.overlayOpacity]: "Прозрачность обоев",
 	[Key.overlayBlur]: "Размытие фона",
@@ -312,13 +316,14 @@ export const ru: Translation = {
 	// Защита паролем
 	[Key.passwordProtected]: "Защищено паролем",
 	[Key.passwordProtectedDesc]:
-		"Эта статья защищена паролем. Пожалуйста, введите пароль для просмотра содержимого.",
+		"Этот контент защищён паролем. Пожалуйста, введите пароль для просмотра.",
 	[Key.passwordHint]: "Подсказка",
 	[Key.passwordPlaceholder]: "Введите пароль",
 	[Key.passwordSubmit]: "Разблокировать",
 	[Key.passwordError]: "Неверный пароль, попробуйте снова.",
 	[Key.passwordProtectedRss]:
 		"Эта статья зашифрована. Пожалуйста, посетите сайт для просмотра.",
+
 
 	// Commits 更新记录
 	[Key.commits]: "Коммиты",

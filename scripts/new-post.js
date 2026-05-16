@@ -46,11 +46,11 @@ const content = `---
 title: ${args[0]}
 published: ${getDate()}
 description: ''
-image: 'api'
+image: ''
 tags: []
 category: ''
 draft: false 
-pinned: false
+lang: ''
 ---
 `
 

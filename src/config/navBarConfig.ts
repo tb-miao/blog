@@ -54,15 +54,15 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 					url: "/privacy/",
 					icon: "material-symbols:privacy",
 				},
-			// 根据配置决定是否添加相册，在 siteConfig 关闭 pages.gallery 时导航栏不显示相册
+			// 根据配置决定是否添加相册，在siteConfig关闭pages.gallery时导航栏不显示相册
 			...(siteConfig.pages.gallery ? [LinkPreset.Gallery] : []),
 
-			// 根据配置决定是否添加番组计划，在 siteConfig 关闭 pages.bangumi 时导航栏不显示番组计划
+			// 根据配置决定是否添加番组计划，在siteConfig关闭pages.bangumi时导航栏不显示番组计划
 			...(siteConfig.pages.bangumi ? [LinkPreset.Bangumi] : []),
 		],
 	});
 
-	// 自定义导航栏链接,并且支持多级菜单
+	// 关于及其子菜单
 	links.push({
 		name: "链接",
 		url: "/links/",

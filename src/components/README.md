@@ -93,7 +93,6 @@ Firefly 项目中所有可复用组件的集中管理。组件按照功能和职
 - `SakuraEffect.astro` - 樱花飘落特效
 - `SpineModel.astro` - Spine 看板娘组件
 - `TypewriterText.astro` - 打字机动画效果
-- `DevToolsWarning.astro` - 开发工具警告组件
 
 ### 📃 pages/ - 页面特定组件
 

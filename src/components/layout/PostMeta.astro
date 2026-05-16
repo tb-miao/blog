@@ -36,6 +36,7 @@ const {
 	id,
 	showTags = true,
 	customPath,
+	pinned,
 } = Astro.props;
 
 const path = customPath || (id ? `/posts/${id}` : "");

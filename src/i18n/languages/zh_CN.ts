@@ -19,7 +19,7 @@ export const zh_CN: Translation = {
 	[Key.categories]: "分类",
 	[Key.recentPosts]: "最新文章",
 	[Key.postList]: "文章列表",
-	[Key.tableOfContents]: "目录",
+	[Key.tableOfContents]: "文章目录",
 	[Key.tocEmpty]: "当前页面没有目录",
 	[Key.music]: "音乐",
 	[Key.musicNoPlaying]: "暂未播放",
@@ -206,14 +206,18 @@ export const zh_CN: Translation = {
 	// 壁纸模式
 	[Key.wallpaperMode]: "壁纸模式",
 	[Key.wallpaperBannerMode]: "横幅壁纸",
+	[Key.wallpaperFullscreenMode]: "全屏壁纸",
 	[Key.wallpaperOverlayMode]: "全屏透明",
 	[Key.wallpaperNoneMode]: "纯色背景",
 
-	// 横幅设置
-	[Key.bannerSettings]: "横幅设置",
-	[Key.bannerTitle]: "首页横幅标题",
-	[Key.bannerCarousel]: "横幅轮播",
+	// 壁纸设置
+	[Key.wallpaperSettings]: "壁纸设置",
+	[Key.wallpaperTitle]: "首页壁纸标题",
+	[Key.wallpaperCarousel]: "壁纸轮播",
 	[Key.wavesAnimation]: "水波纹动画",
+	[Key.gradientTransition]: "渐变过渡",
+	[Key.sakuraEffect]: "樱花特效",
+	[Key.effectsSettings]: "特效设置",
 	[Key.overlaySettings]: "透明设置",
 	[Key.overlayOpacity]: "壁纸透明度",
 	[Key.overlayBlur]: "背景模糊度",
@@ -301,7 +305,7 @@ export const zh_CN: Translation = {
 
 	// 密码保护
 	[Key.passwordProtected]: "密码保护",
-	[Key.passwordProtectedDesc]: "这篇文章已被密码保护，请输入密码查看内容。",
+	[Key.passwordProtectedDesc]: "此内容已被密码保护，请输入密码查看。",
 	[Key.passwordHint]: "提示",
 	[Key.passwordPlaceholder]: "请输入密码",
 	[Key.passwordSubmit]: "解锁",
@@ -314,5 +318,4 @@ export const zh_CN: Translation = {
 	[Key.commitsLoading]: "正在加载提交记录...",
 	[Key.commitsFailed]: "加载提交记录失败",
 	[Key.commitsViewOnGitHub]: "在 GitHub 上查看",
-
 };

@@ -17,7 +17,7 @@ export const siteConfig: SiteConfig = {
 
 	// 站点描述
 	description:
-		" Nachcekoの小窝 是一个基于 Astro 框架和 Firefly 模板开发的清新美观且现代化个人博客主题模板，专为技术爱好者和内容创作者设计。该主题融合了现代 Web 技术栈，提供了丰富的功能模块和高度可定制的界面，让您能够轻松打造出专业且美观的个人博客网站。",
+		"Nachcekoの小窝是喵~ 基于Astro框架和Firefly模板开发的清新又可爱的个人博客主题模板喵，专为喜欢技术的铲屎官和内容创作者设计nya~ 融合了现代Web技术栈，提供丰富的功能模块和高度可定制的界面，让您能轻松打造出专业又萌萌哒的个人博客网站喵！(ฅ'ω'ฅ)",
 
 	// 站点关键词
 	keywords: [
@@ -62,7 +62,7 @@ export const siteConfig: SiteConfig = {
 		// 是否开启卡片边框和阴影，开启后让网站更有立体感
 		border: true,
 		// 是否让卡片风格跟随主题色相
-		followTheme: true,
+		followTheme: false,
 	},
 
 	// Favicon 配置
@@ -76,14 +76,6 @@ export const siteConfig: SiteConfig = {
 			// sizes: "32x32",
 		},
 	],
-
-	// 启用开发者工具提示信息
-	devtoolsWarning: {
-		enable: false, // 是否启用
-		message:
-			"请按本站规定合法使用开发者工具", // 提示信息内容，留空为默认
-		time: 2, // 提示信息显示时间，单位秒
-	},
 
 	// 导航栏配置
 	navbar: {

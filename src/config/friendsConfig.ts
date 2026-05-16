@@ -185,7 +185,7 @@ export const friendsConfig: FriendLink[] = [
 		weight: 1,
 		enabled: true,
 	},
-]
+];
 
 // 获取启用的友链并进行排序
 export const getEnabledFriends = (): FriendLink[] => {

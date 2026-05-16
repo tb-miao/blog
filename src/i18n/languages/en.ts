@@ -214,14 +214,18 @@ export const en: Translation = {
 	// Wallpaper Mode
 	[Key.wallpaperMode]: "Wallpaper Mode",
 	[Key.wallpaperBannerMode]: "Banner Wallpaper",
+	[Key.wallpaperFullscreenMode]: "Fullscreen Wallpaper",
 	[Key.wallpaperOverlayMode]: "Overlay Wallpaper",
 	[Key.wallpaperNoneMode]: "None Wallpaper",
 
-	// Banner Settings
-	[Key.bannerSettings]: "Banner Settings",
-	[Key.bannerTitle]: "Home Banner Title",
-	[Key.bannerCarousel]: "Banner Carousel",
+	// Wallpaper Settings
+	[Key.wallpaperSettings]: "Wallpaper Settings",
+	[Key.wallpaperTitle]: "Home Wallpaper Title",
+	[Key.wallpaperCarousel]: "Wallpaper Carousel",
 	[Key.wavesAnimation]: "Waves Animation",
+	[Key.gradientTransition]: "Gradient Transition",
+	[Key.sakuraEffect]: "Sakura Effect",
+	[Key.effectsSettings]: "Effects Settings",
 	[Key.overlaySettings]: "Transparency Settings",
 	[Key.overlayOpacity]: "Wallpaper Opacity",
 	[Key.overlayBlur]: "Background Blur",
@@ -311,7 +315,7 @@ export const en: Translation = {
 	// Password Protection
 	[Key.passwordProtected]: "Password Protected",
 	[Key.passwordProtectedDesc]:
-		"This article is password protected. Please enter the password to view the content.",
+		"This content is password protected. Please enter the password to view.",
 	[Key.passwordHint]: "Hint",
 	[Key.passwordPlaceholder]: "Enter password",
 	[Key.passwordSubmit]: "Unlock",
@@ -325,5 +329,4 @@ export const en: Translation = {
 	[Key.commitsLoading]: "Loading commits...",
 	[Key.commitsFailed]: "Failed to load commits",
 	[Key.commitsViewOnGitHub]: "View on GitHub",
-
 };

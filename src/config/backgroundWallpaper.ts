@@ -1,9 +1,11 @@
 import type { BackgroundWallpaperConfig } from "@/types/config";
 
 export const backgroundWallpaper: BackgroundWallpaperConfig = {
-	// 壁纸模式："banner" 横幅壁纸，"overlay" 全屏透明，"none" 纯色背景无壁纸
+	// 壁纸模式："banner" 横幅壁纸，"fullscreen" 全屏壁纸，"overlay" 全屏透明，"none" 纯色背景无壁纸
 	mode: "overlay",
-	// 是否允许用户通过导航栏切换壁纸模式，设为false可提升性能（只渲染当前模式）
+	// 是否允许用户通过导航栏切换壁纸模式
+	// 且同时维护多种壁纸模式过于复杂（已经屎山代码），在切换时有时候可能会出现一些奇怪的过渡效果或者bug
+	// 推荐只选择自己喜欢的模式并关闭切换功能
 	switchable: false,
 	/**
 	 * 背景图片配置
@@ -40,38 +42,17 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		// desktop: "assets/images/DesktopWallpaper/d1.avif",
 		desktop: [
 			"https://t.alcy.cc/moez"
-			//"assets/images/DesktopWallpaper/1.webp",
-			//"assets/images/DesktopWallpaper/2.webp",
-			//"assets/images/DesktopWallpaper/3.webp",
-			//"assets/images/DesktopWallpaper/4.webp",
-			//"assets/images/DesktopWallpaper/8.png",
-			//"assets/images/DesktopWallpaper/9.jpg",
-			//"assets/images/DesktopWallpaper/10.jpg",
-			//"assets/images/DesktopWallpaper/11.jpg",
 		],
 		// 移动背景图片（支持单张或多张随机）
 		// mobile: "assets/images/MobileWallpaper/m1.avif",
 		mobile: [
 			"https://t.alcy.cc/moemp"
-			//"assets/images/MobileWallpaper/1.webp",
-			//"assets/images/MobileWallpaper/2.webp",
-			//"assets/images/MobileWallpaper/3.webp",
-			//"assets/images/MobileWallpaper/4.webp",
-			//"assets/images/MobileWallpaper/1.png",
-			//"assets/images/MobileWallpaper/2.png",
-			//"assets/images/MobileWallpaper/3.png",
-			//"assets/images/MobileWallpaper/4.png",
-			//"assets/images/MobileWallpaper/5.png",
-			//"assets/images/MobileWallpaper/6.png",
 		],
 	},
-	// Banner模式特有配置
-	banner: {
-		// 图片位置
-		// 支持所有CSS object-position值，如: 'top', 'center', 'bottom', 'left top', 'right bottom', '25% 75%', '10px 20px'..
-		// 如果不知道怎么配置百分百之类的配置，推荐直接使用：'center'居中，'top'顶部居中，'bottom' 底部居中，'left'左侧居中，'right'右侧居中
-		position: "0% 20%",
-
+	// 横幅壁纸和全屏壁纸共享配置
+	common: {
+		// 横幅文字遮罩暗度，0-1之间，值越大越暗
+		dimOpacity: 0.2,
 		// 主页横幅文字
 		homeText: {
 			// 是否启用主页横幅文字
@@ -106,36 +87,46 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 				pauseTime: 2000,
 			},
 		},
-		// 图片来源
-		credit: {
-			enable: {
-				// 桌面端显示横幅图片来源文本
-				desktop: false,
-				// 移动端显示横幅图片来源文本
-				mobile: false,
-			},
-			text: {
-				// 桌面端要显示的来源文本
-				desktop: "SITEAPI",
-				// 移动端要显示的来源文本
-				mobile: "SITEAPI",
-			},
-			url: {
-				// 桌面端原始艺术品或艺术家页面的 URL 链接
-				desktop: "https://www.pixiv.net/users/108801776",
-				// 移动端原始艺术品或艺术家页面的 URL 链接
-				mobile: "https://www.pixiv.net/users/42715864",
-			},
-		},
-		// 横幅导航栏配置
+		// 导航栏配置
 		navbar: {
-			// 横幅导航栏透明模式："semi" 半透明，"full" 完全透明，"semifull" 动态透明
+			// 导航栏透明模式："semi" 半透明，"full" 完全透明，"semifull" 动态透明
 			transparentMode: "semi",
 			// 是否开启毛玻璃模糊效果，开启可能会影响页面性能，如果不开启则是半透明，请根据自己的喜好开启
 			enableBlur: true,
 			// 毛玻璃模糊度
 			blur: 5,
 		},
+		// 水波纹动画效果配置，开启会影响页面性能，请根据自己的喜好开启
+		waves: {
+			enable: {
+				// 桌面端是否启用水波纹动画效果
+				desktop: false,
+				// 移动端是否启用水波纹动画效果
+				mobile: false,
+			},
+			// 是否允许用户通过控制面板切换水波纹动画
+			switchable: false,
+		},
+		// 渐变过渡效果配置，当水波纹关闭时自动启用，提供壁纸底部到背景色的平滑过渡
+		gradient: {
+			enable: {
+				// 桌面端是否启用渐变过渡
+				desktop: false,
+				// 移动端是否启用渐变过渡
+				mobile: false,
+			},
+			// 渐变高度
+			height: "15vh",
+			// 是否允许用户通过控制面板切换渐变过渡
+			switchable: false,
+		},
+	},
+	// Banner模式特有配置
+	banner: {
+		// 图片位置
+		// 支持所有CSS object-position值，如: 'top', 'center', 'bottom', 'left top', 'right bottom', '25% 75%', '10px 20px'..
+		// 如果不知道怎么配置百分百之类的配置，推荐直接使用：'center'居中，'top'顶部居中，'bottom' 底部居中，'left'左侧居中，'right'右侧居中
+		position: "0% 20%",
 		// 横幅图片轮播配置，仅在当配置多张图片时生效
 		carousel: {
 			// 是否启用横幅图片轮播；关闭时保持每次刷新随机显示一张
@@ -146,17 +137,6 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 			// 轮播切换间隔（毫秒）
 			interval: 5000,
 			// 是否允许用户通过控制面板切换横幅轮播
-			switchable: false,
-		},
-		// 水波纹动画效果配置，开启会影响页面性能，请根据自己的喜好开启
-		waves: {
-			enable: {
-				// 桌面端是否启用水波纹动画效果
-				desktop: true,
-				// 移动端是否启用水波纹动画效果
-				mobile: true,
-			},
-			// 是否允许用户通过控制面板切换水波纹动画
 			switchable: false,
 		},
 	},
@@ -173,8 +153,13 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		// 壁纸透明度
 		opacity: 0.8,
 		// 背景模糊度
-		blur: 7,
+		blur: 10,
 		// 卡片透明度，0-1之间，值越小越透明
-		cardOpacity: 0.60,
+		cardOpacity: 0.5,
+	},
+	// 全屏壁纸模式特有配置
+	fullscreen: {
+		// 图片位置
+		position: "center",
 	},
 };
