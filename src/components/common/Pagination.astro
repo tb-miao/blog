@@ -55,7 +55,7 @@ const getPageUrl = (p: number) => {
 
 <div class:list={[className, "flex flex-col gap-4 items-center"]} style={style}>
   <!-- 分页信息 - 已禁用 -->
-  <!--
+
   {
     page.lastPage > 1 && (
       <div class="text-sm text-(--text-secondary) text-center">
@@ -63,7 +63,7 @@ const getPageUrl = (p: number) => {
       </div>
     )
   }
-  -->
+
 
   <!-- 分页控件 -->
   <div class="flex flex-row gap-3 justify-center" role="navigation" aria-label={i18n(I18nKey.postList)}>
@@ -123,7 +123,7 @@ const getPageUrl = (p: number) => {
       ]}
     >
       <Icon
-        name="material-symbols:chevron-right-rounded"
+        name="material-symbols:chevron-right"
         class="text-[1.75rem]"
         aria-hidden="true"
       />

@@ -62,22 +62,34 @@ function getAllFiles(dir, extensions = [".svelte"]) {
 function extractIconNames(content) {
 	const icons = new Set();
 
-	// 匹配各种图标使用模式
+	// 匹配各种图标使用模式 - 增强版正则表达式
 	const patterns = [
-		// icon="xxx:yyy" 或 icon='xxx:yyy'
-		/icon=["']([a-z0-9-]+:[a-z0-9-]+)["']/gi,
-		// icon={`xxx:yyy`}
-		/icon=\{[`"']([a-z0-9-]+:[a-z0-9-]+)[`"']\}/gi,
+		// Icon 组件的 name 属性：name="xxx:yyy" 或 name='xxx:yyy'
+		/name=["']([a-z0-9-]+:[a-z0-9-]+(?:-[a-z0-9-]+)*)["']/gi,
+		// Icon 组件的 name 属性：name={`xxx:yyy`}
+		/name=\{[`"']([a-z0-9-]+:[a-z0-9-]+(?:-[a-z0-9-]+)*)[`"']\}/gi,
+		// 通用 icon 属性：icon="xxx:yyy" 或 icon='xxx:yyy'
+		/icon=["']([a-z0-9-]+:[a-z0-9-]+(?:-[a-z0-9-]+)*)["']/gi,
+		// 通用 icon 属性：icon={`xxx:yyy`}
+		/icon=\{[`"']([a-z0-9-]+:[a-z0-9-]+(?:-[a-z0-9-]+)*)[`"']\}/gi,
 		// getIconSvg("xxx:yyy") 或 getIconSvg('xxx:yyy')
-		/getIconSvg\(["']([a-z0-9-]+:[a-z0-9-]+)["']\)/gi,
+		/getIconSvg\(["']([a-z0-9-]+:[a-z0-9-]+(?:-[a-z0-9-]+)*)["']\)/gi,
 		// hasIcon("xxx:yyy")
-		/hasIcon\(["']([a-z0-9-]+:[a-z0-9-]+)["']\)/gi,
+		/hasIcon\(["']([a-z0-9-]+:[a-z0-9-]+(?:-[a-z0-9-]+)*)["']\)/gi,
+		// astro-icon 组件：Icon name="xxx:yyy"
+		/<Icon\s+name=["']([a-z0-9-]+:[a-z0-9-]+(?:-[a-z0-9-]+)*)["']/gi,
 	];
 
 	for (const pattern of patterns) {
 		let match;
+		// 重置正则表达式的 lastIndex，确保每次循环都从头开始
+		pattern.lastIndex = 0;
 		while ((match = pattern.exec(content)) !== null) {
-			icons.add(match[1]);
+			const iconName = match[1];
+			// 验证图标名称格式
+			if (iconName && /^[a-z0-9-]+:[a-z0-9-]+(?:-[a-z0-9-]+)*$/.test(iconName)) {
+				icons.add(iconName);
+			}
 		}
 	}
 
@@ -113,7 +125,7 @@ async function loadIconSet(prefix) {
 /**
  * 获取单个图标的 SVG
  */
-async function getIconSvg(iconName) {
+async function getIconSvg(iconName, retryCount = 0) {
 	const [prefix, name] = iconName.split(":");
 	if (!prefix || !name) {
 		console.warn(`⚠️  无效的图标名称: ${iconName}`);
@@ -127,24 +139,37 @@ async function getIconSvg(iconName) {
 
 	const iconData = getIconData(iconSet, name);
 	if (!iconData) {
-		console.warn(`⚠️  图标未找到: ${iconName}`);
+		// 仅在首次尝试时警告
+		if (retryCount === 0) {
+			console.warn(`⚠️  图标未找到: ${iconName}`);
+		}
 		return null;
 	}
 
-	// 转换为 SVG
-	const renderData = iconToSVG(iconData, {
-		height: "1em",
-		width: "1em",
-	});
+	try {
+		// 转换为 SVG
+		const renderData = iconToSVG(iconData, {
+			height: "1em",
+			width: "1em",
+		});
 
-	let svg = iconToHTML(replaceIDs(renderData.body), renderData.attributes);
+		let svg = iconToHTML(replaceIDs(renderData.body), renderData.attributes);
 
-	// 确保支持 currentColor
-	if (!svg.includes("currentColor")) {
-		svg = svg.replace("<svg", '<svg fill="currentColor"');
+		// 确保支持 currentColor
+		if (!svg.includes("currentColor")) {
+			svg = svg.replace("<svg", '<svg fill="currentColor"');
+		}
+
+		return svg;
+	} catch (error) {
+		// 重试机制
+		if (retryCount < 3) {
+			console.warn(`⚠️  图标转换失败：${iconName}，重试 ${retryCount + 1}/3`);
+			return getIconSvg(iconName, retryCount + 1);
+		}
+		console.error(`❌ 图标转换失败（已重试 3 次）: ${iconName}`, error);
+		return null;
 	}
-
-	return svg;
 }
 
 /**

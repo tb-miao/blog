@@ -44,7 +44,6 @@ const description = toolListPageConfig.description;
 				const container = this.closest(".card-base");
 				if (!container) return;
 
-				const cards = container.querySelectorAll(".tool-card");
 
 				filters.forEach((f) => {
 					f.classList.remove("bg-(--primary)", "text-white");
@@ -319,7 +318,7 @@ const description = toolListPageConfig.description;
 							{/* 标签 */}
 							{tool.tags && tool.tags.length > 0 && (
 								<div class="flex flex-wrap gap-1 mt-0.5 md:mt-1">
-									{tool.tags.map((tag) => (
+									{tool.tags.map((tag: string) => (
 										<span class="text-[0.65rem] md:text-xs px-1.5 md:px-2 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 group-hover:bg-(--primary)/10 group-hover:text-(--primary) transition-colors duration-300">
 											{tag}
 										</span>

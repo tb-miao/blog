@@ -1,7 +1,78 @@
 /**
  * 图标加载管理器
  * 负责处理图标的加载状态显示
+ * 支持开发环境下的动态图标加载
  */
+
+// 开发环境下动态加载图标的缓存
+const dynamicIconCache = new Map<string, string>();
+
+/**
+ * 在开发环境下动态加载图标
+ */
+async function loadIconDynamically(iconName: string): Promise<string | null> {
+	// 先检查缓存
+	if (dynamicIconCache.has(iconName)) {
+		return dynamicIconCache.get(iconName) || null;
+	}
+
+	try {
+		// 使用 Iconify API 动态加载图标
+		const [prefix, name] = iconName.split(":");
+		if (!prefix || !name) {
+			console.warn(`[IconLoader] 无效的图标名称：${iconName}`);
+			return null;
+		}
+
+		// 尝试从本地 JSON 加载（如果可用）
+		const response = await fetch(
+			`https://api.iconify.design/${prefix}/${name}.svg`,
+			{
+				mode: "cors",
+			},
+		);
+
+		if (response.ok) {
+			const svg = await response.text();
+			// 确保支持 currentColor
+			let processedSvg = svg;
+			if (!svg.includes("currentColor") && !svg.includes('fill="')) {
+				processedSvg = svg.replace("<svg", '<svg fill="currentColor"');
+			}
+			dynamicIconCache.set(iconName, processedSvg);
+			return processedSvg;
+		}
+	} catch (error) {
+		console.warn(`[IconLoader] 动态加载图标失败：${iconName}`, error);
+	}
+
+	return null;
+}
+
+/**
+ * 预加载一组图标（用于开发环境）
+ */
+export async function preloadIcons(iconNames: string[]): Promise<void> {
+	if (import.meta.env.PROD) return;
+
+	const loadPromises = iconNames.map((name) => loadIconDynamically(name));
+	await Promise.all(loadPromises);
+	console.log(`[IconLoader] 已预加载 ${iconNames.length} 个图标`);
+}
+
+/**
+ * 检查图标是否已缓存
+ */
+export function isIconCached(iconName: string): boolean {
+	return dynamicIconCache.has(iconName);
+}
+
+/**
+ * 获取缓存的图标 SVG
+ */
+export function getCachedIcon(iconName: string): string | null {
+	return dynamicIconCache.get(iconName) || null;
+}
 
 export function initIconLoader() {
 	// 初始化单个图标容器
@@ -55,13 +126,13 @@ export function initIconLoader() {
 
 		// 监听图标加载错误
 		iconElement.addEventListener("error", () => {
-			// 保持显示fallback
+			// 保持显示 fallback
 			if (iconName) {
 				console.warn(`Failed to load icon: ${iconName}`);
 			}
 		});
 
-		// 使用MutationObserver监听shadow DOM变化
+		// 使用 MutationObserver 监听 shadow DOM 变化
 		if (window.MutationObserver) {
 			const observer = new MutationObserver(() => {
 				if (checkIconLoaded()) {
@@ -69,7 +140,7 @@ export function initIconLoader() {
 				}
 			});
 
-			// 监听iconify-icon元素的变化
+			// 监听 iconify-icon 元素的变化
 			observer.observe(iconElement, {
 				childList: true,
 				subtree: true,

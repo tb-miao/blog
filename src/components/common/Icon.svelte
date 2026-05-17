@@ -16,6 +16,7 @@ interface Props {
 	style?: string;
 	size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
 	color?: string;
+	showWarning?: boolean; // 开发环境下是否显示警告
 }
 
 let {
@@ -24,6 +25,7 @@ let {
 	style = "",
 	size = "md",
 	color,
+	showWarning = true, // 默认在开发环境显示警告
 }: Props = $props();
 
 // 尺寸映射
@@ -44,6 +46,19 @@ const combinedClass = $derived(`${sizeClass} ${className}`.trim());
 // 获取内联 SVG
 const svgContent = $derived(getIconSvg(icon));
 const iconExists = $derived(hasIcon(icon));
+
+// 开发环境警告
+$effect(() => {
+	if (import.meta.env.DEV && showWarning && !iconExists) {
+		console.warn(
+			`[Icon] 图标未找到：${icon}。\n` +
+			`请确保：\n` +
+			`1. 图标名称格式正确（如 "material-symbols:search"）\n` +
+			`2. 已在组件中使用该图标（会被自动扫描）\n` +
+			`3. 运行 "pnpm icons" 重新生成图标数据`
+		);
+	}
+});
 </script>
 
 {#if iconExists && svgContent}
